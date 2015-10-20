@@ -35,6 +35,14 @@ import py.com.purplemammoth.apps.yoelijopy.model.DatosConsultaPadron;
 public class ConsultaPadronFragment extends Fragment {
     public static final String MAPS_STATIC_URL = "http://maps.google.com/maps/api/staticmap?center" +
             "=%f,%f&zoom=16&size=480x240&markers=color:blue|%f,%f&sensor=false";
+    private static final String CONSULTA_PADRON_URI = "consultas-padron?ci=%s&fechaNacimiento=%s&latitud=%f&longitud=%f";
+    private static final String ARG_CEDULA = "arg_cedula";
+    private static final String ARG_FECHA_NAC = "arg_fecha_nac";
+    private static final Double TEST_LATITUDE = -25.325367;
+    private static final Double TEST_LONGITUDE = -57.567217;
+
+    private String cedula;
+    private String fechaNacimiento;
 
     private OnFragmentInteractionListener mListener;
 
@@ -63,9 +71,11 @@ public class ConsultaPadronFragment extends Fragment {
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ConsultaPadronFragment newInstance() {
+    public static ConsultaPadronFragment newInstance(String cedula, String fechaNacimiento) {
         ConsultaPadronFragment fragment = new ConsultaPadronFragment();
         Bundle args = new Bundle();
+        args.putString(ARG_CEDULA, cedula);
+        args.putString(ARG_FECHA_NAC, fechaNacimiento);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,7 +84,8 @@ public class ConsultaPadronFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            // TODO
+            cedula = getArguments().getString(ARG_CEDULA);
+            fechaNacimiento = getArguments().getString(ARG_FECHA_NAC);
         }
     }
 
@@ -137,7 +148,7 @@ public class ConsultaPadronFragment extends Fragment {
         super.onStart();
 
         try {
-            consultaPadron();
+            consultaPadron(cedula, fechaNacimiento);
         } catch (JSONException e) {
             Log.e("HomeFragment", e.getLocalizedMessage());
         } catch (Exception e) {
@@ -145,9 +156,10 @@ public class ConsultaPadronFragment extends Fragment {
         }
     }
 
-    public void consultaPadron() throws JSONException {
-        EleccionesRestClient.get("consultas-padron?ci=4232966&fechaNacimiento=1/9/88&latitud=-25.325367&longitud=-57.567217",
-                null, new BaseJsonHttpResponseHandler<DatosConsultaPadron>() {
+    public void consultaPadron(String cedula, String fechaNacimiento) throws JSONException {
+        EleccionesRestClient.get(String.format(CONSULTA_PADRON_URI, cedula, fechaNacimiento,
+                        TEST_LATITUDE, TEST_LONGITUDE), null,
+                new BaseJsonHttpResponseHandler<DatosConsultaPadron>() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
                                           DatosConsultaPadron response) {

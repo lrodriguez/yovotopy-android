@@ -56,7 +56,7 @@ public class MainTabAdapter extends FragmentStatePagerAdapter {
         if (mPageReferenceMap.get(position) == null) {
             switch (position) {
                 case 0:
-                    fragment = ConsultaPadronFragment.newInstance();
+                    fragment = ConsultaPadronFragment.newInstance("4232966", "1/9/88");
                     break;
                 case 1:
                     fragment = HomeFragment.newInstance();
