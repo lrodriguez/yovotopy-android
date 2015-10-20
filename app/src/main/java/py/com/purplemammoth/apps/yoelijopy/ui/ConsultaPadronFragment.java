@@ -105,6 +105,7 @@ public class ConsultaPadronFragment extends Fragment {
         mesa = (TextView) view.findViewById(R.id.mesa_text);
         orden = (TextView) view.findViewById(R.id.orden_text);
 
+        // TODO onclicklisteners
     }
 
     // TODO: Rename method, update argument and hook method into UI event
