@@ -1,0 +1,105 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- CardView MD Styles -->
+    <style name="Widget.CardTitle" parent="android:Widget">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">24dp</item>
+        <item name="android:paddingBottom">24dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Widget.CardTitle.WithActions" parent="android:Widget">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">24dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Widget.CardContent" parent="android:Widget">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">24dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Widget.CardContent.WithActions" parent="android:Widget">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Widget.CardActions" parent="android:Widget">
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="Widget.CardTitleText" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/materialPrimaryText</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Widget.CardTitleText.Big" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/materialPrimaryText</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="Widget.CardSubtitleText" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/materialSecondaryText</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Widget.CardSupportingText" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/materialPrimaryText</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Widget.CardSupportingText.Light" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/materialTextIcons</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Widget.CardSupportingText.Bold" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/materialPrimaryText</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Widget.CardActionButton.Primary" parent="Widget.CardActionButton">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="Widget.CardActionButton" parent="android:Widget.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:textColor">@color/materialSecondaryText</item>
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+</resources>
