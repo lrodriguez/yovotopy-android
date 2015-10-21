@@ -3,6 +3,7 @@ package py.com.purplemammoth.apps.yoelijopy.ui;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,12 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 
@@ -23,6 +26,8 @@ import cz.msebera.android.httpclient.Header;
 import py.com.purplemammoth.apps.yoelijopy.R;
 import py.com.purplemammoth.apps.yoelijopy.client.EleccionesRestClient;
 import py.com.purplemammoth.apps.yoelijopy.model.DatosConsultaPadron;
+import py.com.purplemammoth.apps.yoelijopy.model.DatosVotacion;
+import py.com.purplemammoth.apps.yoelijopy.model.MensajeError;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,7 +40,7 @@ import py.com.purplemammoth.apps.yoelijopy.model.DatosConsultaPadron;
 public class ConsultaPadronFragment extends Fragment {
     public static final String MAPS_STATIC_URL = "http://maps.google.com/maps/api/staticmap?center" +
             "=%f,%f&zoom=16&size=480x240&markers=color:blue|%f,%f&sensor=false";
-    private static final String CONSULTA_PADRON_URI = "consultas-padron?ci=%s&fechaNacimiento=%s&latitud=%f&longitud=%f";
+    private static final String CONSULTA_PADRON_URI = "consultas-padron";
     private static final String ARG_CEDULA = "arg_cedula";
     private static final String ARG_FECHA_NAC = "arg_fecha_nac";
     private static final Double TEST_LATITUDE = -25.325367;
@@ -46,6 +51,9 @@ public class ConsultaPadronFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private View parentView;
+
+    private LinearLayout tipoVotoContainer;
     private TextView nombrePersona;
     private TextView sexo;
     private TextView nacionalidad;
@@ -56,6 +64,7 @@ public class ConsultaPadronFragment extends Fragment {
     private TextView distrito;
     private TextView mesa;
     private TextView orden;
+    private TextView tipoVoto;
     private ImageView mapa;
     private Button guardarPredeterminado;
     private Button verMapa;
@@ -99,6 +108,7 @@ public class ConsultaPadronFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        parentView = view;
 
         nombrePersona = (TextView) view.findViewById(R.id.nombre_persona_text);
         sexo = (TextView) view.findViewById(R.id.sexo_persona_text);
@@ -113,8 +123,10 @@ public class ConsultaPadronFragment extends Fragment {
         distrito = (TextView) view.findViewById(R.id.distrito_text);
         verMapa = (Button) view.findViewById(R.id.ver_mapa_button);
 
+        tipoVotoContainer = (LinearLayout) view.findViewById(R.id.tipo_voto_layout);
         mesa = (TextView) view.findViewById(R.id.mesa_text);
         orden = (TextView) view.findViewById(R.id.orden_text);
+        tipoVoto = (TextView) view.findViewById(R.id.tipo_voto_text);
 
         // TODO onclicklisteners
     }
@@ -157,33 +169,49 @@ public class ConsultaPadronFragment extends Fragment {
     }
 
     public void consultaPadron(String cedula, String fechaNacimiento) throws JSONException {
-        EleccionesRestClient.get(String.format(CONSULTA_PADRON_URI, cedula, fechaNacimiento,
-                        TEST_LATITUDE, TEST_LONGITUDE), null,
-                new BaseJsonHttpResponseHandler<DatosConsultaPadron>() {
+        RequestParams requestParams = new RequestParams();
+        requestParams.add("ci", cedula);
+        requestParams.add("fechaNacimiento", fechaNacimiento);
+        requestParams.add("latitud", TEST_LATITUDE.toString());
+        requestParams.add("longitud", TEST_LONGITUDE.toString());
+
+        EleccionesRestClient.get(CONSULTA_PADRON_URI, requestParams,
+                new BaseJsonHttpResponseHandler<Object>() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
-                                          DatosConsultaPadron response) {
+                                          Object response) {
                         if (statusCode != 200) {
                             Log.e("Consulta Padrón", "Status Code: " + statusCode);
                         } else {
                             Log.i("Consulta Padrón", response.toString());
-                            nombrePersona.setText(response.getDatosPersonales().getNombre());
-                            sexo.setText(response.getDatosPersonales().getSexo());
-                            nacionalidad.setText(response.getDatosPersonales().getNacionalidad());
+                            DatosConsultaPadron datosConsultaPadron = (DatosConsultaPadron) response;
+                            nombrePersona.setText(datosConsultaPadron.getDatosPersonales().getNombre());
+                            sexo.setText(datosConsultaPadron.getDatosPersonales().getSexo());
+                            nacionalidad.setText(datosConsultaPadron.getDatosPersonales().getNacionalidad());
 
-                            Double latitudLocal = response.getLocalVotacion().getLatitud();
-                            Double longitudLocal = response.getLocalVotacion().getLongitud();
+                            Double latitudLocal = datosConsultaPadron.getLocalVotacion().getLatitud();
+                            Double longitudLocal = datosConsultaPadron.getLocalVotacion().getLongitud();
                             String mapsUrl = String.format(MAPS_STATIC_URL, latitudLocal, longitudLocal,
                                     latitudLocal, longitudLocal);
                             Glide.with(getActivity()).load(mapsUrl).into(mapa);
-                            nombreLocal.setText(response.getLocalVotacion().getNombre());
-                            direccion.setText(response.getLocalVotacion().getDireccion());
-                            departamento.setText(response.getLocalVotacion().getDepartamento());
-                            zona.setText(response.getLocalVotacion().getZona());
-                            distrito.setText(response.getLocalVotacion().getDistrito());
+                            nombreLocal.setText(datosConsultaPadron.getLocalVotacion().getNombre());
+                            direccion.setText(datosConsultaPadron.getLocalVotacion().getDireccion());
+                            departamento.setText(datosConsultaPadron.getLocalVotacion().getDepartamento());
+                            zona.setText(datosConsultaPadron.getLocalVotacion().getZona());
+                            distrito.setText(datosConsultaPadron.getLocalVotacion().getDistrito());
 
-                            mesa.setText(String.format("%d", response.getDatosVotacion().getMesa()));
-                            orden.setText(String.format("%d", response.getDatosVotacion().getOrden()));
+                            mesa.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
+                                    .getMesa()));
+                            orden.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
+                                    .getOrden()));
+                            if (datosConsultaPadron.getDatosVotacion().getTipoVotoAccesible() != null) {
+                                tipoVotoContainer.setVisibility(View.VISIBLE);
+                                tipoVoto.setText(DatosVotacion.TipoVoto
+                                        .valueOf(datosConsultaPadron.getDatosVotacion()
+                                                .getTipoVotoAccesible()).getDescripcion());
+                            } else {
+                                tipoVotoContainer.setVisibility(View.GONE);
+                            }
 
                             // TODO manejar datos duplicados y deshabilitados
                         }
@@ -192,19 +220,39 @@ public class ConsultaPadronFragment extends Fragment {
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable,
-                                          String rawJsonData, DatosConsultaPadron errorResponse) {
+                                          String rawJsonData, Object errorResponse) {
+                        Log.e("ConsultaPadron", "Status Code: " + statusCode + "Raw JSONData: "
+                                + rawJsonData);
+                        MensajeError mensajeError = (MensajeError) errorResponse;
+                        if (statusCode == 404) {
+                            /*try {
 
+                                MensajeError mensajeError = new ObjectMapper()
+                                        .readValues(new JsonFactory().createParser(rawJsonData),
+                                                MensajeError.class).next();*/
+                            Snackbar.make(parentView, mensajeError.getMensajeUsuario(),
+                                    Snackbar.LENGTH_SHORT).show();
+                            /*} catch (IOException e) {
+                                Log.e("ConsultaPadron", "Error: " + e.getLocalizedMessage());
+                            }*/
+                        }
                     }
 
                     @Override
-                    protected DatosConsultaPadron parseResponse(String rawJsonData, boolean isFailure)
+                    protected Object parseResponse(String rawJsonData, boolean isFailure)
                             throws Throwable {
                         DatosConsultaPadron datosConsultaPadron = null;
+                        MensajeError mensajeError = null;
                         if (!isFailure) {
                             datosConsultaPadron = new ObjectMapper().readValues(new JsonFactory().createParser(rawJsonData),
                                     DatosConsultaPadron.class).next();
+                            return datosConsultaPadron;
+                        } else {
+                            mensajeError = new ObjectMapper()
+                                    .readValues(new JsonFactory().createParser(rawJsonData),
+                                            MensajeError.class).next();
+                            return mensajeError;
                         }
-                        return datosConsultaPadron;
                     }
                 });
     }

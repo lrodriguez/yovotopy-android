@@ -3,6 +3,7 @@ package py.com.purplemammoth.apps.yoelijopy.ui;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -103,6 +104,10 @@ public class MainTabActivity extends AppCompatActivity implements
 
         cedula = (EditText) view.findViewById(R.id.editText);
         fechaNacimiento = (DatePicker) view.findViewById(R.id.datePicker);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            fechaNacimiento.setCalendarViewShown(false);
+        }
 
         return view;
     }

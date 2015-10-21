@@ -12,7 +12,7 @@ public class EleccionesRestClient {
     private static final String HOST = "municipales2015-openshiftpublic.rhcloud.com";
     private static final String PORT = ":80";
     private static final String BASE_PATH = "/municipales2015-%s/rest/";
-    private static final String VERSION = "v0.1";
+    private static final String VERSION = "v0.2";
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 

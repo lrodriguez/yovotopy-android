@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONException;
+
 import py.com.purplemammoth.apps.yoelijopy.R;
+import py.com.purplemammoth.apps.yoelijopy.client.EleccionesRestCallback;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +81,19 @@ public class HomeFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        EleccionesRestCallback callback = new EleccionesRestCallback();
+
+        try {
+            callback.consultaPadron();
+        } catch (JSONException e) {
+            Log.e("HomeFragment", "Ocurrió un error: " + e);
+        }
     }
 
     /**
