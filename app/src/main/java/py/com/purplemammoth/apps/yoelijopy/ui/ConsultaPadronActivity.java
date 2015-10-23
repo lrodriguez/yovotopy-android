@@ -134,7 +134,7 @@ public class ConsultaPadronActivity extends AppCompatActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
-            fragment = ConsultaPadronFragment.newInstance(cedula, fechaNac);
+            fragment = ConsultaPadronFragment.newInstance(cedula, fechaNac, false);
             FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction()
                     .add(R.id.container, fragment, "consulta_padron_fragment")

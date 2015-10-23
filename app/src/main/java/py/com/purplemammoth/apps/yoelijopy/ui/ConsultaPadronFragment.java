@@ -1,6 +1,7 @@
 package py.com.purplemammoth.apps.yoelijopy.ui;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -44,6 +45,7 @@ public class ConsultaPadronFragment extends Fragment {
 
     private String cedula;
     private String fechaNacimiento;
+    private boolean isProfile;
 
     private OnFragmentInteractionListener mListener;
 
@@ -78,11 +80,13 @@ public class ConsultaPadronFragment extends Fragment {
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ConsultaPadronFragment newInstance(String cedula, String fechaNacimiento) {
+    public static ConsultaPadronFragment newInstance(String cedula, String fechaNacimiento,
+                                                     boolean isProfile) {
         ConsultaPadronFragment fragment = new ConsultaPadronFragment();
         Bundle args = new Bundle();
         args.putString(AppConstants.ARG_CEDULA, cedula);
         args.putString(AppConstants.ARG_FECHA_NAC, fechaNacimiento);
+        args.putBoolean(AppConstants.ARG_PROFILE, isProfile);
         fragment.setArguments(args);
         return fragment;
     }
@@ -93,6 +97,7 @@ public class ConsultaPadronFragment extends Fragment {
         if (getArguments() != null) {
             cedula = getArguments().getString(AppConstants.ARG_CEDULA);
             fechaNacimiento = getArguments().getString(AppConstants.ARG_FECHA_NAC);
+            isProfile = getArguments().getBoolean(AppConstants.ARG_PROFILE);
         }
     }
 
@@ -130,7 +135,32 @@ public class ConsultaPadronFragment extends Fragment {
         tipoVoto = (TextView) view.findViewById(R.id.tipo_voto_text);
 
         mainContainer.setVisibility(View.GONE);
-        // TODO onclicklisteners
+
+        if (isProfile) {
+            guardarPredeterminado.setVisibility(View.GONE);
+        }
+
+        guardarPredeterminado.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPreferences = getActivity()
+                        .getSharedPreferences(AppConstants.PREFS_APP, 0);
+                sharedPreferences.edit().putBoolean(AppConstants.PREFS_PROFILE, true).apply();
+                sharedPreferences.edit().putString(AppConstants.PREFS_CEDULA, cedula).apply();
+                sharedPreferences.edit().putString(AppConstants.PREFS_FECHA_NAC, fechaNacimiento)
+                        .apply();
+
+                Snackbar.make(parentView, "Se guardó como predeterminado", Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
+        verMapa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -160,9 +190,21 @@ public class ConsultaPadronFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        if (isProfile) {
+            try {
+                consultaPadron(cedula, fechaNacimiento);
+            } catch (JSONException e) {
+                Log.e(TAG, "Ocurrió un error: " + e.getLocalizedMessage());
+            }
+        }
     }
 
     public void consultaPadron(String cedula, String fechaNacimiento) throws JSONException {
+
+        this.cedula = cedula;
+        this.fechaNacimiento = fechaNacimiento;
+
         RequestParams requestParams = new RequestParams();
         requestParams.add(AppConstants.PARAM_CEDULA, cedula);
         requestParams.add(AppConstants.PARAM_FECHA_NAC, fechaNacimiento);

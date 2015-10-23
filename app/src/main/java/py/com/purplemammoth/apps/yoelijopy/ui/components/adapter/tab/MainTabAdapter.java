@@ -1,13 +1,16 @@
 package py.com.purplemammoth.apps.yoelijopy.ui.components.adapter.tab;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import py.com.purplemammoth.apps.yoelijopy.ui.ConsultaPadronFragment;
 import py.com.purplemammoth.apps.yoelijopy.ui.HomeFragment;
+import py.com.purplemammoth.apps.yoelijopy.util.AppConstants;
 
 /**
  * Created by luisrodriguez on 14/10/15.
@@ -64,7 +67,16 @@ public class MainTabAdapter extends FragmentStatePagerAdapter {
                     fragment = HomeFragment.newInstance();
                     break;
                 case 3:
-                    fragment = HomeFragment.newInstance();
+                    SharedPreferences sharedPreferences = context
+                            .getSharedPreferences(AppConstants.PREFS_APP, 0);
+                    String cedula = sharedPreferences.getString(AppConstants.PREFS_CEDULA,
+                            AppConstants.EMPTY_STRING);
+                    String fechaNac = sharedPreferences.getString(AppConstants.PREFS_FECHA_NAC,
+                            AppConstants.EMPTY_STRING);
+                    boolean hasProfile = sharedPreferences.getBoolean(AppConstants.PREFS_PROFILE,
+                            false);
+
+                    fragment = ConsultaPadronFragment.newInstance(cedula, fechaNac, hasProfile);
                     break;
             }
 

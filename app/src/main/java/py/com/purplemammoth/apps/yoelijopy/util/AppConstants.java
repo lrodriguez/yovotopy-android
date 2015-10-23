@@ -8,6 +8,13 @@ public class AppConstants {
     public static final String ARG_ACTIVITY_TITLE = "arg_activity_title";
     public static final String ARG_CEDULA = "arg_cedula";
     public static final String ARG_FECHA_NAC = "arg_fecha_nac";
+    public static final String ARG_PROFILE = "arg_profile";
+
+    // Preferences
+    public static final String PREFS_APP = "AppPreferencesFile";
+    public static final String PREFS_PROFILE = "hasProfile";
+    public static final String PREFS_CEDULA = "cedula";
+    public static final String PREFS_FECHA_NAC = "fechaNacimiento";
 
     // REST client constants
     public static final String SCHEMA = "http://";
