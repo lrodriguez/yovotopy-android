@@ -1,6 +1,8 @@
 package py.com.purplemammoth.apps.yoelijopy.ui;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -46,6 +49,9 @@ public class ConsultaPadronFragment extends Fragment {
     private String cedula;
     private String fechaNacimiento;
     private boolean isProfile;
+
+    private Double latitudLocal;
+    private Double longitudLocal;
 
     private OnFragmentInteractionListener mListener;
 
@@ -158,6 +164,20 @@ public class ConsultaPadronFragment extends Fragment {
         verMapa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    String uriBegin = "geo:" + latitudLocal + "," + longitudLocal;
+                    String query = latitudLocal + "," + longitudLocal + "(" + nombreLocal.getText() + ")";
+                    String encodedQuery = Uri.encode(query);
+                    String uriString = uriBegin + "?q=" + encodedQuery + "&z=14";
+                    Uri uri = Uri.parse(uriString);
+                    Intent mapIntent = new Intent(android.content.Intent.ACTION_VIEW, uri);
+                    startActivity(mapIntent);
+                } catch (ActivityNotFoundException e) {
+                    Log.e("LocalAdapter", "No se encontró activity para visualizar mapas: "
+                            + e.getLocalizedMessage());
+                    Toast.makeText(getActivity(), "Por favor, instalá una aplicación para visualizar mapas " +
+                            "como por ej. Google Maps", Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -238,8 +258,8 @@ public class ConsultaPadronFragment extends Fragment {
                             sexo.setText(datosConsultaPadron.getDatosPersonales().getSexo());
                             nacionalidad.setText(datosConsultaPadron.getDatosPersonales().getNacionalidad());
 
-                            Double latitudLocal = datosConsultaPadron.getLocalVotacion().getLatitud();
-                            Double longitudLocal = datosConsultaPadron.getLocalVotacion().getLongitud();
+                            latitudLocal = datosConsultaPadron.getLocalVotacion().getLatitud();
+                            longitudLocal = datosConsultaPadron.getLocalVotacion().getLongitud();
                             String mapsUrl = String.format(AppConstants.URL_MAPS_STATIC_IMAGE, latitudLocal,
                                     longitudLocal, latitudLocal, longitudLocal);
                             Glide.with(getActivity()).load(mapsUrl).into(mapa);
