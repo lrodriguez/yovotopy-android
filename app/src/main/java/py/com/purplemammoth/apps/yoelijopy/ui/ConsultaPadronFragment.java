@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +59,7 @@ public class ConsultaPadronFragment extends Fragment {
     private View parentView;
 
     private LinearLayout mainContainer;
-    private LinearLayout tipoVotoContainer;
+    private TableRow tipoVotoContainer;
     private ProgressBar progressBar;
     private TextView nombrePersona;
     private TextView sexo;
@@ -135,7 +136,7 @@ public class ConsultaPadronFragment extends Fragment {
         distrito = (TextView) view.findViewById(R.id.distrito_text);
         verMapa = (Button) view.findViewById(R.id.ver_mapa_button);
 
-        tipoVotoContainer = (LinearLayout) view.findViewById(R.id.tipo_voto_layout);
+        tipoVotoContainer = (TableRow) view.findViewById(R.id.tipo_voto_layout);
         mesa = (TextView) view.findViewById(R.id.mesa_text);
         orden = (TextView) view.findViewById(R.id.orden_text);
         tipoVoto = (TextView) view.findViewById(R.id.tipo_voto_text);
