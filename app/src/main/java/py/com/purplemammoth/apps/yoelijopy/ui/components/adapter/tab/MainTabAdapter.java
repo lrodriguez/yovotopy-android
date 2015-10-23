@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import py.com.purplemammoth.apps.yoelijopy.ui.ConsultaPadronFragment;
 import py.com.purplemammoth.apps.yoelijopy.ui.HomeFragment;
 
 /**
@@ -56,7 +55,7 @@ public class MainTabAdapter extends FragmentStatePagerAdapter {
         if (mPageReferenceMap.get(position) == null) {
             switch (position) {
                 case 0:
-                    fragment = ConsultaPadronFragment.newInstance("4232966", "1/9/88");
+                    fragment = HomeFragment.newInstance();
                     break;
                 case 1:
                     fragment = HomeFragment.newInstance();

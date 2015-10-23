@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context="py.com.purplemammoth.apps.yoelijopy.ui.ConsultaPadronFragment">
 
     <LinearLayout
@@ -9,373 +10,387 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/card_margin">
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
 
-            <LinearLayout
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone" />
+        </FrameLayout>
+
+
+        <LinearLayout
+            android:id="@+id/main_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:visibility="gone">
+
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="@dimen/card_margin">
 
                 <LinearLayout
-                    style="@style/Widget.CardTitle.WithActions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        style="@style/Widget.CardTitleText.Big"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Datos Personales" />
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/Widget.CardContent.WithActions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/Widget.CardSupportingText.Bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="Nombre:" />
-
-                        <TextView
-                            android:id="@+id/nombre_persona_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="right|center_vertical"
-                            android:text="Fulano de tal" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/Widget.CardSupportingText.Bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="Sexo:" />
-
-                        <TextView
-                            android:id="@+id/sexo_persona_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="right|center_vertical"
-                            android:text="Masculino" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/Widget.CardSupportingText.Bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="Nacionalidad:" />
-
-                        <TextView
-                            android:id="@+id/nacionalidad_persona_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="right|center_vertical"
-                            android:text="Paraguaya" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/Widget.CardActions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="right">
+                    android:orientation="vertical">
 
-                    <Button
-                        android:id="@+id/guardar_button"
-                        style="@style/Widget.CardActionButton.Primary"
-                        android:text="Guardar como predeterminado" />
+                    <LinearLayout
+                        style="@style/Widget.CardTitle.WithActions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/Widget.CardTitleText.Big"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Datos Personales" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/Widget.CardContent.WithActions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/Widget.CardSupportingText.Bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="Nombre:" />
+
+                            <TextView
+                                android:id="@+id/nombre_persona_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="right|center_vertical"
+                                android:text="Fulano de tal" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/Widget.CardSupportingText.Bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="Sexo:" />
+
+                            <TextView
+                                android:id="@+id/sexo_persona_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="right|center_vertical"
+                                android:text="Masculino" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/Widget.CardSupportingText.Bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="Nacionalidad:" />
+
+                            <TextView
+                                android:id="@+id/nacionalidad_persona_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="right|center_vertical"
+                                android:text="Paraguaya" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/Widget.CardActions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right">
+
+                        <Button
+                            android:id="@+id/guardar_button"
+                            style="@style/Widget.CardActionButton.Primary"
+                            android:text="Guardar como predeterminado" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/card_margin"
-            android:layout_marginLeft="@dimen/card_margin"
-            android:layout_marginRight="@dimen/card_margin">
-
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginBottom="@dimen/card_margin"
+                android:layout_marginLeft="@dimen/card_margin"
+                android:layout_marginRight="@dimen/card_margin">
 
                 <LinearLayout
-                    style="@style/Widget.CardTitle.WithActions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        style="@style/Widget.CardTitleText.Big"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Local de votación" />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/map_image_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="240dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop" />
-
-                <LinearLayout
-                    style="@style/Widget.CardContent.WithActions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/Widget.CardSupportingText.Bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="Nombre:" />
-
-                        <TextView
-                            android:id="@+id/nombre_local_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="right|center_vertical"
-                            android:text="Escuela XXX" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/Widget.CardSupportingText.Bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="Dirección:" />
-
-                        <TextView
-                            android:id="@+id/direccion_local_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="right|center_vertical"
-                            android:text="En tal lugar" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/Widget.CardSupportingText.Bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="Departamento:" />
-
-                        <TextView
-                            android:id="@+id/departamento_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="right|center_vertical"
-                            android:text="xxx" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/Widget.CardSupportingText.Bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="Zona:" />
-
-                        <TextView
-                            android:id="@+id/zona_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="right|center_vertical"
-                            android:text="xxx" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/Widget.CardSupportingText.Bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="Distrito:" />
-
-                        <TextView
-                            android:id="@+id/distrito_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="right|center_vertical"
-                            android:text="xxx" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/Widget.CardActions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="right">
+                    android:orientation="vertical">
 
-                    <Button
-                        android:id="@+id/ver_mapa_button"
-                        style="@style/Widget.CardActionButton.Primary"
-                        android:text="Ver mapa" />
+                    <LinearLayout
+                        style="@style/Widget.CardTitle.WithActions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/Widget.CardTitleText.Big"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Local de votación" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/map_image_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="240dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop" />
+
+                    <LinearLayout
+                        style="@style/Widget.CardContent.WithActions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/Widget.CardSupportingText.Bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="Nombre:" />
+
+                            <TextView
+                                android:id="@+id/nombre_local_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="right|center_vertical"
+                                android:text="Escuela XXX" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/Widget.CardSupportingText.Bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="Dirección:" />
+
+                            <TextView
+                                android:id="@+id/direccion_local_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="right|center_vertical"
+                                android:text="En tal lugar" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/Widget.CardSupportingText.Bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="Departamento:" />
+
+                            <TextView
+                                android:id="@+id/departamento_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="right|center_vertical"
+                                android:text="xxx" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/Widget.CardSupportingText.Bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="Zona:" />
+
+                            <TextView
+                                android:id="@+id/zona_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="right|center_vertical"
+                                android:text="xxx" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/Widget.CardSupportingText.Bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="Distrito:" />
+
+                            <TextView
+                                android:id="@+id/distrito_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="right|center_vertical"
+                                android:text="xxx" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/Widget.CardActions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right">
+
+                        <Button
+                            android:id="@+id/ver_mapa_button"
+                            style="@style/Widget.CardActionButton.Primary"
+                            android:text="Ver mapa" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/card_margin"
-            android:layout_marginLeft="@dimen/card_margin"
-            android:layout_marginRight="@dimen/card_margin">
-
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginBottom="@dimen/card_margin"
+                android:layout_marginLeft="@dimen/card_margin"
+                android:layout_marginRight="@dimen/card_margin">
 
                 <LinearLayout
-                    style="@style/Widget.CardTitle.WithActions"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <TextView
-                        style="@style/Widget.CardTitleText.Big"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Datos de votación" />
+                    <LinearLayout
+                        style="@style/Widget.CardTitle.WithActions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/Widget.CardTitleText.Big"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Datos de votación" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/Widget.CardContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/Widget.CardSupportingText.Bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="Mesa:" />
+
+                            <TextView
+                                android:id="@+id/mesa_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="right|center_vertical"
+                                android:text="Fulano de tal" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/Widget.CardSupportingText.Bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="Orden:" />
+
+                            <TextView
+                                android:id="@+id/orden_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="right|center_vertical"
+                                android:text="Masculino" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/tipo_voto_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="36dp"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <TextView
+                                style="@style/Widget.CardSupportingText.Bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:text="Lugar de votación:" />
+
+                            <TextView
+                                android:id="@+id/tipo_voto_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="right|center_vertical"
+                                android:text="Masculino" />
+
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
-
-                <LinearLayout
-                    style="@style/Widget.CardContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/Widget.CardSupportingText.Bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="Mesa:" />
-
-                        <TextView
-                            android:id="@+id/mesa_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="right|center_vertical"
-                            android:text="Fulano de tal" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/Widget.CardSupportingText.Bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="Orden:" />
-
-                        <TextView
-                            android:id="@+id/orden_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="right|center_vertical"
-                            android:text="Masculino" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/tipo_voto_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:orientation="horizontal"
-                        android:visibility="gone">
-
-                        <TextView
-                            style="@style/Widget.CardSupportingText.Bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center_vertical"
-                            android:text="Lugar de votación:" />
-
-                        <TextView
-                            android:id="@+id/tipo_voto_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="right|center_vertical"
-                            android:text="Masculino" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-            </LinearLayout>
-
-
-        </android.support.v7.widget.CardView>
-
-
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

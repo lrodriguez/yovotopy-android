@@ -1,7 +1,7 @@
 package py.com.purplemammoth.apps.yoelijopy.ui;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,15 +11,12 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
-
-import org.json.JSONException;
 
 import py.com.purplemammoth.apps.yoelijopy.R;
 import py.com.purplemammoth.apps.yoelijopy.ui.components.adapter.tab.MainTabAdapter;
@@ -39,11 +36,15 @@ public class MainTabActivity extends AppCompatActivity implements
             "Denuncias",
             "Perfil"
     };
+    DialogInterface.OnClickListener onCancelClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+
+        }
+    };
     private String cedulaText;
     private String fechaNacText;
-
     private MainTabAdapter mAdapter;
-
     private ViewPager mViewPager;
     private EditText cedula;
     private DatePicker fechaNacimiento;
@@ -87,14 +88,15 @@ public class MainTabActivity extends AppCompatActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                updateDatosPadron();
 
-                View dialogView = createDialog();
+                /*View dialogView = createDialog();
                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainTabActivity.this)
                         .setView(dialogView)
                         .setTitle("Consultar datos de padrón")
                         .setPositiveButton("Consultar", onClickListener)
-                        .setNegativeButton("Cancelar", null);
-                dialog.show();
+                        .setNegativeButton("Cancelar", onCancelClickListener);
+                dialog.show();*/
             }
         });
     }
@@ -113,17 +115,15 @@ public class MainTabActivity extends AppCompatActivity implements
     }
 
     private void updateDatosPadron() {
-        // TODO esto es temporal
-        mViewPager.setCurrentItem(0, true);
-        ConsultaPadronFragment consultaPadronFragment =
-                (ConsultaPadronFragment) mAdapter.getFragment(0);
+        Intent i = new Intent(this, ConsultaPadronActivity.class);
+        Bundle args = new Bundle();
+        /*String title = "CI: " + cedulaText + " - " + fechaNacText;
+        args.putString(AppConstants.ARG_ACTIVITY_TITLE, title);
+        args.putString(AppConstants.ARG_CEDULA, cedulaText);
+        args.putString(AppConstants.ARG_FECHA_NAC, fechaNacText);
+        i.putExtras(args);*/
 
-        try {
-            consultaPadronFragment.consultaPadron(cedulaText, fechaNacText);
-        } catch (JSONException e) {
-            Log.e("MainTabActivity", "Ocurrió un error: " + e.getLocalizedMessage());
-        }
-
+        startActivity(i);
     }
 
     @Override

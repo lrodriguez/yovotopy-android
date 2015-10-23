@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +29,7 @@ import py.com.purplemammoth.apps.yoelijopy.client.EleccionesRestClient;
 import py.com.purplemammoth.apps.yoelijopy.model.DatosConsultaPadron;
 import py.com.purplemammoth.apps.yoelijopy.model.DatosVotacion;
 import py.com.purplemammoth.apps.yoelijopy.model.MensajeError;
+import py.com.purplemammoth.apps.yoelijopy.util.AppConstants;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,13 +40,7 @@ import py.com.purplemammoth.apps.yoelijopy.model.MensajeError;
  * create an instance of this fragment.
  */
 public class ConsultaPadronFragment extends Fragment {
-    public static final String MAPS_STATIC_URL = "http://maps.google.com/maps/api/staticmap?center" +
-            "=%f,%f&zoom=16&size=480x240&markers=color:blue|%f,%f&sensor=false";
-    private static final String CONSULTA_PADRON_URI = "consultas-padron";
-    private static final String ARG_CEDULA = "arg_cedula";
-    private static final String ARG_FECHA_NAC = "arg_fecha_nac";
-    private static final Double TEST_LATITUDE = -25.325367;
-    private static final Double TEST_LONGITUDE = -57.567217;
+    private static final String TAG = "ConsultaPadron";
 
     private String cedula;
     private String fechaNacimiento;
@@ -53,7 +49,9 @@ public class ConsultaPadronFragment extends Fragment {
 
     private View parentView;
 
+    private LinearLayout mainContainer;
     private LinearLayout tipoVotoContainer;
+    private ProgressBar progressBar;
     private TextView nombrePersona;
     private TextView sexo;
     private TextView nacionalidad;
@@ -83,8 +81,8 @@ public class ConsultaPadronFragment extends Fragment {
     public static ConsultaPadronFragment newInstance(String cedula, String fechaNacimiento) {
         ConsultaPadronFragment fragment = new ConsultaPadronFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_CEDULA, cedula);
-        args.putString(ARG_FECHA_NAC, fechaNacimiento);
+        args.putString(AppConstants.ARG_CEDULA, cedula);
+        args.putString(AppConstants.ARG_FECHA_NAC, fechaNacimiento);
         fragment.setArguments(args);
         return fragment;
     }
@@ -93,8 +91,8 @@ public class ConsultaPadronFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            cedula = getArguments().getString(ARG_CEDULA);
-            fechaNacimiento = getArguments().getString(ARG_FECHA_NAC);
+            cedula = getArguments().getString(AppConstants.ARG_CEDULA);
+            fechaNacimiento = getArguments().getString(AppConstants.ARG_FECHA_NAC);
         }
     }
 
@@ -109,6 +107,9 @@ public class ConsultaPadronFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         parentView = view;
+
+        mainContainer = (LinearLayout) view.findViewById(R.id.main_content);
+        progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
         nombrePersona = (TextView) view.findViewById(R.id.nombre_persona_text);
         sexo = (TextView) view.findViewById(R.id.sexo_persona_text);
@@ -128,6 +129,7 @@ public class ConsultaPadronFragment extends Fragment {
         orden = (TextView) view.findViewById(R.id.orden_text);
         tipoVoto = (TextView) view.findViewById(R.id.tipo_voto_text);
 
+        mainContainer.setVisibility(View.GONE);
         // TODO onclicklisteners
     }
 
@@ -158,32 +160,37 @@ public class ConsultaPadronFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        try {
-            consultaPadron(cedula, fechaNacimiento);
-        } catch (JSONException e) {
-            Log.e("HomeFragment", e.getLocalizedMessage());
-        } catch (Exception e) {
-            Log.e("HomeFragment", e.getLocalizedMessage());
-        }
     }
 
     public void consultaPadron(String cedula, String fechaNacimiento) throws JSONException {
         RequestParams requestParams = new RequestParams();
-        requestParams.add("ci", cedula);
-        requestParams.add("fechaNacimiento", fechaNacimiento);
-        requestParams.add("latitud", TEST_LATITUDE.toString());
-        requestParams.add("longitud", TEST_LONGITUDE.toString());
+        requestParams.add(AppConstants.PARAM_CEDULA, cedula);
+        requestParams.add(AppConstants.PARAM_FECHA_NAC, fechaNacimiento);
+        requestParams.add(AppConstants.PARAM_LATITUD, AppConstants.TEST_LATITUDE.toString());
+        requestParams.add(AppConstants.PARAM_LONGITUD, AppConstants.TEST_LONGITUDE.toString());
 
-        EleccionesRestClient.get(CONSULTA_PADRON_URI, requestParams,
+        EleccionesRestClient.get(AppConstants.PATH_CONSULTA_PADRON, requestParams,
                 new BaseJsonHttpResponseHandler<Object>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        progressBar.setVisibility(View.GONE);
+                    }
+
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
                                           Object response) {
                         if (statusCode != 200) {
-                            Log.e("Consulta Padrón", "Status Code: " + statusCode);
+                            Log.e(TAG, "Status Code: " + statusCode);
                         } else {
-                            Log.i("Consulta Padrón", response.toString());
+                            Log.i(TAG, response.toString());
+                            mainContainer.setVisibility(View.VISIBLE);
                             DatosConsultaPadron datosConsultaPadron = (DatosConsultaPadron) response;
                             nombrePersona.setText(datosConsultaPadron.getDatosPersonales().getNombre());
                             sexo.setText(datosConsultaPadron.getDatosPersonales().getSexo());
@@ -191,8 +198,8 @@ public class ConsultaPadronFragment extends Fragment {
 
                             Double latitudLocal = datosConsultaPadron.getLocalVotacion().getLatitud();
                             Double longitudLocal = datosConsultaPadron.getLocalVotacion().getLongitud();
-                            String mapsUrl = String.format(MAPS_STATIC_URL, latitudLocal, longitudLocal,
-                                    latitudLocal, longitudLocal);
+                            String mapsUrl = String.format(AppConstants.URL_MAPS_STATIC_IMAGE, latitudLocal,
+                                    longitudLocal, latitudLocal, longitudLocal);
                             Glide.with(getActivity()).load(mapsUrl).into(mapa);
                             nombreLocal.setText(datosConsultaPadron.getLocalVotacion().getNombre());
                             direccion.setText(datosConsultaPadron.getLocalVotacion().getDireccion());
@@ -221,7 +228,7 @@ public class ConsultaPadronFragment extends Fragment {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable,
                                           String rawJsonData, Object errorResponse) {
-                        Log.e("ConsultaPadron", "Status Code: " + statusCode + "Raw JSONData: "
+                        Log.e(TAG, "Status Code: " + statusCode + " Raw JSONData: "
                                 + rawJsonData);
                         MensajeError mensajeError = (MensajeError) errorResponse;
                         if (statusCode == 404) {
@@ -235,6 +242,14 @@ public class ConsultaPadronFragment extends Fragment {
                             /*} catch (IOException e) {
                                 Log.e("ConsultaPadron", "Error: " + e.getLocalizedMessage());
                             }*/
+                        } else if (statusCode == 500 || statusCode == 503) {
+                            Snackbar.make(parentView, "El servicio no está disponible, " +
+                                            "intente de nuevo más tarde",
+                                    Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            Snackbar.make(parentView, "Ocurrió un error, " +
+                                            "intente de nuevo más tarde",
+                                    Snackbar.LENGTH_SHORT).show();
                         }
                     }
 
