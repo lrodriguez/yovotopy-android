@@ -79,6 +79,7 @@
 
                                 <TextView
                                     android:id="@+id/nombre_persona_text"
+                                    style="@style/Widget.CardSupportingText"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:paddingLeft="@dimen/default_padding"
@@ -100,6 +101,7 @@
 
                                 <TextView
                                     android:id="@+id/sexo_persona_text"
+                                    style="@style/Widget.CardSupportingText"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:paddingLeft="@dimen/default_padding"
@@ -121,6 +123,7 @@
 
                                 <TextView
                                     android:id="@+id/nacionalidad_persona_text"
+                                    style="@style/Widget.CardSupportingText"
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:paddingLeft="@dimen/default_padding"
@@ -200,6 +203,7 @@
 
                                 <TextView
                                     android:id="@+id/nombre_local_text"
+                                    style="@style/Widget.CardSupportingText"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:paddingLeft="@dimen/default_padding"
@@ -222,6 +226,7 @@
 
                                 <TextView
                                     android:id="@+id/direccion_local_text"
+                                    style="@style/Widget.CardSupportingText"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:paddingLeft="@dimen/default_padding"
@@ -243,6 +248,7 @@
 
                                 <TextView
                                     android:id="@+id/departamento_text"
+                                    style="@style/Widget.CardSupportingText"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:paddingLeft="@dimen/default_padding"
@@ -264,6 +270,7 @@
 
                                 <TextView
                                     android:id="@+id/zona_text"
+                                    style="@style/Widget.CardSupportingText"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:paddingLeft="@dimen/default_padding"
@@ -285,6 +292,7 @@
 
                                 <TextView
                                     android:id="@+id/distrito_text"
+                                    style="@style/Widget.CardSupportingText"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:paddingLeft="@dimen/default_padding"
@@ -357,6 +365,7 @@
 
                                 <TextView
                                     android:id="@+id/mesa_text"
+                                    style="@style/Widget.CardSupportingText"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:paddingLeft="@dimen/default_padding"
@@ -378,6 +387,7 @@
 
                                 <TextView
                                     android:id="@+id/orden_text"
+                                    style="@style/Widget.CardSupportingText"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:paddingLeft="@dimen/default_padding"
@@ -401,6 +411,7 @@
 
                                 <TextView
                                     android:id="@+id/tipo_voto_text"
+                                    style="@style/Widget.CardSupportingText"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:paddingLeft="@dimen/default_padding"

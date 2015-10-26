@@ -1,6 +1,7 @@
 package py.com.purplemammoth.apps.yoelijopy.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import java.util.Date;
 
 import py.com.purplemammoth.apps.yoelijopy.R;
 import py.com.purplemammoth.apps.yoelijopy.util.AppConstants;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ConsultaPadronActivity extends AppCompatActivity implements
         ConsultaPadronFragment.OnFragmentInteractionListener {
@@ -161,6 +163,11 @@ public class ConsultaPadronActivity extends AppCompatActivity implements
             Log.e(TAG, "Ocurrió un error al intentar parsear: " + e);
             return false;
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     private void consultarPadron() {

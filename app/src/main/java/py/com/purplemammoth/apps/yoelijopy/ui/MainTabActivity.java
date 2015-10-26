@@ -1,5 +1,6 @@
 package py.com.purplemammoth.apps.yoelijopy.ui;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,6 +21,7 @@ import android.widget.EditText;
 
 import py.com.purplemammoth.apps.yoelijopy.R;
 import py.com.purplemammoth.apps.yoelijopy.ui.components.adapter.tab.MainTabAdapter;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainTabActivity extends AppCompatActivity implements
         HomeFragment.OnFragmentInteractionListener,
@@ -101,6 +103,11 @@ public class MainTabActivity extends AppCompatActivity implements
         });
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
     public View createDialog() {
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_datos_consulta, null);
 
@@ -142,6 +149,8 @@ public class MainTabActivity extends AppCompatActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            /*Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+            startActivity(intent);*/
             return true;
         }
 
