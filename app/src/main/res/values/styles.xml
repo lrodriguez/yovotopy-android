@@ -70,6 +70,7 @@
     </style>
 
     <style name="Widget.CardSubtitleText" parent="android:Widget.TextView">
+        <item name="fontPath">fonts/RobotoCondensed-Regular.ttf</item>
         <item name="android:textColor">@color/materialSecondaryText</item>
         <item name="android:textSize">14sp</item>
     </style>

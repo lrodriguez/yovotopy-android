@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +76,29 @@ public class ConsultaPadronFragment extends Fragment {
     private ImageView mapa;
     private Button guardarPredeterminado;
     private Button verMapa;
+    // Datos duplicados
+    private CardView duplicadoCard;
+    private TextView nombrePersonaDuplicado;
+    private TextView sexoDuplicado;
+    private TextView nacionalidadDuplicado;
+    private TextView nombreLocalDuplicado;
+    private TextView departamentoDuplicado;
+    private TextView zonaDuplicado;
+    private TextView distritoDuplicado;
+    private TextView fechaDuplicado;
+    private TextView talonarioDuplicado;
+    private TextView boletaDuplicado;
+    //Datos deshabilitados
+    private CardView deshabilitadoCard;
+    private TextView nombrePersonaDeshabilitado;
+    private TextView sexoDeshabilitado;
+    private TextView nacionalidadDeshabilitado;
+    private TextView departamentoDeshabilitado;
+    private TextView zonaDeshabilitado;
+    private TextView distritoDeshabilitado;
+    private TextView fechaDeshabilitado;
+    private TextView talonarioDeshabilitado;
+    private TextView boletaDeshabilitado;
 
     public ConsultaPadronFragment() {
         // Required empty public constructor
@@ -141,7 +165,34 @@ public class ConsultaPadronFragment extends Fragment {
         orden = (TextView) view.findViewById(R.id.orden_text);
         tipoVoto = (TextView) view.findViewById(R.id.tipo_voto_text);
 
+        // Datos duplicados
+        duplicadoCard = (CardView) view.findViewById(R.id.duplicado_card_view);
+        nombrePersonaDuplicado = (TextView) view.findViewById(R.id.nombre_duplicado_text);
+        sexoDuplicado = (TextView) view.findViewById(R.id.sexo_duplicado_text);
+        nacionalidadDuplicado = (TextView) view.findViewById(R.id.nacionalidad_duplicado_text);
+        nombreLocalDuplicado = (TextView) view.findViewById(R.id.nombre_local_duplicado_text);
+        departamentoDuplicado = (TextView) view.findViewById(R.id.departamento_duplicado_text);
+        zonaDuplicado = (TextView) view.findViewById(R.id.zona_duplicado_text);
+        distritoDuplicado = (TextView) view.findViewById(R.id.distrito_duplicado_text);
+        fechaDuplicado = (TextView) view.findViewById(R.id.fecha_duplicado_text);
+        talonarioDuplicado = (TextView) view.findViewById(R.id.talonario_duplicado_text);
+        boletaDuplicado = (TextView) view.findViewById(R.id.boleta_duplicado_text);
+
+        // Datos deshabilitados
+        deshabilitadoCard = (CardView) view.findViewById(R.id.deshabilitado_card_view);
+        nombrePersonaDeshabilitado = (TextView) view.findViewById(R.id.nombre_deshabilitado_text);
+        sexoDeshabilitado = (TextView) view.findViewById(R.id.sexo_deshabilitado_text);
+        nacionalidadDeshabilitado = (TextView) view.findViewById(R.id.nacionalidad_deshabilitado_text);
+        departamentoDeshabilitado = (TextView) view.findViewById(R.id.departamento_deshabilitado_text);
+        zonaDeshabilitado = (TextView) view.findViewById(R.id.zona_deshabilitado_text);
+        distritoDeshabilitado = (TextView) view.findViewById(R.id.distrito_deshabilitado_text);
+        fechaDeshabilitado = (TextView) view.findViewById(R.id.fecha_deshabilitado_text);
+        talonarioDeshabilitado = (TextView) view.findViewById(R.id.talonario_deshabilitado_text);
+        boletaDeshabilitado = (TextView) view.findViewById(R.id.boleta_deshabilitado_text);
+
         mainContainer.setVisibility(View.GONE);
+        duplicadoCard.setVisibility(View.GONE);
+        deshabilitadoCard.setVisibility(View.GONE);
 
         if (isProfile) {
             guardarPredeterminado.setVisibility(View.GONE);
@@ -283,7 +334,35 @@ public class ConsultaPadronFragment extends Fragment {
                                 tipoVotoContainer.setVisibility(View.GONE);
                             }
 
-                            // TODO manejar datos duplicados y deshabilitados
+                            DatosConsultaPadron datosDuplicados = datosConsultaPadron.getDuplicado();
+                            DatosConsultaPadron datosDeshabilitados = datosConsultaPadron.getDeshabilitado();
+
+                            if (datosDuplicados != null) {
+                                duplicadoCard.setVisibility(View.VISIBLE);
+                                nombrePersonaDuplicado.setText(datosDuplicados.getDatosPersonales().getNombre());
+                                sexoDuplicado.setText(datosDuplicados.getDatosPersonales().getSexo());
+                                nacionalidadDuplicado.setText(datosDuplicados.getDatosPersonales().getNacionalidad());
+                                nombreLocalDuplicado.setText(datosDuplicados.getLocalVotacion().getNombre());
+                                departamentoDuplicado.setText(datosDuplicados.getLocalVotacion().getDepartamento());
+                                zonaDuplicado.setText(datosDuplicados.getLocalVotacion().getZona());
+                                distritoDuplicado.setText(datosDuplicados.getLocalVotacion().getDistrito());
+                                fechaDuplicado.setText(datosDuplicados.getDatosInscripcion().getFecha());
+                                talonarioDuplicado.setText(datosDuplicados.getDatosInscripcion().getTalonario().toString());
+                                boletaDuplicado.setText(datosDuplicados.getDatosInscripcion().getBoleta().toString());
+                            }
+
+                            if (datosDeshabilitados != null) {
+                                deshabilitadoCard.setVisibility(View.VISIBLE);
+                                nombrePersonaDeshabilitado.setText(datosDeshabilitados.getDatosPersonales().getNombre());
+                                sexoDeshabilitado.setText(datosDeshabilitados.getDatosPersonales().getSexo());
+                                nacionalidadDeshabilitado.setText(datosDeshabilitados.getDatosPersonales().getNacionalidad());
+                                departamentoDeshabilitado.setText(datosDeshabilitados.getLocalVotacion().getDepartamento());
+                                zonaDeshabilitado.setText(datosDeshabilitados.getLocalVotacion().getZona());
+                                distritoDeshabilitado.setText(datosDeshabilitados.getLocalVotacion().getDistrito());
+                                fechaDeshabilitado.setText(datosDeshabilitados.getDatosInscripcion().getFecha());
+                                talonarioDeshabilitado.setText(datosDeshabilitados.getDatosInscripcion().getTalonario().toString());
+                                boletaDeshabilitado.setText(datosDeshabilitados.getDatosInscripcion().getBoleta().toString());
+                            }
                         }
 
                     }

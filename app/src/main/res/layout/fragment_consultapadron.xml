@@ -422,6 +422,542 @@
                     </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/duplicado_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/card_margin"
+                android:layout_marginLeft="@dimen/card_margin"
+                android:layout_marginRight="@dimen/card_margin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        style="@style/Widget.CardTitle.WithActions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/Widget.CardTitleText.Big"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Datos de duplicados" />
+
+                        <TextView
+                            style="@style/Widget.CardSubtitleText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Esta información está duplicada y no se encuetra activa" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/Widget.CardContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:shrinkColumns="1">
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Nombre:" />
+
+                                <TextView
+                                    android:id="@+id/nombre_duplicado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="Fulano de tal" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Sexo:" />
+
+                                <TextView
+                                    android:id="@+id/sexo_duplicado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="Masculino" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp"
+                                android:visibility="gone">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Nacionalidad:" />
+
+                                <TextView
+                                    android:id="@+id/nacionalidad_duplicado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="Masculino" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Local:" />
+
+                                <TextView
+                                    android:id="@+id/nombre_local_duplicado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="Escuela XXX" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Departamento:" />
+
+                                <TextView
+                                    android:id="@+id/departamento_duplicado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="xxx" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Zona:" />
+
+                                <TextView
+                                    android:id="@+id/zona_duplicado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="xxx" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Distrito:" />
+
+                                <TextView
+                                    android:id="@+id/distrito_duplicado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="xxx" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Datos de inscripción" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Fecha:" />
+
+                                <TextView
+                                    android:id="@+id/fecha_duplicado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="Fulano de tal" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Talonario:" />
+
+                                <TextView
+                                    android:id="@+id/talonario_duplicado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="Masculino" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Boleta:" />
+
+                                <TextView
+                                    android:id="@+id/boleta_duplicado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="Masculino" />
+                            </TableRow>
+                        </TableLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/deshabilitado_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/card_margin"
+                android:layout_marginLeft="@dimen/card_margin"
+                android:layout_marginRight="@dimen/card_margin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        style="@style/Widget.CardTitle.WithActions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/Widget.CardTitleText.Big"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Datos deshabilitados" />
+
+                        <TextView
+                            style="@style/Widget.CardSubtitleText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Esta información está deshabilitada y no se encuentra activa" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/Widget.CardContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:shrinkColumns="1">
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Nombre:" />
+
+                                <TextView
+                                    android:id="@+id/nombre_deshabilitado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="Fulano de tal" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Sexo:" />
+
+                                <TextView
+                                    android:id="@+id/sexo_deshabilitado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="Masculino" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp"
+                                android:visibility="gone">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Nacionalidad:" />
+
+                                <TextView
+                                    android:id="@+id/nacionalidad_deshabilitado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="Masculino" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Departamento:" />
+
+                                <TextView
+                                    android:id="@+id/departamento_deshabilitado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="xxx" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Zona:" />
+
+                                <TextView
+                                    android:id="@+id/zona_deshabilitado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="xxx" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Distrito:" />
+
+                                <TextView
+                                    android:id="@+id/distrito_deshabilitado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="xxx" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Datos de inscripción" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Fecha:" />
+
+                                <TextView
+                                    android:id="@+id/fecha_deshabilitado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="Fulano de tal" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Talonario:" />
+
+                                <TextView
+                                    android:id="@+id/talonario_deshabilitado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="Masculino" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:minHeight="48dp">
+
+                                <TextView
+                                    style="@style/Widget.CardSupportingText.Bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="Boleta:" />
+
+                                <TextView
+                                    android:id="@+id/boleta_deshabilitado_text"
+                                    style="@style/Widget.CardSupportingText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingLeft="@dimen/default_padding"
+                                    android:paddingRight="@dimen/default_padding"
+                                    android:text="Masculino" />
+                            </TableRow>
+                        </TableLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
         </LinearLayout>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
