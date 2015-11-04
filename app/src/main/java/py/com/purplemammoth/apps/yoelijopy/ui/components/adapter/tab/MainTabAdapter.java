@@ -71,12 +71,10 @@ public class MainTabAdapter extends FragmentStatePagerAdapter {
                             .getSharedPreferences(AppConstants.PREFS_APP, 0);
                     String cedula = sharedPreferences.getString(AppConstants.PREFS_CEDULA,
                             AppConstants.EMPTY_STRING);
-                    String fechaNac = sharedPreferences.getString(AppConstants.PREFS_FECHA_NAC,
-                            AppConstants.EMPTY_STRING);
                     boolean hasProfile = sharedPreferences.getBoolean(AppConstants.PREFS_PROFILE,
                             false);
 
-                    fragment = ConsultaPadronFragment.newInstance(cedula, fechaNac, hasProfile);
+                    fragment = ConsultaPadronFragment.newInstance(cedula, hasProfile);
                     break;
             }
 

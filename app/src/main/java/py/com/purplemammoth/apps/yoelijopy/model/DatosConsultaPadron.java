@@ -12,22 +12,19 @@ public class DatosConsultaPadron {
     private DatosPersonales datosPersonales;
     private LocalVotacion localVotacion;
     private DatosVotacion datosVotacion;
-    private DatosInscripcion datosInscripcion;
-    private DatosConsultaPadron duplicado;
-    private DatosConsultaPadron deshabilitado;
+    private Boolean puedeVotar;
+    private String motivo;
 
     public DatosConsultaPadron() {
     }
 
     public DatosConsultaPadron(DatosPersonales datosPersonales, LocalVotacion localVotacion,
-                               DatosVotacion datosVotacion, DatosInscripcion datosInscripcion,
-                               DatosConsultaPadron duplicado, DatosConsultaPadron deshabilitado) {
+                               DatosVotacion datosVotacion, Boolean puedeVotar, String motivo) {
         this.datosPersonales = datosPersonales;
         this.localVotacion = localVotacion;
         this.datosVotacion = datosVotacion;
-        this.datosInscripcion = datosInscripcion;
-        this.duplicado = duplicado;
-        this.deshabilitado = deshabilitado;
+        this.puedeVotar = puedeVotar;
+        this.motivo = motivo;
     }
 
     public DatosPersonales getDatosPersonales() {
@@ -57,31 +54,22 @@ public class DatosConsultaPadron {
         this.datosVotacion = datosVotacion;
     }
 
-    public DatosInscripcion getDatosInscripcion() {
-        return datosInscripcion;
+    public Boolean getPuedeVotar() {
+        return puedeVotar;
     }
 
-    @JsonProperty("datosInscripcion")
-    public void setDatosInscripcion(DatosInscripcion datosInscripcion) {
-        this.datosInscripcion = datosInscripcion;
+    @JsonProperty("puedeVotar")
+    public void setPuedeVotar(Boolean puedeVotar) {
+        this.puedeVotar = puedeVotar;
     }
 
-    public DatosConsultaPadron getDuplicado() {
-        return duplicado;
+    public String getMotivo() {
+        return motivo;
     }
 
-    @JsonProperty("duplicado")
-    public void setDuplicado(DatosConsultaPadron duplicado) {
-        this.duplicado = duplicado;
-    }
-
-    public DatosConsultaPadron getDeshabilitado() {
-        return deshabilitado;
-    }
-
-    @JsonProperty("deshabilitado")
-    public void setDeshabilitado(DatosConsultaPadron deshabilitado) {
-        this.deshabilitado = deshabilitado;
+    @JsonProperty("motivo")
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
     }
 
     @Override
@@ -90,9 +78,8 @@ public class DatosConsultaPadron {
                 "datosPersonales=" + datosPersonales +
                 ", localVotacion=" + localVotacion +
                 ", datosVotacion=" + datosVotacion +
-                ", datosInscripcion=" + datosInscripcion +
-                ", duplicado=" + duplicado +
-                ", deshabilitado=" + deshabilitado +
+                ", puedeVotar=" + puedeVotar +
+                ", motivo='" + motivo + '\'' +
                 '}';
     }
 }

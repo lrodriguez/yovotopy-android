@@ -32,24 +32,6 @@
                 android:maxLength="15"
                 android:textSize="28sp" />
         </android.support.design.widget.TextInputLayout>
-
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/fecha_nac_input_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:errorEnabled="true">
-
-            <EditText
-                android:id="@+id/fecha_nac_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Fecha de nacimiento (dd/mm/aa)"
-                android:imeOptions="actionSearch"
-                android:inputType="date"
-                android:maxLength="8"
-                android:textSize="20sp" />
-        </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
 </FrameLayout>

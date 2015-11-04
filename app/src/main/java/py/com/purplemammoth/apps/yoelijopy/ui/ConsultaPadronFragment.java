@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,25 +17,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.loopj.android.http.BaseJsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 
-import cz.msebera.android.httpclient.Header;
 import py.com.purplemammoth.apps.yoelijopy.R;
-import py.com.purplemammoth.apps.yoelijopy.client.EleccionesRestClient;
+import py.com.purplemammoth.apps.yoelijopy.client.EleccionesRestCallback;
 import py.com.purplemammoth.apps.yoelijopy.model.DatosConsultaPadron;
 import py.com.purplemammoth.apps.yoelijopy.model.DatosVotacion;
-import py.com.purplemammoth.apps.yoelijopy.model.MensajeError;
 import py.com.purplemammoth.apps.yoelijopy.util.AppConstants;
 
 /**
@@ -45,24 +39,30 @@ import py.com.purplemammoth.apps.yoelijopy.util.AppConstants;
  * Use the {@link ConsultaPadronFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ConsultaPadronFragment extends Fragment {
+public class ConsultaPadronFragment extends Fragment implements EleccionesRestCallback.OnResponseReceived {
     private static final String TAG = "ConsultaPadron";
 
+    // Variables
     private String cedula;
-    private String fechaNacimiento;
     private boolean isProfile;
-
     private Double latitudLocal;
     private Double longitudLocal;
 
     private OnFragmentInteractionListener mListener;
+    private EleccionesRestCallback restCallback;
 
+    // Containers
     private View parentView;
-
+    private SwipeRefreshLayout refreshLayout;
     private LinearLayout mainContainer;
+    private CardView datosPersonalesCard;
+    private CardView localVotacionCard;
+    private CardView datosVotacionCard;
     private TableRow tipoVotoContainer;
-    private ProgressBar progressBar;
+
+    // Widgets
     private TextView nombrePersona;
+    private TextView apellidoPersona;
     private TextView sexo;
     private TextView nacionalidad;
     private TextView nombreLocal;
@@ -76,29 +76,6 @@ public class ConsultaPadronFragment extends Fragment {
     private ImageView mapa;
     private Button guardarPredeterminado;
     private Button verMapa;
-    // Datos duplicados
-    private CardView duplicadoCard;
-    private TextView nombrePersonaDuplicado;
-    private TextView sexoDuplicado;
-    private TextView nacionalidadDuplicado;
-    private TextView nombreLocalDuplicado;
-    private TextView departamentoDuplicado;
-    private TextView zonaDuplicado;
-    private TextView distritoDuplicado;
-    private TextView fechaDuplicado;
-    private TextView talonarioDuplicado;
-    private TextView boletaDuplicado;
-    //Datos deshabilitados
-    private CardView deshabilitadoCard;
-    private TextView nombrePersonaDeshabilitado;
-    private TextView sexoDeshabilitado;
-    private TextView nacionalidadDeshabilitado;
-    private TextView departamentoDeshabilitado;
-    private TextView zonaDeshabilitado;
-    private TextView distritoDeshabilitado;
-    private TextView fechaDeshabilitado;
-    private TextView talonarioDeshabilitado;
-    private TextView boletaDeshabilitado;
 
     public ConsultaPadronFragment() {
         // Required empty public constructor
@@ -111,12 +88,10 @@ public class ConsultaPadronFragment extends Fragment {
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ConsultaPadronFragment newInstance(String cedula, String fechaNacimiento,
-                                                     boolean isProfile) {
+    public static ConsultaPadronFragment newInstance(String cedula, boolean isProfile) {
         ConsultaPadronFragment fragment = new ConsultaPadronFragment();
         Bundle args = new Bundle();
         args.putString(AppConstants.ARG_CEDULA, cedula);
-        args.putString(AppConstants.ARG_FECHA_NAC, fechaNacimiento);
         args.putBoolean(AppConstants.ARG_PROFILE, isProfile);
         fragment.setArguments(args);
         return fragment;
@@ -127,7 +102,6 @@ public class ConsultaPadronFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             cedula = getArguments().getString(AppConstants.ARG_CEDULA);
-            fechaNacimiento = getArguments().getString(AppConstants.ARG_FECHA_NAC);
             isProfile = getArguments().getBoolean(AppConstants.ARG_PROFILE);
         }
     }
@@ -144,10 +118,14 @@ public class ConsultaPadronFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         parentView = view;
 
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         mainContainer = (LinearLayout) view.findViewById(R.id.main_content);
-        progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        datosPersonalesCard = (CardView) view.findViewById(R.id.datos_personales_card);
+        localVotacionCard = (CardView) view.findViewById(R.id.local_votacion_card);
+        datosVotacionCard = (CardView) view.findViewById(R.id.datos_votacion_card);
 
         nombrePersona = (TextView) view.findViewById(R.id.nombre_persona_text);
+        apellidoPersona = (TextView) view.findViewById(R.id.apellido_persona_text);
         sexo = (TextView) view.findViewById(R.id.sexo_persona_text);
         nacionalidad = (TextView) view.findViewById(R.id.nacionalidad_persona_text);
         guardarPredeterminado = (Button) view.findViewById(R.id.guardar_button);
@@ -165,38 +143,22 @@ public class ConsultaPadronFragment extends Fragment {
         orden = (TextView) view.findViewById(R.id.orden_text);
         tipoVoto = (TextView) view.findViewById(R.id.tipo_voto_text);
 
-        // Datos duplicados
-        duplicadoCard = (CardView) view.findViewById(R.id.duplicado_card_view);
-        nombrePersonaDuplicado = (TextView) view.findViewById(R.id.nombre_duplicado_text);
-        sexoDuplicado = (TextView) view.findViewById(R.id.sexo_duplicado_text);
-        nacionalidadDuplicado = (TextView) view.findViewById(R.id.nacionalidad_duplicado_text);
-        nombreLocalDuplicado = (TextView) view.findViewById(R.id.nombre_local_duplicado_text);
-        departamentoDuplicado = (TextView) view.findViewById(R.id.departamento_duplicado_text);
-        zonaDuplicado = (TextView) view.findViewById(R.id.zona_duplicado_text);
-        distritoDuplicado = (TextView) view.findViewById(R.id.distrito_duplicado_text);
-        fechaDuplicado = (TextView) view.findViewById(R.id.fecha_duplicado_text);
-        talonarioDuplicado = (TextView) view.findViewById(R.id.talonario_duplicado_text);
-        boletaDuplicado = (TextView) view.findViewById(R.id.boleta_duplicado_text);
-
-        // Datos deshabilitados
-        deshabilitadoCard = (CardView) view.findViewById(R.id.deshabilitado_card_view);
-        nombrePersonaDeshabilitado = (TextView) view.findViewById(R.id.nombre_deshabilitado_text);
-        sexoDeshabilitado = (TextView) view.findViewById(R.id.sexo_deshabilitado_text);
-        nacionalidadDeshabilitado = (TextView) view.findViewById(R.id.nacionalidad_deshabilitado_text);
-        departamentoDeshabilitado = (TextView) view.findViewById(R.id.departamento_deshabilitado_text);
-        zonaDeshabilitado = (TextView) view.findViewById(R.id.zona_deshabilitado_text);
-        distritoDeshabilitado = (TextView) view.findViewById(R.id.distrito_deshabilitado_text);
-        fechaDeshabilitado = (TextView) view.findViewById(R.id.fecha_deshabilitado_text);
-        talonarioDeshabilitado = (TextView) view.findViewById(R.id.talonario_deshabilitado_text);
-        boletaDeshabilitado = (TextView) view.findViewById(R.id.boleta_deshabilitado_text);
-
         mainContainer.setVisibility(View.GONE);
-        duplicadoCard.setVisibility(View.GONE);
-        deshabilitadoCard.setVisibility(View.GONE);
 
         if (isProfile) {
             guardarPredeterminado.setVisibility(View.GONE);
         }
+
+        refreshLayout.setColorSchemeColors(getResources().getColor(R.color.materialAccentColor),
+                getResources().getColor(R.color.materialLightAccentColor),
+                getResources().getColor(R.color.materialPrimaryColor));
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // TODO mientras
+                refreshLayout.setRefreshing(false);
+            }
+        });
 
         guardarPredeterminado.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,8 +167,6 @@ public class ConsultaPadronFragment extends Fragment {
                         .getSharedPreferences(AppConstants.PREFS_APP, 0);
                 sharedPreferences.edit().putBoolean(AppConstants.PREFS_PROFILE, true).apply();
                 sharedPreferences.edit().putString(AppConstants.PREFS_CEDULA, cedula).apply();
-                sharedPreferences.edit().putString(AppConstants.PREFS_FECHA_NAC, fechaNacimiento)
-                        .apply();
 
                 Snackbar.make(parentView, "Se guardó como predeterminado", Snackbar.LENGTH_SHORT)
                         .show();
@@ -233,6 +193,8 @@ public class ConsultaPadronFragment extends Fragment {
 
             }
         });
+
+        restCallback = new EleccionesRestCallback(this, getActivity(), refreshLayout, parentView);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -264,154 +226,73 @@ public class ConsultaPadronFragment extends Fragment {
         super.onStart();
 
         if (isProfile) {
-            try {
-                consultaPadron(cedula, fechaNacimiento);
-            } catch (JSONException e) {
-                Log.e(TAG, "Ocurrió un error: " + e.getLocalizedMessage());
-            }
+            performRequest(cedula);
         }
     }
 
-    public void consultaPadron(String cedula, String fechaNacimiento) throws JSONException {
-
+    public void performRequest(String cedula) {
         this.cedula = cedula;
-        this.fechaNacimiento = fechaNacimiento;
+        // TODO update with user location
+        try {
+            restCallback.consultaPadron(cedula, 0.0, 0.0);
+        } catch (JSONException e) {
+            Log.e(TAG, "Ocurrió un error: " + e.getLocalizedMessage());
+        }
+    }
 
-        RequestParams requestParams = new RequestParams();
-        requestParams.add(AppConstants.PARAM_CEDULA, cedula);
-        requestParams.add(AppConstants.PARAM_FECHA_NAC, fechaNacimiento);
-        requestParams.add(AppConstants.PARAM_LATITUD, AppConstants.TEST_LATITUDE.toString());
-        requestParams.add(AppConstants.PARAM_LONGITUD, AppConstants.TEST_LONGITUDE.toString());
+    public SwipeRefreshLayout getRefreshLayout() {
+        return refreshLayout;
+    }
 
-        EleccionesRestClient.get(AppConstants.PATH_CONSULTA_PADRON, requestParams,
-                new BaseJsonHttpResponseHandler<Object>() {
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                        progressBar.setVisibility(View.VISIBLE);
-                    }
+    @Override
+    public void onSuccessAction(DatosConsultaPadron datosConsultaPadron) {
 
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        progressBar.setVisibility(View.GONE);
-                    }
+        mainContainer.setVisibility(View.VISIBLE);
+        nombrePersona.setText(datosConsultaPadron.getDatosPersonales().getNombre());
+        apellidoPersona.setText(datosConsultaPadron.getDatosPersonales().getApellido());
+        sexo.setText(datosConsultaPadron.getDatosPersonales().getSexo());
+        nacionalidad.setText(datosConsultaPadron.getDatosPersonales().getNacionalidad());
 
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
-                                          Object response) {
-                        if (statusCode != 200) {
-                            Log.e(TAG, "Status Code: " + statusCode);
-                        } else {
-                            Log.i(TAG, response.toString());
-                            mainContainer.setVisibility(View.VISIBLE);
-                            DatosConsultaPadron datosConsultaPadron = (DatosConsultaPadron) response;
-                            nombrePersona.setText(datosConsultaPadron.getDatosPersonales().getNombre());
-                            sexo.setText(datosConsultaPadron.getDatosPersonales().getSexo());
-                            nacionalidad.setText(datosConsultaPadron.getDatosPersonales().getNacionalidad());
+        if (!datosConsultaPadron.getPuedeVotar()) {
+            Snackbar.make(parentView, datosConsultaPadron.getMotivo(), Snackbar.LENGTH_LONG).show();
+//            datosPersonalesCard.setVisibility(View.VISIBLE);
+            localVotacionCard.setVisibility(View.GONE);
+            datosVotacionCard.setVisibility(View.GONE);
+        } else {
+            datosPersonalesCard.setVisibility(View.VISIBLE);
+            localVotacionCard.setVisibility(View.VISIBLE);
+            datosVotacionCard.setVisibility(View.VISIBLE);
 
-                            latitudLocal = datosConsultaPadron.getLocalVotacion().getLatitud();
-                            longitudLocal = datosConsultaPadron.getLocalVotacion().getLongitud();
-                            String mapsUrl = String.format(AppConstants.URL_MAPS_STATIC_IMAGE, latitudLocal,
-                                    longitudLocal, latitudLocal, longitudLocal);
-                            Glide.with(getActivity()).load(mapsUrl).into(mapa);
-                            nombreLocal.setText(datosConsultaPadron.getLocalVotacion().getNombre());
-                            direccion.setText(datosConsultaPadron.getLocalVotacion().getDireccion());
-                            departamento.setText(datosConsultaPadron.getLocalVotacion().getDepartamento());
-                            zona.setText(datosConsultaPadron.getLocalVotacion().getZona());
-                            distrito.setText(datosConsultaPadron.getLocalVotacion().getDistrito());
+            latitudLocal = datosConsultaPadron.getLocalVotacion().getLatitud();
+            longitudLocal = datosConsultaPadron.getLocalVotacion().getLongitud();
+            String mapsUrl = String.format(AppConstants.URL_MAPS_STATIC_IMAGE, latitudLocal,
+                    longitudLocal, latitudLocal, longitudLocal);
+            Glide.with(getActivity()).load(mapsUrl).into(mapa);
+            nombreLocal.setText(datosConsultaPadron.getLocalVotacion().getNombre());
+            direccion.setText(datosConsultaPadron.getLocalVotacion().getDireccion());
+            departamento.setText(datosConsultaPadron.getLocalVotacion().getDepartamento());
+            zona.setText(datosConsultaPadron.getLocalVotacion().getZona());
+            distrito.setText(datosConsultaPadron.getLocalVotacion().getDistrito());
 
-                            mesa.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
-                                    .getMesa()));
-                            orden.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
-                                    .getOrden()));
-                            if (datosConsultaPadron.getDatosVotacion().getTipoVotoAccesible() != null) {
-                                tipoVotoContainer.setVisibility(View.VISIBLE);
-                                tipoVoto.setText(DatosVotacion.TipoVoto
-                                        .valueOf(datosConsultaPadron.getDatosVotacion()
-                                                .getTipoVotoAccesible()).getDescripcion());
-                            } else {
-                                tipoVotoContainer.setVisibility(View.GONE);
-                            }
+            mesa.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
+                    .getMesa()));
+            orden.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
+                    .getOrden()));
+            if (datosConsultaPadron.getDatosVotacion().getTipoVotoAccesible() != null) {
+                tipoVotoContainer.setVisibility(View.VISIBLE);
+                tipoVoto.setText(DatosVotacion.TipoVoto
+                        .valueOf(datosConsultaPadron.getDatosVotacion()
+                                .getTipoVotoAccesible()).getDescripcion());
+            } else {
+                tipoVotoContainer.setVisibility(View.GONE);
+            }
+        }
 
-                            DatosConsultaPadron datosDuplicados = datosConsultaPadron.getDuplicado();
-                            DatosConsultaPadron datosDeshabilitados = datosConsultaPadron.getDeshabilitado();
+    }
 
-                            if (datosDuplicados != null) {
-                                duplicadoCard.setVisibility(View.VISIBLE);
-                                nombrePersonaDuplicado.setText(datosDuplicados.getDatosPersonales().getNombre());
-                                sexoDuplicado.setText(datosDuplicados.getDatosPersonales().getSexo());
-                                nacionalidadDuplicado.setText(datosDuplicados.getDatosPersonales().getNacionalidad());
-                                nombreLocalDuplicado.setText(datosDuplicados.getLocalVotacion().getNombre());
-                                departamentoDuplicado.setText(datosDuplicados.getLocalVotacion().getDepartamento());
-                                zonaDuplicado.setText(datosDuplicados.getLocalVotacion().getZona());
-                                distritoDuplicado.setText(datosDuplicados.getLocalVotacion().getDistrito());
-                                fechaDuplicado.setText(datosDuplicados.getDatosInscripcion().getFecha());
-                                talonarioDuplicado.setText(datosDuplicados.getDatosInscripcion().getTalonario().toString());
-                                boletaDuplicado.setText(datosDuplicados.getDatosInscripcion().getBoleta().toString());
-                            }
+    @Override
+    public void onFailureAction(int status) {
 
-                            if (datosDeshabilitados != null) {
-                                deshabilitadoCard.setVisibility(View.VISIBLE);
-                                nombrePersonaDeshabilitado.setText(datosDeshabilitados.getDatosPersonales().getNombre());
-                                sexoDeshabilitado.setText(datosDeshabilitados.getDatosPersonales().getSexo());
-                                nacionalidadDeshabilitado.setText(datosDeshabilitados.getDatosPersonales().getNacionalidad());
-                                departamentoDeshabilitado.setText(datosDeshabilitados.getLocalVotacion().getDepartamento());
-                                zonaDeshabilitado.setText(datosDeshabilitados.getLocalVotacion().getZona());
-                                distritoDeshabilitado.setText(datosDeshabilitados.getLocalVotacion().getDistrito());
-                                fechaDeshabilitado.setText(datosDeshabilitados.getDatosInscripcion().getFecha());
-                                talonarioDeshabilitado.setText(datosDeshabilitados.getDatosInscripcion().getTalonario().toString());
-                                boletaDeshabilitado.setText(datosDeshabilitados.getDatosInscripcion().getBoleta().toString());
-                            }
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable,
-                                          String rawJsonData, Object errorResponse) {
-                        Log.e(TAG, "Status Code: " + statusCode + " Raw JSONData: "
-                                + rawJsonData);
-                        MensajeError mensajeError = (MensajeError) errorResponse;
-                        if (statusCode == 404) {
-                            /*try {
-
-                                MensajeError mensajeError = new ObjectMapper()
-                                        .readValues(new JsonFactory().createParser(rawJsonData),
-                                                MensajeError.class).next();*/
-                            Snackbar.make(parentView, mensajeError.getMensajeUsuario(),
-                                    Snackbar.LENGTH_SHORT).show();
-                            /*} catch (IOException e) {
-                                Log.e("ConsultaPadron", "Error: " + e.getLocalizedMessage());
-                            }*/
-                        } else if (statusCode == 500 || statusCode == 503) {
-                            Snackbar.make(parentView, "El servicio no está disponible, " +
-                                            "intente de nuevo más tarde",
-                                    Snackbar.LENGTH_SHORT).show();
-                        } else {
-                            Snackbar.make(parentView, "Ocurrió un error, " +
-                                            "intente de nuevo más tarde",
-                                    Snackbar.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    protected Object parseResponse(String rawJsonData, boolean isFailure)
-                            throws Throwable {
-                        DatosConsultaPadron datosConsultaPadron = null;
-                        MensajeError mensajeError = null;
-                        if (!isFailure) {
-                            datosConsultaPadron = new ObjectMapper().readValues(new JsonFactory().createParser(rawJsonData),
-                                    DatosConsultaPadron.class).next();
-                            return datosConsultaPadron;
-                        } else {
-                            mensajeError = new ObjectMapper()
-                                    .readValues(new JsonFactory().createParser(rawJsonData),
-                                            MensajeError.class).next();
-                            return mensajeError;
-                        }
-                    }
-                });
     }
 
     /**
@@ -428,5 +309,4 @@ public class ConsultaPadronFragment extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
-
 }

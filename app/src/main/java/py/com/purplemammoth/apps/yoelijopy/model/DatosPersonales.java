@@ -9,14 +9,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DatosPersonales {
     private String nombre;
+    private String apellido;
     private String sexo;
     private String nacionalidad;
 
     public DatosPersonales() {
     }
 
-    public DatosPersonales(String nombre, String sexo, String nacionalidad) {
+    public DatosPersonales(String nombre, String apellido, String sexo, String nacionalidad) {
         this.nombre = nombre;
+        this.apellido = apellido;
         this.sexo = sexo;
         this.nacionalidad = nacionalidad;
     }
@@ -28,6 +30,15 @@ public class DatosPersonales {
     @JsonProperty("nombre")
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    @JsonProperty("apellido")
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
     public String getSexo() {
@@ -52,6 +63,7 @@ public class DatosPersonales {
     public String toString() {
         return "DatosPersonales{" +
                 "nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
                 ", sexo='" + sexo + '\'' +
                 ", nacionalidad='" + nacionalidad + '\'' +
                 '}';

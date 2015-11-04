@@ -18,10 +18,13 @@ public class AppConstants {
 
     // REST client constants
     public static final String SCHEMA = "http://";
-    public static final String HOST = "municipales2015-openshiftpublic.rhcloud.com";
+    public static final String INSTANCE_01 = "yovoto00";
+    public static final String INSTANCE_02 = "yovoto01";
+    public static final String INSTANCE_03 = "yovoto02";
+    public static final String HOST = "-openshiftpublic.rhcloud.com";
     public static final String PORT = ":80";
     public static final String BASE_PATH = "/municipales2015-%s/rest/";
-    public static final String VERSION = "v0.2";
+    public static final String VERSION = "v0.3";
 
     // Urls & paths
     public static final String PATH_CONSULTA_PADRON = "consultas-padron";
