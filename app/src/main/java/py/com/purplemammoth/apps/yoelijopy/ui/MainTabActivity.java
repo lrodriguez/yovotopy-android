@@ -1,29 +1,25 @@
 package py.com.purplemammoth.apps.yoelijopy.ui;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
-import android.widget.EditText;
 
 import py.com.purplemammoth.apps.yoelijopy.R;
 import py.com.purplemammoth.apps.yoelijopy.ui.components.adapter.tab.MainTabAdapter;
+import rx.functions.Action1;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class MainTabActivity extends AppCompatActivity implements
+public class MainTabActivity extends BaseLocationActivity implements
         HomeFragment.OnFragmentInteractionListener,
         ConsultaPadronFragment.OnFragmentInteractionListener {
     private static final int[] imageResId = {
@@ -38,36 +34,12 @@ public class MainTabActivity extends AppCompatActivity implements
             "Denuncias",
             "Perfil"
     };
-    DialogInterface.OnClickListener onCancelClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
 
-        }
-    };
-    private String cedulaText;
-    private String fechaNacText;
     private MainTabAdapter mAdapter;
     private ViewPager mViewPager;
-    private EditText cedula;
-    private DatePicker fechaNacimiento;
-    DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            // TODO Validar cedula
-            cedulaText = cedula.getText().toString();
-            fechaNacText = fechaNacimiento.getDayOfMonth() + "/" + (fechaNacimiento.getMonth() + 1)
-                    + "/" + (fechaNacimiento.getYear() % 100);
-
-            // TODO comunicar al fragment de consultar
-            Snackbar.make(mViewPager, "Cedula: " + cedulaText + "\nFecha de Nacimiento: "
-                    + fechaNacText, Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
-            updateDatosPadron();
-        }
-    };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tab);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -91,16 +63,30 @@ public class MainTabActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 updateDatosPadron();
-
-                /*View dialogView = createDialog();
-                AlertDialog.Builder dialog = new AlertDialog.Builder(MainTabActivity.this)
-                        .setView(dialogView)
-                        .setTitle("Consultar datos de padrón")
-                        .setPositiveButton("Consultar", onClickListener)
-                        .setNegativeButton("Cancelar", onCancelClickListener);
-                dialog.show();*/
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        lastKnownLocationSubscription = lastKnownLocationObservable
+                .subscribe(new Action1<Location>() {
+                    @Override
+                    public void call(Location location) {
+                        Log.i(TAG, "lastKnownLocationSuscription callback is running");
+                        if (location != null) {
+                            currentLocation = location;
+                            Log.i(TAG, "Se obtuvo la localización: "
+                                    + currentLocation.getLatitude() + ";"
+                                    + currentLocation.getLongitude() + "("
+                                    + currentLocation.getAccuracy() + ")");
+                        } else {
+                            Log.i(TAG, "Reactive Location: no se obtuvo la localización");
+                        }
+                    }
+                });
     }
 
     @Override
@@ -108,28 +94,8 @@ public class MainTabActivity extends AppCompatActivity implements
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    public View createDialog() {
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_datos_consulta, null);
-
-        cedula = (EditText) view.findViewById(R.id.editText);
-        fechaNacimiento = (DatePicker) view.findViewById(R.id.datePicker);
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            fechaNacimiento.setCalendarViewShown(false);
-        }
-
-        return view;
-    }
-
     private void updateDatosPadron() {
         Intent i = new Intent(this, ConsultaPadronActivity.class);
-        Bundle args = new Bundle();
-        /*String title = "CI: " + cedulaText + " - " + fechaNacText;
-        args.putString(AppConstants.ARG_ACTIVITY_TITLE, title);
-        args.putString(AppConstants.ARG_CEDULA, cedulaText);
-        args.putString(AppConstants.ARG_FECHA_NAC, fechaNacText);
-        i.putExtras(args);*/
-
         startActivity(i);
     }
 

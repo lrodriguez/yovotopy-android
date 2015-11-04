@@ -1,7 +1,7 @@
 package py.com.purplemammoth.apps.yoelijopy.ui;
 
 import android.app.Activity;
-import android.content.Context;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,7 +11,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,9 +23,9 @@ import android.widget.TextView;
 
 import py.com.purplemammoth.apps.yoelijopy.R;
 import py.com.purplemammoth.apps.yoelijopy.util.AppConstants;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+import rx.functions.Action1;
 
-public class ConsultaPadronActivity extends AppCompatActivity implements
+public class ConsultaPadronActivity extends BaseLocationActivity implements
         ConsultaPadronFragment.OnFragmentInteractionListener {
     private static final String TAG = "ConsultaPadron";
     private String cedula;
@@ -38,7 +37,7 @@ public class ConsultaPadronActivity extends AppCompatActivity implements
     private ConsultaPadronFragment fragment;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consulta_padron);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -126,15 +125,34 @@ public class ConsultaPadronActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (getCurrentLocation() != null && verifyGooglePlayServicesInstalled()) {
+            lastKnownLocationSubscription = lastKnownLocationObservable
+                    .subscribe(new Action1<Location>() {
+                        @Override
+                        public void call(Location location) {
+                            Log.i(TAG, "lastKnownLocationSuscription callback is running");
+                            if (location != null) {
+                                currentLocation = location;
+                                Log.i(TAG, "Se obtuvo la localización: "
+                                        + currentLocation.getLatitude() + ";"
+                                        + currentLocation.getLongitude() + "("
+                                        + currentLocation.getAccuracy() + ")");
+
+                            } else {
+                                Log.i(TAG, "Reactive Location: no se obtuvo la localización");
+                            }
+                        }
+                    });
+        }
+    }
+
     private boolean validateCedula() {
         int textLength = cedulaText.getText().length();
         return textLength > AppConstants.MIN_LENGHT;
-    }
-
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     private void consultarPadron() {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -76,6 +77,8 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
     private ImageView mapa;
     private Button guardarPredeterminado;
     private Button verMapa;
+
+    private Location currentLocation;
 
     public ConsultaPadronFragment() {
         // Required empty public constructor
@@ -233,8 +236,18 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
     public void performRequest(String cedula) {
         this.cedula = cedula;
         // TODO update with user location
+        Double latitud = AppConstants.TEST_LATITUDE;
+        Double longitud = AppConstants.TEST_LONGITUDE;
+
+        currentLocation = BaseLocationActivity.getCurrentLocation();
+
+        if (currentLocation != null) {
+            latitud = currentLocation.getLatitude();
+            longitud = currentLocation.getLongitude();
+        }
+
         try {
-            restCallback.consultaPadron(cedula, 0.0, 0.0);
+            restCallback.consultaPadron(cedula, latitud, longitud);
         } catch (JSONException e) {
             Log.e(TAG, "Ocurrió un error: " + e.getLocalizedMessage());
         }
