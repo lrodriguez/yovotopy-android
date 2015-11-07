@@ -31,6 +31,7 @@ import py.com.purplemammoth.apps.yoelijopy.client.EleccionesRestCallback;
 import py.com.purplemammoth.apps.yoelijopy.model.DatosConsultaPadron;
 import py.com.purplemammoth.apps.yoelijopy.model.DatosVotacion;
 import py.com.purplemammoth.apps.yoelijopy.util.AppConstants;
+import py.com.purplemammoth.apps.yoelijopy.util.Tracking;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,6 +80,9 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
     private Button verMapa;
 
     private Location currentLocation;
+
+    // Para el tracking de analytics
+    private Tracking.Pantalla pantalla = Tracking.Pantalla.CONSULTA_PADRON;
 
     public ConsultaPadronFragment() {
         // Required empty public constructor
@@ -171,6 +175,9 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
                 sharedPreferences.edit().putBoolean(AppConstants.PREFS_PROFILE, true).apply();
                 sharedPreferences.edit().putString(AppConstants.PREFS_CEDULA, cedula).apply();
 
+                Tracking.track(ConsultaPadronFragment.this.getActivity().getApplication(),
+                        pantalla, Tracking.Accion.GUARDAR_PREDETERMINADO);
+
                 Snackbar.make(parentView, "Se guardó como predeterminado", Snackbar.LENGTH_SHORT)
                         .show();
             }
@@ -185,6 +192,10 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
                     String encodedQuery = Uri.encode(query);
                     String uriString = uriBegin + "?q=" + encodedQuery + "&z=14";
                     Uri uri = Uri.parse(uriString);
+
+                    Tracking.track(ConsultaPadronFragment.this.getActivity().getApplication(),
+                            pantalla, Tracking.Accion.VER_MAPA);
+
                     Intent mapIntent = new Intent(android.content.Intent.ACTION_VIEW, uri);
                     startActivity(mapIntent);
                 } catch (ActivityNotFoundException e) {
@@ -198,6 +209,8 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
         });
 
         restCallback = new EleccionesRestCallback(this, getActivity(), refreshLayout, parentView);
+
+        Tracking.track(ConsultaPadronFragment.this.getActivity().getApplication(), pantalla, Tracking.Accion.VER_PANTALLA);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -321,5 +334,9 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    public void setPantalla(Tracking.Pantalla pantalla) {
+        this.pantalla = pantalla;
     }
 }

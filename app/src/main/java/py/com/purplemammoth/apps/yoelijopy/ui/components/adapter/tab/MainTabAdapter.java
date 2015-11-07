@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import py.com.purplemammoth.apps.yoelijopy.ui.ConsultaPadronFragment;
 import py.com.purplemammoth.apps.yoelijopy.ui.HomeFragment;
 import py.com.purplemammoth.apps.yoelijopy.util.AppConstants;
+import py.com.purplemammoth.apps.yoelijopy.util.Tracking;
 
 /**
  * Created by luisrodriguez on 14/10/15.
@@ -74,7 +75,10 @@ public class MainTabAdapter extends FragmentStatePagerAdapter {
                     boolean hasProfile = sharedPreferences.getBoolean(AppConstants.PREFS_PROFILE,
                             false);
 
-                    fragment = ConsultaPadronFragment.newInstance(cedula, hasProfile);
+                    ConsultaPadronFragment consultaPadronFragment = ConsultaPadronFragment.newInstance(cedula, hasProfile);
+                    consultaPadronFragment.setPantalla(Tracking.Pantalla.PERFIL);
+
+                    fragment = consultaPadronFragment;
                     break;
             }
 
