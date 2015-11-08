@@ -12,6 +12,11 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  * Created by luisrodriguez on 26/10/15.
  */
 public class YoVotoPyApplication extends Application {
+    public static GoogleAnalytics analytics;
+
+    // Google Analytics
+    public static Tracker tracker;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -23,11 +28,6 @@ public class YoVotoPyApplication extends Application {
                         .build()
         );
     }
-
-    // Google Analytics
-
-    public static GoogleAnalytics analytics;
-    public static Tracker tracker;
 
     public Tracker getTracker() {
         return tracker;

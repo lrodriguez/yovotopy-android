@@ -34,6 +34,7 @@ import py.com.purpleapps.yovotopy.model.AvizorCategoryWrapper;
 import py.com.purpleapps.yovotopy.model.DatosConsultaPadron;
 import py.com.purpleapps.yovotopy.model.DatosVotacion;
 import py.com.purpleapps.yovotopy.util.AppConstants;
+import py.com.purpleapps.yovotopy.util.Tracking;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -333,6 +334,10 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
 
     }
 
+    public void setPantalla(Tracking.Pantalla pantalla) {
+        this.pantalla = pantalla;
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -346,9 +351,5 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
-    }
-
-    public void setPantalla(Tracking.Pantalla pantalla) {
-        this.pantalla = pantalla;
     }
 }

@@ -12,6 +12,7 @@ import py.com.purpleapps.yovotopy.ui.ConsultaPadronFragment;
 import py.com.purpleapps.yovotopy.ui.DenunciasFragment;
 import py.com.purpleapps.yovotopy.ui.HomeFragment;
 import py.com.purpleapps.yovotopy.util.AppConstants;
+import py.com.purpleapps.yovotopy.util.Tracking;
 
 /**
  * Created by luisrodriguez on 14/10/15.

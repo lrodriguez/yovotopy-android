@@ -21,9 +21,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import py.com.purpleapps.yovotopy.util.Tracking;
 import py.com.purpleapps.yovotopy.R;
 import py.com.purpleapps.yovotopy.util.AppConstants;
+import py.com.purpleapps.yovotopy.util.Tracking;
 import rx.functions.Action1;
 
 public class ConsultaPadronActivity extends BaseLocationActivity implements

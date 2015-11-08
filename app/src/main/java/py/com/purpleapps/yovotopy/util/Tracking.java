@@ -8,7 +8,7 @@ import com.google.android.gms.analytics.Tracker;
 
 import java.util.Map;
 
-import py.com.purplemammoth.apps.yoelijopy.YoElijoPyApplication;
+import py.com.purpleapps.yovotopy.YoVotoPyApplication;
 
 /**
  * Created by mduarte on 7/11/15.
@@ -17,6 +17,41 @@ public class Tracking {
     private static String TAG = "Tracking";
     private static String PANTALLA_CONSULTA_PADRON = "Consulta del padrón";
     private static String PANTALLA_PERFIL = "Perfil";
+
+    public static void track(Application app, Pantalla pantalla, Accion accion) {
+        track(app, pantalla.getNombre(), accion.getNombre(), null, null);
+    }
+
+    public static void track(Application app, String category, String action, String label, Long value) {
+        Tracker t = ((YoVotoPyApplication) app).getTracker();
+        t.enableAdvertisingIdCollection(true);
+
+        HitBuilders.EventBuilder event = new HitBuilders.EventBuilder();
+
+        if (category != null) {
+            event.setCategory(category);
+        }
+
+        if (action != null) {
+            event.setAction(action);
+        }
+
+        if (label != null) {
+            event.setLabel(label);
+        }
+
+        if (value != null) {
+            event.setValue(value);
+        }
+
+        Map<String, String> params = event.build();
+
+        t.send(params);
+
+        Log.d(TAG, "track: " + params);
+
+        //Toast.makeText(app, params.toString(), Toast.LENGTH_SHORT).show();
+    }
 
     public enum Accion {
         VER_PANTALLA("Ver pantalla"),
@@ -48,40 +83,5 @@ public class Tracking {
         public String getNombre() {
             return nombre;
         }
-    }
-
-    public static void track(Application app, Pantalla pantalla, Accion accion) {
-        track(app, pantalla.getNombre(), accion.getNombre(), null, null);
-    }
-
-    public static void track(Application app, String category, String action, String label, Long value) {
-        Tracker t = ((YoElijoPyApplication) app).getTracker();
-        t.enableAdvertisingIdCollection(true);
-
-        HitBuilders.EventBuilder event = new HitBuilders.EventBuilder();
-
-        if (category != null) {
-            event.setCategory(category);
-        }
-
-        if (action != null) {
-            event.setAction(action);
-        }
-
-        if (label != null) {
-            event.setLabel(label);
-        }
-
-        if (value != null) {
-            event.setValue(value);
-        }
-
-        Map<String, String> params = event.build();
-
-        t.send(params);
-
-        Log.d(TAG, "track: " + params);
-
-        //Toast.makeText(app, params.toString(), Toast.LENGTH_SHORT).show();
     }
 }
