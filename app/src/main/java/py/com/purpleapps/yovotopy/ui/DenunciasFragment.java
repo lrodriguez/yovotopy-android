@@ -123,6 +123,8 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
     Button addFoto;
     @Bind(R.id.camera_image)
     ImageView fotoDenuncia;
+    @Bind(R.id.remove_image)
+    ImageView removeFoto;
     @BindString(R.string.error_input_required)
     String errorRequired;
     private OnFragmentInteractionListener mListener;
@@ -218,6 +220,46 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
         super.onCreate(savedInstanceState);
 
         links = new ArrayList<>();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        tituloText = titulo.getText().toString();
+        descripcionText = descripcion.getText().toString();
+        fechaText = fecha.getText().toString();
+        horaText = hora.getText().toString();
+        String categoriasText = categoria.getText().toString();
+        String ubicacionText = ubicacion.getText().toString();
+        lugarText = lugar.getText().toString();
+        nombreText = nombre.getText().toString();
+        apellidoText = apellido.getText().toString();
+        emailText = email.getText().toString();
+        telefonoText = telefono.getText().toString();
+
+        outState.putString("titulo_text", tituloText);
+        outState.putString("descripcion_text", descripcionText);
+        outState.putString("fecha_text", fechaText);
+        outState.putString("hora_text", horaText);
+        outState.putString("categorias_text", categoriasText);
+        outState.putString("ubicacion_text", ubicacionText);
+        outState.putString("lugar_text", lugarText);
+        outState.putString("nombre_text", nombreText);
+        outState.putString("apellido_text", apellidoText);
+        outState.putString("email_text", emailText);
+        outState.putString("telefono_text", telefonoText);
+
+        outState.putStringArray("ids_categorias", idsCategorias);
+        outState.putStringArray("nombres_categorias", categorias);
+        outState.putBooleanArray("selected_categorias", selectedCategories);
+
+        outState.putDouble("latitud", latitude);
+        outState.putDouble("longitud", longitude);
+
+        outState.putStringArrayList("links_array", links);
+
+        outState.putString("image_path", imagePath);
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -323,7 +365,66 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
             }
         });
 
+        removeFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deletePicture();
+            }
+        });
+
         restCallback = new EleccionesRestCallback(this, getActivity(), refreshLayout, parentView);
+
+        if (savedInstanceState != null) {
+            tituloText = savedInstanceState.getString("titulo_text");
+            descripcionText = savedInstanceState.getString("descripcion_text");
+            fechaText = savedInstanceState.getString("fecha_text");
+            horaText = savedInstanceState.getString("hora_text");
+            String categoriasText = savedInstanceState.getString("categorias_text");
+            String ubicacionText = savedInstanceState.getString("ubicacion_text");
+            lugarText = savedInstanceState.getString("lugar_text");
+            nombreText = savedInstanceState.getString("nombre_text");
+            apellidoText = savedInstanceState.getString("apellido_text");
+            emailText = savedInstanceState.getString("email_text");
+            telefonoText = savedInstanceState.getString("telefono_text");
+
+            idsCategorias = savedInstanceState.getStringArray("ids_categorias");
+            categorias = savedInstanceState.getStringArray("nombres_categorias");
+            selectedCategories = savedInstanceState.getBooleanArray("selected_categorias");
+
+            latitude = savedInstanceState.getDouble("latitud");
+            longitude = savedInstanceState.getDouble("longitud");
+
+            links = savedInstanceState.getStringArrayList("links_array");
+
+            imagePath = savedInstanceState.getString("image_path");
+
+            titulo.setText(tituloText);
+            descripcion.setText(descripcionText);
+            fecha.setText(fechaText);
+            hora.setText(horaText);
+            categoria.setText(categoriasText);
+            ubicacion.setText(ubicacionText);
+            lugar.setText(lugarText);
+            nombre.setText(nombreText);
+            apellido.setText(apellidoText);
+            email.setText(emailText);
+            telefono.setText(telefonoText);
+
+            Log.d(TAG, links.toString());
+
+            ArrayList<String> linksTemp = new ArrayList<>(links);
+            links.clear();
+
+            if (linksContainer != null && linksContainer.getChildCount() == 0) {
+                for (String link : linksTemp) {
+                    addLinksView(link);
+                }
+            }
+
+            if (imagePath != null && !imagePath.isEmpty()) {
+                loadPicture(imagePath);
+            }
+        }
     }
 
     // Dialogs
@@ -370,13 +471,6 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     private void showDatePickerDialog() {
@@ -481,15 +575,15 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String link = linkText.getText().toString();
-                        addLinksView(link);
+                        if (!link.isEmpty()) {
+                            addLinksView(link);
+                        }
                     }
                 })
                 .setNegativeButton("Cancelar", null);
 
         builder.show();
     }
-
-    // Camera and gallery
 
     private void showAddPhotoDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppTheme_Dialog)
@@ -566,12 +660,18 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
         imagePath = path;
         Glide.with(this).load(new File(imagePath))
                 .thumbnail(0.1f).into(fotoDenuncia);
+        addFoto.setVisibility(View.GONE);
+        fotoDenuncia.setVisibility(View.VISIBLE);
+        removeFoto.setVisibility(View.VISIBLE);
     }
 
-    private void deletePicture(final int imageViewOrder) {
+    private void deletePicture() {
         if (imagePath != null && !imagePath.isEmpty()) {
             final String previousImagePath = imagePath;
             imagePath = "";
+            addFoto.setVisibility(View.VISIBLE);
+            fotoDenuncia.setVisibility(View.GONE);
+            removeFoto.setVisibility(View.GONE);
             fotoDenuncia.setImageDrawable(getResources()
                     .getDrawable(android.R.drawable.ic_menu_camera));
             Snackbar.make(parentView, "Foto eliminada", Snackbar.LENGTH_SHORT)
@@ -584,7 +684,6 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
         }
     }
 
-    // Validate forms
     public void validateForm() {
         tituloText = titulo.getText().toString();
         descripcionText = descripcion.getText().toString();
@@ -698,8 +797,6 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
         }
 
     }
-
-    // Network Request
 
     public void performRequest() {
         try {

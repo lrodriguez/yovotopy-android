@@ -221,19 +221,36 @@
                 android:id="@+id/add_foto_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
                 android:drawableLeft="@drawable/ic_add_to_photos_white_24dp"
                 android:drawablePadding="8dp"
                 android:text="Añadir foto (máximo 10 Mb)"
                 android:textColor="@color/materialTextIcons" />
 
-            <ImageView
-                android:id="@+id/camera_image"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:minHeight="240dp"
-                android:scaleType="centerCrop"
-                android:src="@android:drawable/ic_menu_camera" />
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/camera_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:minHeight="240dp"
+                    android:scaleType="centerCrop"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/remove_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_remove_circle_black_24dp"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
