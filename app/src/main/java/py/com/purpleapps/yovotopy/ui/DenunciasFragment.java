@@ -59,6 +59,7 @@ import py.com.purpleapps.yovotopy.model.DatosConsultaPadron;
 import py.com.purpleapps.yovotopy.model.DatosDenuncia;
 import py.com.purpleapps.yovotopy.model.FotoDenuncia;
 import py.com.purpleapps.yovotopy.util.ImageFilePath;
+import py.com.purpleapps.yovotopy.util.Tracking;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -354,6 +355,9 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
         addLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Tracking.track(getActivity().getApplication(),
+                        Tracking.Pantalla.DENUNCIAS,
+                        Tracking.Accion.ANHADIR_LINKS);
                 showAddLinkDialog();
             }
         });
@@ -361,6 +365,9 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
         addFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Tracking.track(getActivity().getApplication(),
+                        Tracking.Pantalla.DENUNCIAS,
+                        Tracking.Accion.ANHADIR_FOTO);
                 showAddPhotoDialog();
             }
         });
@@ -425,6 +432,10 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
                 loadPicture(imagePath);
             }
         }
+
+        Tracking.track(getActivity().getApplication(),
+                Tracking.Pantalla.DENUNCIAS,
+                Tracking.Accion.VER_PANTALLA);
     }
 
     // Dialogs
@@ -771,6 +782,9 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
             Snackbar.make(parentView, "Se envia el form", Snackbar.LENGTH_SHORT).show();
             try {
                 restCallback.postDenuncia(datosDenuncia);
+                Tracking.track(getActivity().getApplication(),
+                        Tracking.Pantalla.DENUNCIAS,
+                        Tracking.Accion.ENVIAR_DENUNCIA);
             } catch (JSONException e) {
                 Log.e(TAG, "Ocurrió un error al enviar la denuncia: " + e.getLocalizedMessage());
                 e.printStackTrace();

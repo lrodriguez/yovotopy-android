@@ -15,8 +15,6 @@ import py.com.purpleapps.yovotopy.YoVotoPyApplication;
  */
 public class Tracking {
     private static String TAG = "Tracking";
-    private static String PANTALLA_CONSULTA_PADRON = "Consulta del padrón";
-    private static String PANTALLA_PERFIL = "Perfil";
 
     public static void track(Application app, Pantalla pantalla, Accion accion) {
         track(app, pantalla.getNombre(), accion.getNombre(), null, null);
@@ -57,7 +55,10 @@ public class Tracking {
         VER_PANTALLA("Ver pantalla"),
         CONSULTAR_PADRON("Consultar padrón"),
         GUARDAR_PREDETERMINADO("Guardar predeterminado"),
-        VER_MAPA("Ver mapa");
+        VER_MAPA("Ver mapa"),
+        ENVIAR_DENUNCIA("Enviar denuncia"),
+        ANHADIR_LINKS("Añadir links"),
+        ANHADIR_FOTO("Añadir foto");
 
         private String nombre;
 
@@ -72,7 +73,8 @@ public class Tracking {
 
     public enum Pantalla {
         CONSULTA_PADRON("Consulta del padrón"),
-        PERFIL("Perfil");
+        PERFIL("Perfil"),
+        DENUNCIAS("Denuncias");
 
         private String nombre;
 
