@@ -1,4 +1,4 @@
-package py.com.purplemammoth.apps.yoelijopy;
+package py.com.purpleapps.yovotopy;
 
 import org.junit.Test;
 

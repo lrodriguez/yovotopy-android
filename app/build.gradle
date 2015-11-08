@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "py.com.purplemammoth.apps.yoelijopy"
+        applicationId "py.com.purpleapps.yovotopy"
         minSdkVersion 9
         targetSdkVersion 23
         versionCode 1
@@ -48,10 +48,16 @@ dependencies {
     // Image Loader
     compile 'com.github.bumptech.glide:glide:3.6.1'
 
+    // Reactive Location
     compile 'pl.charmas.android:android-reactive-location:0.8@aar'
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'io.reactivex:rxandroid:0.25.0'
 
+    // View Injection
+    compile 'com.jakewharton:butterknife:7.0.1'
+
     // Appearence
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
+
+    compile "commons-io:commons-io:+"
 }

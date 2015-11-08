@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="py.com.purplemammoth.apps.yoelijopy.ui.ConsultaPadronFragment">
+    tools:context="py.com.purpleapps.yovotopy.ui.ConsultaPadronFragment">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"

@@ -5,25 +5,11 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/link_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Nro de Cédula o Documento de identidad"
-        android:inputType="number"
+        android:hint="Escribí o copiá acá el link que querés adjuntar"
+        android:inputType="textUri"
         android:padding="16dp" />
 
-    <TextView
-        style="@style/Widget.CardTitleText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Fecha de Nacimiento" />
-
-    <DatePicker
-        android:id="@+id/datePicker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:startYear="1900" />
 </LinearLayout>
