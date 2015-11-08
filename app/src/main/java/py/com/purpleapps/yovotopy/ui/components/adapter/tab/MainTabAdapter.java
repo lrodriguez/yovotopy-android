@@ -75,7 +75,10 @@ public class MainTabAdapter extends FragmentStatePagerAdapter {
                     boolean hasProfile = sharedPreferences.getBoolean(AppConstants.PREFS_PROFILE,
                             false);
 
-                    fragment = ConsultaPadronFragment.newInstance(cedula, hasProfile);
+                    ConsultaPadronFragment consultaPadronFragment = ConsultaPadronFragment.newInstance(cedula, hasProfile);
+                    consultaPadronFragment.setPantalla(Tracking.Pantalla.PERFIL);
+
+                    fragment = consultaPadronFragment;
                     break;
             }
 

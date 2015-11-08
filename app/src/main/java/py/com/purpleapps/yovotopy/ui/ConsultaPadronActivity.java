@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import py.com.purpleapps.yovotopy.util.Tracking;
 import py.com.purpleapps.yovotopy.R;
 import py.com.purpleapps.yovotopy.util.AppConstants;
 import rx.functions.Action1;
@@ -111,6 +112,8 @@ public class ConsultaPadronActivity extends BaseLocationActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Tracking.track(ConsultaPadronActivity.this.getApplication(),
+                        Tracking.Pantalla.CONSULTA_PADRON, Tracking.Accion.CONSULTAR_PADRON);
                 consultarPadron();
             }
         });
@@ -118,6 +121,7 @@ public class ConsultaPadronActivity extends BaseLocationActivity implements
 
         if (savedInstanceState == null) {
             fragment = ConsultaPadronFragment.newInstance(cedula, false);
+            fragment.setPantalla(Tracking.Pantalla.CONSULTA_PADRON);
             FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction()
                     .add(R.id.container, fragment, "consulta_padron_fragment")

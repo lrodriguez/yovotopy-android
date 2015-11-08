@@ -2,6 +2,10 @@ package py.com.purpleapps.yovotopy;
 
 import android.app.Application;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Logger;
+import com.google.android.gms.analytics.Tracker;
+
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
@@ -11,10 +15,33 @@ public class YoVotoPyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        setupGATracker();
+
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                         .setDefaultFontPath("fonts/Roboto-Regular.ttf")
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+    }
+
+    // Google Analytics
+
+    public static GoogleAnalytics analytics;
+    public static Tracker tracker;
+
+    public Tracker getTracker() {
+        return tracker;
+    }
+
+    private void setupGATracker() {
+        analytics = GoogleAnalytics.getInstance(this);
+
+        analytics.setDryRun(false);
+        analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
+
+        tracker = analytics.newTracker(R.xml.app_tracker); // Replace with actual tracker/property Id
+        tracker.enableExceptionReporting(true);
+        tracker.enableAdvertisingIdCollection(true);
+        tracker.enableAutoActivityTracking(true);
     }
 }
