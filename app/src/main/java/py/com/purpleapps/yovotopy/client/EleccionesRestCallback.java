@@ -3,7 +3,9 @@ package py.com.purpleapps.yovotopy.client;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.fasterxml.jackson.core.JsonFactory;
@@ -21,6 +23,7 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.entity.ContentType;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import py.com.purpleapps.yovotopy.R;
 import py.com.purpleapps.yovotopy.model.AvizorCategoryWrapper;
 import py.com.purpleapps.yovotopy.model.AvizorError;
 import py.com.purpleapps.yovotopy.model.AvizorResponse;
@@ -241,9 +244,32 @@ public class EleccionesRestCallback {
 
         HttpEntity httpEntity = new StringEntity(jsonString, ContentType.APPLICATION_JSON);
 
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_loading, null);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppTheme_Dialog)
+                .setView(dialogView)
+                .setCancelable(false);
+        final AlertDialog[] dialog = new AlertDialog[1];
+
         EleccionesRestClient.post(getContext(), AppConstants.OPENSHIFT_DENUNCIAS_HOST,
                 AppConstants.PATH_DENUNCIAS, httpEntity, null,
                 new BaseJsonHttpResponseHandler<Object>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        dialog[0] = builder.show();
+                    }
+
+                    @Override
+                    public void onProgress(long bytesWritten, long totalSize) {
+                        super.onProgress(bytesWritten, totalSize);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        dialog[0].dismiss();
+                    }
+
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
                                           Object response) {

@@ -778,8 +778,6 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
         Log.e(TAG, datosDenuncia.toString());
 
         if (isValid) {
-            // POST denuncias
-            Snackbar.make(parentView, "Se envia el form", Snackbar.LENGTH_SHORT).show();
             try {
                 restCallback.postDenuncia(datosDenuncia);
                 Tracking.track(getActivity().getApplication(),
@@ -832,6 +830,48 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
         }
     }
 
+    private void clearFormData() {
+        tituloText = "";
+        descripcionText = "";
+        fechaText = "";
+        horaText = "";
+        lugarText = "";
+        nombreText = "";
+        apellidoText = "";
+        emailText = "";
+        telefonoText = "";
+
+        for (int i = 0; i < selectedCategories.length; i++) {
+            selectedCategories[i] = false;
+        }
+
+        latitude = -1;
+        longitude = -1;
+
+        linksContainer.removeAllViews();
+        links.clear();
+
+        titulo.setText(tituloText);
+        descripcion.setText(descripcionText);
+        fecha.setText(fechaText);
+        hora.setText(horaText);
+        categoria.setText("");
+        ubicacion.setText("");
+        lugar.setText(lugarText);
+        nombre.setText(nombreText);
+        apellido.setText(apellidoText);
+        email.setText(emailText);
+        telefono.setText(telefonoText);
+
+        removeFoto.setVisibility(View.GONE);
+        fotoDenuncia.setVisibility(View.GONE);
+        addFoto.setVisibility(View.VISIBLE);
+
+        imagePath = "";
+
+        isValid = true;
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -862,8 +902,9 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
     @Override
     public void onSuccessAction() {
         Snackbar.make(parentView, "Se enviaron correctamente los datos de la denuncia",
-                Snackbar.LENGTH_SHORT).show();
+                Snackbar.LENGTH_LONG).show();
         // Borrar los datos
+        clearFormData();
     }
 
     @Override
