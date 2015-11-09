@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.Toast;
 
 import java.util.HashMap;
 
@@ -70,6 +69,12 @@ public class ExplorarListActivity extends AppCompatActivity implements ExplorarF
         if (mTitle != null) {
             toolbar.setTitle(mTitle);
         }
+
+        if (tipoListado == null) {
+            tipoListado = TipoListado.valueOf(TipoListado.DEPARTAMENTO.name());
+            toolbar.setTitle("Departamentos");
+        }
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -90,13 +95,11 @@ public class ExplorarListActivity extends AppCompatActivity implements ExplorarF
 
             bundleHash = new HashMap<>();
             bundleHash.put(AppConstants.PARAM_DEPARTAMENTO, ((Departamento) item).getNombre());
-            if (orderBy == null || orderBy.isEmpty()) {
-                bundleHash.put(AppConstants.PARAM_ORDER_BY, "distancia");
-            } else {
-                bundleHash.put(AppConstants.PARAM_ORDER_BY, orderBy);
-            }
+            bundleHash.put(AppConstants.PARAM_DEPARTAMENTO, ((Departamento) item).getNombre());
+            bundleHash.put(AppConstants.PARAM_ORDER_BY, "distancia");
 
             i.putExtra(AppConstants.ARG_ITEM_FILTER, bundleHash);
+            i.putExtra(AppConstants.ARG_TIPO_LISTADO, TipoListado.DISTRITO.name());
             i.putExtra(AppConstants.ARG_ACTIVITY_TITLE, ((Departamento) item).getNombre());
             startActivity(i);
         } else if (item instanceof Distrito) {
@@ -125,8 +128,7 @@ public class ExplorarListActivity extends AppCompatActivity implements ExplorarF
             i.putExtra(AppConstants.ARG_ACTIVITY_TITLE, ((Partido) item).getNombre());
             startActivity(i);
         } else if (item instanceof String) {
-            Intent
-                    i = new Intent(this, ExplorarListActivity.class);
+            Intent i = new Intent(this, ExplorarListActivity.class);
 
             String candidatura = ((String) item);
 
@@ -147,7 +149,11 @@ public class ExplorarListActivity extends AppCompatActivity implements ExplorarF
             startActivity(i);
 
         } else if (item instanceof Candidato) {
-            Toast.makeText(this, "Mostrar detalle de candidato", Toast.LENGTH_SHORT).show();
+
+            Intent i = new Intent(this, DetalleCandidatoActivity.class);
+
+            i.putExtra(AppConstants.ARG_CANDIDATO, (Candidato) item);
+            startActivity(i);
         }
     }
 }

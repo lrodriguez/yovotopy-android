@@ -13,6 +13,7 @@ public class AppConstants {
     public static final String ARG_TIPO_LISTADO = "arg_listado";
     public static final String ARG_ITEM_ID = "arg_item_id";
     public static final String ARG_ITEM_FILTER = "arg_item_filter";
+    public static final String ARG_CANDIDATO = "arg_candidato";
 
     // Preferences
     public static final String PREFS_APP = "AppPreferencesFile";

@@ -720,7 +720,7 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
 
         String base64String = null, fileName = null, fileType = null;
         try {
-            if (!imagePath.isEmpty()) {
+            if (imagePath != null && !imagePath.isEmpty()) {
                 File imageFile = new File(imagePath);
                 long fileSize = FileUtils.sizeOf(imageFile);
                 if (fileSize > (1 * 10E7)) {
@@ -742,9 +742,11 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
         // Categorías
         List<String> selectedIdCategorias = new ArrayList<>();
 
-        for (int i = 0; i < selectedCategories.length; i++) {
-            if (selectedCategories[i]) {
-                selectedIdCategorias.add(idsCategorias[i]);
+        if (selectedCategories != null) {
+            for (int i = 0; i < selectedCategories.length; i++) {
+                if (selectedCategories[i]) {
+                    selectedIdCategorias.add(idsCategorias[i]);
+                }
             }
         }
 

@@ -2,6 +2,7 @@ package py.com.purpleapps.yovotopy.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,10 +13,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import java.util.HashMap;
 
+import butterknife.Bind;
+import butterknife.BindDrawable;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnPageChange;
 import py.com.purpleapps.yovotopy.R;
 import py.com.purpleapps.yovotopy.model.Departamento;
 import py.com.purpleapps.yovotopy.model.TipoListado;
@@ -37,74 +42,67 @@ public class MainTabActivity extends BaseLocationActivity implements
     };
     private static final String[] titles = {
             "Inicio",
-            "Búsqueda",
+            "Explorar",
             "Denuncias",
             "Perfil"
     };
 
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.tab_layout)
+    TabLayout mTabLayout;
+    @Bind(R.id.view_pager)
+    ViewPager mViewPager;
+    @Bind(R.id.fab)
+    FloatingActionButton fab;
+
+    @BindDrawable(R.drawable.ic_search_white_24dp)
+    Drawable searchIcon;
+    @BindDrawable(R.drawable.ic_send_white_24dp)
+    Drawable sendIcon;
+
     private MainTabAdapter mAdapter;
-    private ViewPager mViewPager;
-    private FloatingActionButton fab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tab);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
-
-        final TabLayout mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
 
         mAdapter = new MainTabAdapter(getSupportFragmentManager(), this);
         mViewPager.setAdapter(mAdapter);
-
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 0) {
-                    fab.show();
-                    fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_search_white_24dp));
-                } else if (position == 2) {
-                    fab.show();
-                    fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_send_white_24dp));
-                } else {
-                    fab.hide();
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
         mTabLayout.setupWithViewPager(mViewPager);
         for (int i = 0; i < mTabLayout.getTabCount(); i++) {
             mTabLayout.getTabAt(i).setIcon(imageResId[i]);
             mTabLayout.getTabAt(i).setContentDescription(titles[i]);
         }
+    }
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mViewPager.getCurrentItem() == 0) {
-                    updateDatosPadron();
-                } else if (mViewPager.getCurrentItem() == 2) {
-                    // llamar API denuncias
-                    DenunciasFragment denunciasFragment =
-                            (DenunciasFragment) mAdapter.getFragment(2);
-                    denunciasFragment.validateForm();
-                }
-            }
-        });
+    @OnClick(R.id.fab)
+    void onFabClick() {
+        if (mViewPager.getCurrentItem() == 0) {
+            updateDatosPadron();
+        } else if (mViewPager.getCurrentItem() == 2) {
+            // llamar API denuncias
+            DenunciasFragment denunciasFragment =
+                    (DenunciasFragment) mAdapter.getFragment(2);
+            denunciasFragment.validateForm();
+        }
+    }
+
+    @OnPageChange(value = R.id.view_pager, callback = OnPageChange.Callback.PAGE_SELECTED)
+    void onPageChanged(int position) {
+        if (position == 0) {
+            fab.show();
+            fab.setImageDrawable(searchIcon);
+        } else if (position == 2) {
+            fab.show();
+            fab.setImageDrawable(sendIcon);
+        } else {
+            fab.hide();
+        }
     }
 
     @Override

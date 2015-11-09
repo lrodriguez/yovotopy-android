@@ -1,5 +1,8 @@
 package py.com.purpleapps.yovotopy.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -8,7 +11,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Candidato {
+public class Candidato implements Parcelable {
+    public static final Creator<Candidato> CREATOR = new Creator<Candidato>() {
+        @Override
+        public Candidato createFromParcel(Parcel source) {
+            return new Candidato(source);
+        }
+
+        @Override
+        public Candidato[] newArray(int size) {
+            return new Candidato[size];
+        }
+    };
     private String distrito;
     private String departamento;
     private String partido;
@@ -31,6 +45,34 @@ public class Candidato {
         this.nombreApellido = nombreApellido;
         this.lista = lista;
         this.orden = orden;
+    }
+
+    public Candidato(Parcel in) {
+        this.distrito = in.readString();
+        this.departamento = in.readString();
+        this.partido = in.readString();
+        this.candidatura = in.readString();
+        this.puesto = in.readString();
+        this.nombreApellido = in.readString();
+        this.lista = in.readInt();
+        this.orden = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(distrito);
+        dest.writeString(departamento);
+        dest.writeString(partido);
+        dest.writeString(candidatura);
+        dest.writeString(puesto);
+        dest.writeString(nombreApellido);
+        dest.writeInt(lista);
+        dest.writeInt(orden);
     }
 
     public String getDistrito() {

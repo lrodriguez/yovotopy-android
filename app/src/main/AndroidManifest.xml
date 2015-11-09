@@ -82,6 +82,15 @@ dispatching on non-Google Play devices
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="py.com.purpleapps.yovotopy.ui.MainTabActivity" />
         </activity>
+        <activity
+            android:name=".ui.DetalleCandidatoActivity"
+            android:label="@string/title_activity_detalle_candidato"
+            android:parentActivityName=".ui.ExplorarListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="py.com.purpleapps.yovotopy.ui.ExplorarListActivity" />
+        </activity>
     </application>
 
 </manifest>
