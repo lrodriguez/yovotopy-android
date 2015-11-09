@@ -3,11 +3,20 @@ package py.com.purpleapps.yovotopy.ui;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import py.com.purpleapps.yovotopy.R;
 
 /**
@@ -19,7 +28,17 @@ import py.com.purpleapps.yovotopy.R;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-
+    public static final long MUNICIPALES_DATE = 1447581600000L;
+    public static final long DAY_IN_MILLISECONDS = 86400000L;
+    public static final long HOUR_IN_MILLISECONDS = 3600000L;
+    public static final long MINUTE_IN_MILLISECONDS = 60000L;
+    public static final long SECOND_IN_MILLISECONDS = 1000L;
+    @Bind(R.id.main_content)
+    LinearLayout mainContent;
+    @Bind(R.id.swipe_refresh)
+    SwipeRefreshLayout refreshLayout;
+    @Bind(R.id.countdown_text)
+    TextView countdownText;
     private OnFragmentInteractionListener mListener;
 
     public HomeFragment() {
@@ -40,6 +59,24 @@ public class HomeFragment extends Fragment {
         return fragment;
     }
 
+    public static String calculateRemainingTime(Long millisUntilFinished) {
+        long dias = TimeUnit.DAYS.convert(millisUntilFinished, TimeUnit.DAYS.MILLISECONDS);
+
+        millisUntilFinished = millisUntilFinished - (dias * DAY_IN_MILLISECONDS);
+
+        long horas = TimeUnit.HOURS.convert(millisUntilFinished, TimeUnit.DAYS.MILLISECONDS);
+
+        millisUntilFinished = millisUntilFinished - (horas * HOUR_IN_MILLISECONDS);
+
+        long minutos = TimeUnit.MINUTES.convert(millisUntilFinished, TimeUnit.DAYS.MILLISECONDS);
+
+        millisUntilFinished = millisUntilFinished - (minutos * MINUTE_IN_MILLISECONDS);
+
+        long segundos = millisUntilFinished / SECOND_IN_MILLISECONDS;
+
+        return String.format("%d d, %d hs, %d min, %d seg", dias, horas, minutos, segundos);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +89,31 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        ButterKnife.bind(this, view);
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        long now = new Date().getTime();
+        long timeLeft = MUNICIPALES_DATE - now;
+
+        new CountDownTimer(timeLeft, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                String timeText = calculateRemainingTime(millisUntilFinished);
+
+                countdownText.setText(timeText);
+            }
+
+            public void onFinish() {
+                countdownText.setText("Llegó el día!");
+            }
+        }.start();
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -296,7 +296,7 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
             longitudLocal = datosConsultaPadron.getLocalVotacion().getLongitud();
             String mapsUrl = String.format(AppConstants.URL_MAPS_STATIC_IMAGE, latitudLocal,
                     longitudLocal, latitudLocal, longitudLocal);
-            Glide.with(getActivity()).load(mapsUrl).into(mapa);
+            Glide.with(this).load(mapsUrl).into(mapa);
             nombreLocal.setText(datosConsultaPadron.getLocalVotacion().getNombre());
             direccion.setText(datosConsultaPadron.getLocalVotacion().getDireccion());
             departamento.setText(datosConsultaPadron.getLocalVotacion().getDepartamento());
