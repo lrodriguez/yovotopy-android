@@ -13,6 +13,7 @@ import py.com.purpleapps.yovotopy.R;
 import py.com.purpleapps.yovotopy.model.Candidato;
 import py.com.purpleapps.yovotopy.model.Departamento;
 import py.com.purpleapps.yovotopy.model.Distrito;
+import py.com.purpleapps.yovotopy.model.Partido;
 import py.com.purpleapps.yovotopy.ui.ExplorarFragment.OnListFragmentInteractionListener;
 import py.com.purpleapps.yovotopy.ui.dummy.DummyContent.DummyItem;
 
@@ -78,6 +79,23 @@ public class MyExplorarRecyclerViewAdapter extends RecyclerView.Adapter<MyExplor
 
             holder.mIdView.setText(distrito.getNombre().substring(0, 1));
             holder.mContentView.setText(distrito.getNombre());
+        } else if (holder.mItem instanceof Partido) {
+            Partido partido = (Partido) holder.mItem;
+
+            int currentItem = position % 4;
+
+            if (currentItem == 0) {
+                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_1));
+            } else if (currentItem == 1) {
+                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_2));
+            } else if (currentItem == 2) {
+                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_3));
+            } else if (currentItem == 3) {
+                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_4));
+            }
+
+            holder.mIdView.setText(partido.getLista().toString());
+            holder.mContentView.setText(partido.getNombre());
         } else if (holder.mItem instanceof Candidato) {
             Candidato candidato = (Candidato) holder.mItem;
 

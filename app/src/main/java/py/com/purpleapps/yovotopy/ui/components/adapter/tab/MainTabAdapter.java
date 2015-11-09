@@ -8,6 +8,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import java.util.HashMap;
+
 import py.com.purpleapps.yovotopy.model.TipoListado;
 import py.com.purpleapps.yovotopy.ui.ConsultaPadronFragment;
 import py.com.purpleapps.yovotopy.ui.DenunciasFragment;
@@ -65,7 +67,9 @@ public class MainTabAdapter extends FragmentStatePagerAdapter {
                     fragment = HomeFragment.newInstance();
                     break;
                 case 1:
-                    fragment = ExplorarFragment.newInstance(2, null, TipoListado.DEPARTAMENTO.name());
+                    HashMap<String, String> hashMap = new HashMap<>();
+                    hashMap.put(AppConstants.PARAM_ORDER_BY, "distancia");
+                    fragment = ExplorarFragment.newInstance(2, hashMap, TipoListado.DEPARTAMENTO.name());
                     break;
                 case 2:
                     fragment = DenunciasFragment.newInstance();

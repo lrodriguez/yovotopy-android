@@ -179,6 +179,7 @@ public class MainTabActivity extends BaseLocationActivity implements
 
             i.putExtra(AppConstants.ARG_ITEM_FILTER, bundleHash);
             i.putExtra(AppConstants.ARG_TIPO_LISTADO, TipoListado.DISTRITO.name());
+            i.putExtra(AppConstants.ARG_ACTIVITY_TITLE, ((Departamento) item).getNombre());
             startActivity(i);
         }
     }

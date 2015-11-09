@@ -35,6 +35,7 @@ import py.com.purpleapps.yovotopy.model.Departamento;
 import py.com.purpleapps.yovotopy.model.Distrito;
 import py.com.purpleapps.yovotopy.model.Listado;
 import py.com.purpleapps.yovotopy.model.MensajeError;
+import py.com.purpleapps.yovotopy.model.Partido;
 import py.com.purpleapps.yovotopy.util.AppConstants;
 
 /**
@@ -330,8 +331,8 @@ public class EleccionesRestCallback {
 
     public void getDepartamentos(Double latitud, Double longitud, String orderBy, String exclude) throws JSONException {
         RequestParams requestParams = new RequestParams();
-        requestParams.add(AppConstants.PARAM_LAT, String.format("%.6f", latitud));
-        requestParams.add(AppConstants.PARAM_LONG, String.format("%.6f", longitud));
+        requestParams.add(AppConstants.PARAM_LAT, Double.toString(latitud));
+        requestParams.add(AppConstants.PARAM_LONG, Double.toString(longitud));
         requestParams.add(AppConstants.PARAM_ORDER_BY, orderBy);
         requestParams.add(AppConstants.PARAM_EXCLUDE, exclude);
 
@@ -539,7 +540,7 @@ public class EleccionesRestCallback {
                                 + rawJsonResponse);
                         Log.i(TAG, response.toString());
                         try {
-                            mListener.onSuccessAction((Listado<String>) response);
+                            mListener.onSuccessAction((Listado<Partido>) response);
                         } catch (ClassCastException e) {
                             Log.e(TAG, "No se pudo realizar el cast del objeto: "
                                     + e.getLocalizedMessage());
@@ -576,7 +577,7 @@ public class EleccionesRestCallback {
                     @Override
                     protected Object parseResponse(String rawJsonData, boolean isFailure)
                             throws Throwable {
-                        Listado<String> partidos = null;
+                        Listado<Partido> partidos = null;
                         MensajeError mensajeError = null;
 
                         ObjectMapper om = new ObjectMapper();
@@ -584,7 +585,7 @@ public class EleccionesRestCallback {
 
                         if (!isFailure) {
                             JavaType jt = om.getTypeFactory().constructParametrizedType(Listado.class,
-                                    Listado.class, String.class);
+                                    Listado.class, Partido.class);
                             partidos = om.readValue(parser, jt);
                             return partidos;
                         } else {
@@ -595,6 +596,7 @@ public class EleccionesRestCallback {
                 });
     }
 
+    @DebugLog
     public void getCandidaturas(String orderBy,
                                 String distrito, String departamento, String partido) throws JSONException {
 
@@ -692,14 +694,20 @@ public class EleccionesRestCallback {
         requestParams.add(AppConstants.PARAM_OFFSET, String.format("%d", offset));
         requestParams.add(AppConstants.PARAM_LIMIT, String.format("%d", limit));
         requestParams.add(AppConstants.PARAM_ORDER_BY, orderBy);
-        /*requestParams.add(AppConstants.PARAM_NOMBRE_CANDIDATO, nombreApellido);*/
+        requestParams.add(AppConstants.PARAM_NOMBRE_CANDIDATO, nombreApellido);
         requestParams.add(AppConstants.PARAM_DISTRITO, distrito);
         requestParams.add(AppConstants.PARAM_DEPARTAMENTO, departamento);
         requestParams.add(AppConstants.PARAM_PARTIDO, partido);
         requestParams.add(AppConstants.PARAM_CANDIDATURA, candidatura);
-        /*requestParams.add(AppConstants.PARAM_PUESTO, puesto);
-        requestParams.add(AppConstants.PARAM_LISTA, String.format("%d", lista));
-        requestParams.add(AppConstants.PARAM_ORDEN, String.format("%d", orden));*/
+        if (puesto != null) {
+            requestParams.add(AppConstants.PARAM_PUESTO, puesto);
+        }
+        if (lista > 0) {
+            requestParams.add(AppConstants.PARAM_LISTA, String.format("%d", lista));
+        }
+        if (orden > 0) {
+            requestParams.add(AppConstants.PARAM_ORDEN, String.format("%d", orden));
+        }
 
         EleccionesRestClient.get(context, AppConstants.OPENSHIFT_HOST,
                 AppConstants.PATH_CANDIDATOS, requestParams,
@@ -754,6 +762,8 @@ public class EleccionesRestCallback {
                         } catch (ClassCastException e) {
                             Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
                                     + e.getLocalizedMessage());
+                        } catch (Exception e) {
+
                         }
 
                     }
