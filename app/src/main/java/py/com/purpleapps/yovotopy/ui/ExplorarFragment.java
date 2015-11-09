@@ -180,6 +180,12 @@ public class ExplorarFragment extends Fragment implements EleccionesRestCallback
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 

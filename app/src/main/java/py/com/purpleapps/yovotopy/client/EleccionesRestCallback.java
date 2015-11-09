@@ -86,8 +86,8 @@ public class EleccionesRestCallback {
         RequestParams requestParams = new RequestParams();
         requestParams.add(AppConstants.PARAM_CEDULA, cedula);
         // TODO update with method params
-        requestParams.add(AppConstants.PARAM_LATITUD, latitud.toString());
-        requestParams.add(AppConstants.PARAM_LONGITUD, longitud.toString());
+        requestParams.add(AppConstants.PARAM_LATITUD, Double.toString(latitud));
+        requestParams.add(AppConstants.PARAM_LONGITUD, Double.toString(longitud));
 
         EleccionesRestClient.get(context, AppConstants.OPENSHIFT_HOST,
                 AppConstants.PATH_CONSULTA_PADRON, requestParams,
@@ -415,14 +415,15 @@ public class EleccionesRestCallback {
                 });
     }
 
+    @DebugLog
     public void getDistritos(int offset, int limit, Double latitud, Double longitud, String orderBy,
                              String exclude, String departamento) throws JSONException {
 
         RequestParams requestParams = new RequestParams();
         requestParams.add(AppConstants.PARAM_OFFSET, String.format("%d", offset));
         requestParams.add(AppConstants.PARAM_LIMIT, String.format("%d", limit));
-        requestParams.add(AppConstants.PARAM_LAT, String.format("%.6f", latitud));
-        requestParams.add(AppConstants.PARAM_LONG, String.format("%.6f", longitud));
+        requestParams.add(AppConstants.PARAM_LAT, Double.toString(latitud));
+        requestParams.add(AppConstants.PARAM_LONG, Double.toString(longitud));
         requestParams.add(AppConstants.PARAM_ORDER_BY, orderBy);
         requestParams.add(AppConstants.PARAM_EXCLUDE, exclude);
         requestParams.add(AppConstants.PARAM_DEPARTAMENTO, departamento);

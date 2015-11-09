@@ -114,6 +114,8 @@ public class HomeFragment extends Fragment {
                 countdownText.setText("Llegó el día!");
             }
         }.start();
+
+        refreshLayout.setEnabled(false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -1,7 +1,9 @@
 package py.com.purpleapps.yovotopy.ui;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,15 +53,7 @@ public class MyExplorarRecyclerViewAdapter extends RecyclerView.Adapter<MyExplor
 
             int currentItem = position % 4;
 
-            if (currentItem == 0) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_1));
-            } else if (currentItem == 1) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_2));
-            } else if (currentItem == 2) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_3));
-            } else if (currentItem == 3) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_4));
-            }
+            setViewBackground(currentItem, holder.mView);
 
             holder.mIdView.setText(departamento.getNombre().substring(0, 1));
             holder.mContentView.setText(departamento.getNombre());
@@ -67,15 +61,7 @@ public class MyExplorarRecyclerViewAdapter extends RecyclerView.Adapter<MyExplor
             Distrito distrito = (Distrito) holder.mItem;
             int currentItem = position % 4;
 
-            if (currentItem == 0) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_1));
-            } else if (currentItem == 1) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_2));
-            } else if (currentItem == 2) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_3));
-            } else if (currentItem == 3) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_4));
-            }
+            setViewBackground(currentItem, holder.mView);
 
             holder.mIdView.setText(distrito.getNombre().substring(0, 1));
             holder.mContentView.setText(distrito.getNombre());
@@ -84,15 +70,7 @@ public class MyExplorarRecyclerViewAdapter extends RecyclerView.Adapter<MyExplor
 
             int currentItem = position % 4;
 
-            if (currentItem == 0) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_1));
-            } else if (currentItem == 1) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_2));
-            } else if (currentItem == 2) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_3));
-            } else if (currentItem == 3) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_4));
-            }
+            setViewBackground(currentItem, holder.mView);
 
             holder.mIdView.setText(partido.getLista().toString());
             holder.mContentView.setText(partido.getNombre());
@@ -101,15 +79,7 @@ public class MyExplorarRecyclerViewAdapter extends RecyclerView.Adapter<MyExplor
 
             int currentItem = position % 4;
 
-            if (currentItem == 0) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_1));
-            } else if (currentItem == 1) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_2));
-            } else if (currentItem == 2) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_3));
-            } else if (currentItem == 3) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_4));
-            }
+            setViewBackground(currentItem, holder.mView);
 
             holder.mIdView.setText(candidato.getLista().toString());
             holder.mContentView.setText(candidato.getNombreApellido());
@@ -118,15 +88,7 @@ public class MyExplorarRecyclerViewAdapter extends RecyclerView.Adapter<MyExplor
 
             int currentItem = position % 4;
 
-            if (currentItem == 0) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_1));
-            } else if (currentItem == 1) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_2));
-            } else if (currentItem == 2) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_3));
-            } else if (currentItem == 3) {
-                holder.mView.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_4));
-            }
+            setViewBackground(currentItem, holder.mView);
 
             holder.mIdView.setText(whatever.substring(0, 1));
             holder.mContentView.setText(whatever);
@@ -152,6 +114,32 @@ public class MyExplorarRecyclerViewAdapter extends RecyclerView.Adapter<MyExplor
     public void removeItems() {
         mValues.clear();
         notifyDataSetChanged();
+    }
+
+    private void setViewBackground(int itemPosition, View view) {
+        try {
+            if (itemPosition == 0) {
+                view.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_1));
+            } else if (itemPosition == 1) {
+                view.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_2));
+            } else if (itemPosition == 2) {
+                view.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_3));
+            } else if (itemPosition == 3) {
+                view.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_4));
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e("Adapter", e.getLocalizedMessage());
+            if (itemPosition == 0) {
+                view.setBackgroundColor(mContext.getResources().getColor(R.color.materialLightPrimaryColor));
+            } else if (itemPosition == 1) {
+                view.setBackgroundColor(mContext.getResources().getColor(R.color.materialLightAccentColor));
+            } else if (itemPosition == 2) {
+                view.setBackgroundColor(mContext.getResources().getColor(R.color.materialAccentColor));
+            } else if (itemPosition == 3) {
+                view.setBackgroundColor(mContext.getResources().getColor(R.color.materialDarkPrimaryColor));
+            }
+        }
+
     }
 
     @Override
