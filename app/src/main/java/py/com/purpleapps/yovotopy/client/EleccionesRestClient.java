@@ -1,6 +1,7 @@
 package py.com.purpleapps.yovotopy.client;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -42,6 +43,10 @@ public class EleccionesRestClient {
 
         switch (host) {
             case AppConstants.OPENSHIFT_HOST:
+                Log.d("RestClient", "Llamada al web service: " + AppConstants.SCHEMA
+                        + AppConstants.INSTANCE_01 + AppConstants.HOST + AppConstants.PORT
+                        + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
+                        + relativeUrl);
                 url = AppConstants.SCHEMA + AppConstants.INSTANCE_01 + AppConstants.HOST + AppConstants.PORT
                         + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
                         + relativeUrl;

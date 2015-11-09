@@ -58,6 +58,7 @@ import py.com.purpleapps.yovotopy.model.AvizorCategoryWrapper;
 import py.com.purpleapps.yovotopy.model.DatosConsultaPadron;
 import py.com.purpleapps.yovotopy.model.DatosDenuncia;
 import py.com.purpleapps.yovotopy.model.FotoDenuncia;
+import py.com.purpleapps.yovotopy.model.Listado;
 import py.com.purpleapps.yovotopy.util.ImageFilePath;
 
 /**
@@ -444,7 +445,6 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
                     lugar.setText(place.getName() + " - " + place.getAddress());
                 }
                 break;
-            // TODO verificar tamaño de archivo
             case ACTION_TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
                     Log.d(TAG, "Path de la imagen: " + imagePath);
@@ -870,7 +870,8 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
     }
 
     @Override
-    public void onSuccessAction(List<AvizorCategoryWrapper> categoryList) {
+    public void onSuccessAction(List list) {
+        List<AvizorCategoryWrapper> categoryList = list;
         idsCategorias = new String[categoryList.size()];
         categorias = new String[categoryList.size()];
         selectedCategories = new boolean[categoryList.size()];
@@ -883,6 +884,11 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
         }
 
         showCategoriesDialog();
+    }
+
+    @Override
+    public void onSuccessAction(Listado listado) {
+
     }
 
     @Override

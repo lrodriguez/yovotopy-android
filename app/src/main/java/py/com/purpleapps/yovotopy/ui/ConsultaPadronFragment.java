@@ -30,9 +30,9 @@ import java.util.List;
 
 import py.com.purpleapps.yovotopy.R;
 import py.com.purpleapps.yovotopy.client.EleccionesRestCallback;
-import py.com.purpleapps.yovotopy.model.AvizorCategoryWrapper;
 import py.com.purpleapps.yovotopy.model.DatosConsultaPadron;
 import py.com.purpleapps.yovotopy.model.DatosVotacion;
+import py.com.purpleapps.yovotopy.model.Listado;
 import py.com.purpleapps.yovotopy.util.AppConstants;
 import py.com.purpleapps.yovotopy.util.Tracking;
 
@@ -325,7 +325,12 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
     }
 
     @Override
-    public void onSuccessAction(List<AvizorCategoryWrapper> categoryList) {
+    public void onSuccessAction(List list) {
+
+    }
+
+    @Override
+    public void onSuccessAction(Listado listado) {
 
     }
 

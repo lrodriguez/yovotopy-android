@@ -109,4 +109,5 @@
     <!-- Errors -->
     <string name="error_input_required">Este campo es requerido para enviar la denuncia</string>
     <string name="error_input_length">Se ha superado la cantidad máxima de caracteres</string>
+    <string name="title_activity_explorar_list">ExplorarListActivity</string>
 </resources>

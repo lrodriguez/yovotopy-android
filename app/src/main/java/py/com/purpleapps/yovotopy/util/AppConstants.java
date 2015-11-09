@@ -9,6 +9,10 @@ public class AppConstants {
     public static final String ARG_CEDULA = "arg_cedula";
     public static final String ARG_FECHA_NAC = "arg_fecha_nac";
     public static final String ARG_PROFILE = "arg_profile";
+    public static final String ARG_COLUMN_COUNT = "column-count";
+    public static final String ARG_TIPO_LISTADO = "arg_listado";
+    public static final String ARG_ITEM_ID = "arg_item_id";
+    public static final String ARG_ITEM_FILTER = "arg_item_filter";
 
     // Preferences
     public static final String PREFS_APP = "AppPreferencesFile";
@@ -36,6 +40,11 @@ public class AppConstants {
     // Urls & paths
     public static final String PATH_CONSULTA_PADRON = "consultas-padron";
     public static final String PATH_DENUNCIAS = "denuncias";
+    public static final String PATH_DEPARTAMENTOS = "departamentos";
+    public static final String PATH_DISTRITOS = "distritos";
+    public static final String PATH_PARTIDOS = "partidos";
+    public static final String PATH_CANDIDATURAS = "candidaturas";
+    public static final String PATH_CANDIDATOS = "candidatos";
     public static final String URL_MAPS_STATIC_IMAGE = "http://maps.google.com/maps/api/staticmap?center" +
             "=%f,%f&zoom=16&size=480x240&markers=color:blue|%f,%f&sensor=false";
 
@@ -44,6 +53,20 @@ public class AppConstants {
     public static final String PARAM_FECHA_NAC = "fechaNacimiento";
     public static final String PARAM_LATITUD = "latitud";
     public static final String PARAM_LONGITUD = "longitud";
+    public static final String PARAM_LAT = "lat";
+    public static final String PARAM_LONG = "lng";
+    public static final String PARAM_ORDER_BY = "orderBy";
+    public static final String PARAM_EXCLUDE = "exclude";
+    public static final String PARAM_LIMIT = "limit";
+    public static final String PARAM_OFFSET = "offset";
+    public static final String PARAM_DEPARTAMENTO = "departamento";
+    public static final String PARAM_DISTRITO = "distrito";
+    public static final String PARAM_PARTIDO = "partido";
+    public static final String PARAM_PUESTO = "puesto";
+    public static final String PARAM_CANDIDATURA = "candidatura";
+    public static final String PARAM_ORDEN = "orden";
+    public static final String PARAM_LISTA = "lista";
+    public static final String PARAM_NOMBRE_CANDIDATO = "nombreApellido";
     public static final String PARAM_TASK_AVIZOR = "task";
 
     // Test constants
@@ -58,4 +81,6 @@ public class AppConstants {
     public static final int MIN_LENGHT = 4;
     public static final String EMPTY_STRING = "";
     public static final String FECHA_FORMAT = "dd/MM/yy";
+    public static final int INITIAL_OFFSET = 0;
+    public static final int DEFAULT_LIMIT = 10;
 }

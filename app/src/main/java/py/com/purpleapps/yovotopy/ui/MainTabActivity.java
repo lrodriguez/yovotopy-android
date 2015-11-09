@@ -14,18 +14,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.HashMap;
+
 import py.com.purpleapps.yovotopy.R;
+import py.com.purpleapps.yovotopy.model.Departamento;
+import py.com.purpleapps.yovotopy.model.TipoListado;
 import py.com.purpleapps.yovotopy.ui.components.adapter.tab.MainTabAdapter;
+import py.com.purpleapps.yovotopy.util.AppConstants;
 import rx.functions.Action1;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainTabActivity extends BaseLocationActivity implements
         HomeFragment.OnFragmentInteractionListener,
+        ExplorarFragment.OnListFragmentInteractionListener,
         DenunciasFragment.OnFragmentInteractionListener,
         ConsultaPadronFragment.OnFragmentInteractionListener {
     private static final int[] imageResId = {
             R.drawable.ic_home_white_24dp,
-            R.drawable.ic_search_white_24dp,
+            R.drawable.ic_explore_white_24dp,
             R.drawable.ic_announcement_white_24dp,
             R.drawable.ic_account_circle_white_24dp
     };
@@ -160,5 +166,20 @@ public class MainTabActivity extends BaseLocationActivity implements
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onListFragmentInteraction(Object item) {
+        if (item instanceof Departamento) {
+            Intent i = new Intent(this, ExplorarListActivity.class);
+
+            HashMap<String, String> bundleHash = new HashMap<>();
+            bundleHash.put(AppConstants.PARAM_DEPARTAMENTO, ((Departamento) item).getNombre());
+            bundleHash.put(AppConstants.PARAM_ORDER_BY, "distancia");
+
+            i.putExtra(AppConstants.ARG_ITEM_FILTER, bundleHash);
+            i.putExtra(AppConstants.ARG_TIPO_LISTADO, TipoListado.DISTRITO.name());
+            startActivity(i);
+        }
     }
 }

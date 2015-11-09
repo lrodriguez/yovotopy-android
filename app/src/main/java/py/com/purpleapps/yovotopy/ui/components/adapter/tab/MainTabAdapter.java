@@ -8,8 +8,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import py.com.purpleapps.yovotopy.model.TipoListado;
 import py.com.purpleapps.yovotopy.ui.ConsultaPadronFragment;
 import py.com.purpleapps.yovotopy.ui.DenunciasFragment;
+import py.com.purpleapps.yovotopy.ui.ExplorarFragment;
 import py.com.purpleapps.yovotopy.ui.HomeFragment;
 import py.com.purpleapps.yovotopy.util.AppConstants;
 import py.com.purpleapps.yovotopy.util.Tracking;
@@ -63,7 +65,7 @@ public class MainTabAdapter extends FragmentStatePagerAdapter {
                     fragment = HomeFragment.newInstance();
                     break;
                 case 1:
-                    fragment = HomeFragment.newInstance();
+                    fragment = ExplorarFragment.newInstance(2, null, TipoListado.DEPARTAMENTO.name());
                     break;
                 case 2:
                     fragment = DenunciasFragment.newInstance();
