@@ -201,8 +201,6 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
         });
 
         restCallback = new EleccionesRestCallback(this, getActivity(), refreshLayout, parentView);
-
-        Tracking.track(ConsultaPadronFragment.this.getActivity().getApplication(), pantalla, Tracking.Accion.VER_PANTALLA);
     }
 
     @Override
@@ -248,6 +246,17 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
             restCallback.getConsultaPadron(cedula, latitud, longitud);
         } catch (JSONException e) {
             Log.e(TAG, "Ocurrió un error: " + e.getLocalizedMessage());
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            Tracking.track(ConsultaPadronFragment.this.getActivity().getApplication(),
+                    pantalla,
+                    Tracking.Accion.VER_PANTALLA);
         }
     }
 

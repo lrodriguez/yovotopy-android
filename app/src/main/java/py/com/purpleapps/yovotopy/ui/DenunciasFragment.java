@@ -445,10 +445,6 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
                 loadPicture(imagePath);
             }
         }
-
-        Tracking.track(getActivity().getApplication(),
-                Tracking.Pantalla.DENUNCIAS,
-                Tracking.Accion.VER_PANTALLA);
     }
 
     // Dialogs
@@ -844,6 +840,10 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             mListener.showFab(true, 2);
+
+            Tracking.track(getActivity().getApplication(),
+                    Tracking.Pantalla.DENUNCIAS,
+                    Tracking.Accion.VER_PANTALLA);
         } else {
             if (getUserVisibleHint()) {
                 mListener.showFab(false, 2);

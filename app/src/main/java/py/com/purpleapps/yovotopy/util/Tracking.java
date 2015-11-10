@@ -89,7 +89,8 @@ public class Tracking {
         PERFIL("Perfil"),
         DENUNCIAS("Denuncias"),
         EXPLORAR("Explorar"),
-        EXPLORAR_JERARQUIAS("Explorar jerarquias"),;
+        EXPLORAR_JERARQUIAS("Explorar jerarquias"),
+        INICIO("Inicio");
 
         private String nombre;
 

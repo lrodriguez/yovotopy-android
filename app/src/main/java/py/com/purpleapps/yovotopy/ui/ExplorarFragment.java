@@ -206,7 +206,6 @@ public class ExplorarFragment extends Fragment implements EleccionesRestCallback
 
         switch (tipoListado.getId()) {
             case 1:
-                Tracking.track(app, explorar, Tracking.Accion.VER_PANTALLA);
                 break;
             case 2:
                 Tracking.track(app, explorar, Tracking.Accion.VER_DEPARTAMENTO, departamento);
@@ -224,6 +223,17 @@ public class ExplorarFragment extends Fragment implements EleccionesRestCallback
                 Tracking.track(app, explorar, Tracking.Accion.VER_CANDIDATURA, candidatura);
                 Tracking.track(app, explorarJerarquia, departamento + "/" + distrito + "/" + partido + "/" + candidatura);
                 break;
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            Tracking.track(getActivity().getApplication(),
+                    Tracking.Pantalla.EXPLORAR,
+                    Tracking.Accion.VER_PANTALLA);
         }
     }
 
