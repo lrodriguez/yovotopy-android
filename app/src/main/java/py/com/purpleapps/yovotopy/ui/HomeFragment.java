@@ -42,6 +42,7 @@ import py.com.purpleapps.yovotopy.model.DatosVotacion;
 import py.com.purpleapps.yovotopy.model.Distrito;
 import py.com.purpleapps.yovotopy.model.Listado;
 import py.com.purpleapps.yovotopy.util.AppConstants;
+import py.com.purpleapps.yovotopy.util.Tracking;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -163,6 +164,7 @@ public class HomeFragment extends Fragment implements EleccionesRestCallback.OnR
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             mListener.showFab(true, 1);
+            Tracking.track(getActivity().getApplication(), Tracking.Pantalla.INICIO, Tracking.Accion.VER_PANTALLA);
         } else {
             if (getUserVisibleHint()) {
                 mListener.showFab(false, 1);
