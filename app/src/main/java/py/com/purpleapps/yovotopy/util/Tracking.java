@@ -72,6 +72,7 @@ public class Tracking {
         VER_PARTIDO("Ver partido"),
         VER_CANDIDATURA("Ver candidatura"),
         VER_CANDIDATO("Ver candidato"),
+        VER_AJUSTES("Ver ajustes"),
         VER_ACERCA_DE("Ver acerca de"),
         VER_TWITTER("Ver twitter"),
         VER_FACEBOOK("Ver facebook"),

@@ -29,6 +29,7 @@ import java.util.List;
 
 import py.com.purpleapps.yovotopy.R;
 import py.com.purpleapps.yovotopy.util.AppConstants;
+import py.com.purpleapps.yovotopy.util.Tracking;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -206,6 +207,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 sharedPreferences.edit().putBoolean(AppConstants.PREFS_PROFILE,
                         false).apply();
                 Snackbar.make(SettingsActivity.this.getWindow().getDecorView(), "Se borraron los datos de consulta del padrón", Snackbar.LENGTH_LONG).show();
+
+                Tracking.track(getApplication(), Tracking.Pantalla.AJUSTES, Tracking.Accion.BORRAR_PREDETERMINADO);
+
                 return false;
             }
         });
@@ -216,6 +220,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 AppConstants.showAboutDialog(SettingsActivity.this);
+
+                Tracking.track(getApplication(), Tracking.Pantalla.AJUSTES, Tracking.Accion.VER_ACERCA_DE);
+
                 return true;
             }
         });
