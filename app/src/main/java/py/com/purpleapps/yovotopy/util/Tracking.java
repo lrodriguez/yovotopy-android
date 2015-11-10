@@ -71,7 +71,12 @@ public class Tracking {
         VER_DISTRITO("Ver distrito"),
         VER_PARTIDO("Ver partido"),
         VER_CANDIDATURA("Ver candidatura"),
-        VER_CANDIDATO("Ver candidato"),;
+        VER_CANDIDATO("Ver candidato"),
+        VER_ACERCA_DE("Ver acerca de"),
+        VER_TWITTER("Ver twitter"),
+        VER_FACEBOOK("Ver facebook"),
+        ENVIAR_CORREO("Enviar correo"),
+        BORRAR_PREDETERMINADO("Borrar datos predeterminados");
 
         private String nombre;
 
@@ -89,8 +94,10 @@ public class Tracking {
         PERFIL("Perfil"),
         DENUNCIAS("Denuncias"),
         EXPLORAR("Explorar"),
-        EXPLORAR_JERARQUIAS("Explorar jerarquias"),
-        INICIO("Inicio");
+        EXPLORAR_JERARQUIAS("Explorar por jerarquias"),
+        INICIO("Inicio"),
+        AJUSTES("Ajustes"),
+        ACERCA_DE("Acerca de"),;
 
         private String nombre;
 

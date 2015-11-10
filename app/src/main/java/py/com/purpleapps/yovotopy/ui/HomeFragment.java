@@ -229,6 +229,9 @@ public class HomeFragment extends Fragment implements EleccionesRestCallback.OnR
 
                     Intent mapIntent = new Intent(android.content.Intent.ACTION_VIEW, uri);
                     startActivity(mapIntent);
+
+                    Tracking.track(HomeFragment.this.getActivity().getApplication(),
+                            Tracking.Pantalla.INICIO, Tracking.Accion.VER_MAPA);
                 } catch (ActivityNotFoundException e) {
                     Log.e(TAG, "No se encontró activity para visualizar mapas: "
                             + e.getLocalizedMessage());
