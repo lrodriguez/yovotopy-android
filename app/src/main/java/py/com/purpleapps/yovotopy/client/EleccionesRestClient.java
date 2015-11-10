@@ -7,6 +7,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import java.util.Random;
+
 import cz.msebera.android.httpclient.HttpEntity;
 import py.com.purpleapps.yovotopy.util.AppConstants;
 
@@ -23,36 +25,43 @@ public class EleccionesRestClient {
 
     public static void get(Context context, int host, RequestParams params,
                            AsyncHttpResponseHandler responseHandler) {
-        client.get(context, getAbsoluteUrl(host, 0, null), params, responseHandler);
+        client.get(context, getAbsoluteUrl(host, null), params, responseHandler);
     }
 
     public static void get(Context context, int host, String url, RequestParams params,
                            AsyncHttpResponseHandler responseHandler) {
-        client.get(context, getAbsoluteUrl(host, 0, url), params, responseHandler);
+        client.get(context, getAbsoluteUrl(host, url), params, responseHandler);
     }
 
     public static void post(Context context, int host, String url, RequestParams params,
                             AsyncHttpResponseHandler responseHandler) {
-        client.post(context, getAbsoluteUrl(host, 0, url), params, responseHandler);
+        client.post(context, getAbsoluteUrl(host, url), params, responseHandler);
     }
 
     public static void post(Context context, int host, String url, HttpEntity httpEntity, String contentType,
                             AsyncHttpResponseHandler responseHandler) {
-        client.post(context, getAbsoluteUrl(host, 0, url), httpEntity, contentType, responseHandler);
+        client.post(context, getAbsoluteUrl(host, url), httpEntity, contentType, responseHandler);
     }
 
-    private static String getAbsoluteUrl(int host, int instance, String relativeUrl) {
-        // TODO get instance randomly
+    private static String getAbsoluteUrl(int host, String relativeUrl) {
         String url = null;
+
+        Random instanceRandom = new Random();
+        int randomValue;
+        String openshiftName;
 
         switch (host) {
             case AppConstants.OPENSHIFT_HOST:
+
                 client.setTimeout(30000);
+                randomValue = instanceRandom.nextInt(3);
+                openshiftName = AppConstants.Instance.values()[randomValue].getNombre();
+
                 Log.d("RestClient", "Llamada al web service: " + AppConstants.SCHEMA
-                        + AppConstants.INSTANCE_01 + AppConstants.HOST + AppConstants.PORT
+                        + openshiftName + AppConstants.HOST + AppConstants.PORT
                         + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
                         + relativeUrl);
-                url = AppConstants.SCHEMA + AppConstants.INSTANCE_01 + AppConstants.HOST + AppConstants.PORT
+                url = AppConstants.SCHEMA + openshiftName + AppConstants.HOST + AppConstants.PORT
                         + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
                         + relativeUrl;
                 break;
@@ -62,7 +71,14 @@ public class EleccionesRestClient {
                 break;
             case AppConstants.OPENSHIFT_DENUNCIAS_HOST:
                 client.setTimeout(600000);
-                url = AppConstants.SCHEMA + AppConstants.INSTANCE_04 + AppConstants.HOST_DENUNCIAS + AppConstants.PORT
+                randomValue = instanceRandom.nextInt(6 - 3) + 3;
+                openshiftName = AppConstants.Instance.values()[randomValue].getNombre();
+
+                Log.d("RestClient", "Llamada al web service: " + AppConstants.SCHEMA
+                        + openshiftName + AppConstants.HOST_DENUNCIAS + AppConstants.PORT
+                        + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
+                        + relativeUrl);
+                url = AppConstants.SCHEMA + openshiftName + AppConstants.HOST_DENUNCIAS + AppConstants.PORT
                         + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
                         + relativeUrl;
                 //url = "http://192.168.0.100:8080/municipales2015-v0.3/rest/"+ relativeUrl;

@@ -61,6 +61,7 @@ import py.com.purpleapps.yovotopy.model.DatosConsultaPadron;
 import py.com.purpleapps.yovotopy.model.DatosDenuncia;
 import py.com.purpleapps.yovotopy.model.FotoDenuncia;
 import py.com.purpleapps.yovotopy.model.Listado;
+import py.com.purpleapps.yovotopy.util.AppConstants;
 import py.com.purpleapps.yovotopy.util.ImageFilePath;
 import py.com.purpleapps.yovotopy.util.Tracking;
 
@@ -645,7 +646,7 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
 
     @OnClick(R.id.avizor_image)
     void onAvizorClick() {
-        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.elavizor.org.py/reports"));
+        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.AVIZOR_HOME_PAGE));
         startActivity(i);
     }
 
@@ -939,8 +940,16 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
 
     @Override
     public void onSuccessAction() {
-        Snackbar.make(parentView, "Se enviaron correctamente los datos de la denuncia",
-                Snackbar.LENGTH_LONG).show();
+        Snackbar.make(parentView, "Se enviaron correctamente los datos de la denuncia.",
+                Snackbar.LENGTH_INDEFINITE).setAction("Ver denuncias", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(AppConstants.AVIZOR_DENUNCIAS_PAGE));
+
+                startActivity(i);
+            }
+        }).show();
+
         // Borrar los datos
         clearFormData();
     }
