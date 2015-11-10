@@ -20,6 +20,14 @@ public class Tracking {
         track(app, pantalla.getNombre(), accion.getNombre(), null, null);
     }
 
+    public static void track(Application app, Pantalla pantalla, String accion) {
+        track(app, pantalla.getNombre(), accion, null, null);
+    }
+
+    public static void track(Application app, Pantalla pantalla, Accion accion, String label) {
+        track(app, pantalla.getNombre(), accion.getNombre(), label, null);
+    }
+
     public static void track(Application app, String category, String action, String label, Long value) {
         Tracker t = ((YoVotoPyApplication) app).getTracker();
         t.enableAdvertisingIdCollection(true);
@@ -58,7 +66,12 @@ public class Tracking {
         VER_MAPA("Ver mapa"),
         ENVIAR_DENUNCIA("Enviar denuncia"),
         ANHADIR_LINKS("Añadir links"),
-        ANHADIR_FOTO("Añadir foto");
+        ANHADIR_FOTO("Añadir foto"),
+        VER_DEPARTAMENTO("Ver departamento"),
+        VER_DISTRITO("Ver distrito"),
+        VER_PARTIDO("Ver partido"),
+        VER_CANDIDATURA("Ver candidatura"),
+        VER_CANDIDATO("Ver candidato"),;
 
         private String nombre;
 
@@ -74,7 +87,9 @@ public class Tracking {
     public enum Pantalla {
         CONSULTA_PADRON("Consulta del padrón"),
         PERFIL("Perfil"),
-        DENUNCIAS("Denuncias");
+        DENUNCIAS("Denuncias"),
+        EXPLORAR("Explorar"),
+        EXPLORAR_JERARQUIAS("Explorar jerarquias"),;
 
         private String nombre;
 
