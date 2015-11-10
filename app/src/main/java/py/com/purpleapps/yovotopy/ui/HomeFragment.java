@@ -1,7 +1,6 @@
 package py.com.purpleapps.yovotopy.ui;
 
-import android.app.Activity;
-import android.net.Uri;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
@@ -86,6 +85,18 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            mListener.showFab(true, 1);
+        } else {
+            if (getUserVisibleHint()) {
+                mListener.showFab(false, 1);
+            }
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -118,21 +129,14 @@ public class HomeFragment extends Fragment {
         refreshLayout.setEnabled(false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnListFragmentInteractionListener");
         }
     }
 
@@ -153,8 +157,8 @@ public class HomeFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+
+        void showFab(boolean show, int iconId);
     }
 
 }

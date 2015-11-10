@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -51,6 +52,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import py.com.purpleapps.yovotopy.R;
 import py.com.purpleapps.yovotopy.client.EleccionesRestCallback;
 import py.com.purpleapps.yovotopy.model.AvizorCategory;
@@ -127,6 +129,8 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
     ImageView fotoDenuncia;
     @Bind(R.id.remove_image)
     ImageView removeFoto;
+    @Bind(R.id.avizor_image)
+    ImageView avizorImage;
     @BindString(R.string.error_input_required)
     String errorRequired;
     private OnFragmentInteractionListener mListener;
@@ -215,6 +219,13 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         }
         return type;
+    }
+
+    public static String getMimeTypeOfFile(String pathName) {
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(pathName, opt);
+        return opt.outMimeType;
     }
 
     @Override
@@ -635,6 +646,12 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
 
     }
 
+    @OnClick(R.id.avizor_image)
+    void onAvizorClick() {
+        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.elavizor.org.py/reports"));
+        startActivity(i);
+    }
+
     public void takePictureIntent(int actionId) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -732,7 +749,7 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
                         .encodeToString(FileUtils.readFileToByteArray(imageFile),
                                 Base64.DEFAULT);
                 fileName = imageFile.getName();
-                fileType = getMimeType(imagePath);
+                fileType = getMimeTypeOfFile(imagePath);
             }
 
         } catch (IOException e) {
@@ -818,6 +835,18 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
         } catch (JSONException e) {
             Log.e(TAG, "Ocurrió un error: " + e.getLocalizedMessage());
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            mListener.showFab(true, 2);
+        } else {
+            if (getUserVisibleHint()) {
+                mListener.showFab(false, 2);
+            }
         }
     }
 
@@ -931,7 +960,7 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+
+        void showFab(boolean show, int iconId);
     }
 }

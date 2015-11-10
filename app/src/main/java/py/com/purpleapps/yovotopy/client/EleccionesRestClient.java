@@ -17,6 +17,10 @@ public class EleccionesRestClient {
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 
+    public static void setTimeout(int timeout) {
+        client.setTimeout(timeout);
+    }
+
     public static void get(Context context, int host, RequestParams params,
                            AsyncHttpResponseHandler responseHandler) {
         client.get(context, getAbsoluteUrl(host, 0, null), params, responseHandler);
@@ -43,6 +47,7 @@ public class EleccionesRestClient {
 
         switch (host) {
             case AppConstants.OPENSHIFT_HOST:
+                client.setTimeout(30000);
                 Log.d("RestClient", "Llamada al web service: " + AppConstants.SCHEMA
                         + AppConstants.INSTANCE_01 + AppConstants.HOST + AppConstants.PORT
                         + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
@@ -52,12 +57,15 @@ public class EleccionesRestClient {
                         + relativeUrl;
                 break;
             case AppConstants.AVIZOR_HOST:
+                client.setTimeout(30000);
                 url = AppConstants.SCHEMA + AppConstants.HOST_AVIZOR + AppConstants.BASE_PATH_AVIZOR;
                 break;
             case AppConstants.OPENSHIFT_DENUNCIAS_HOST:
+                client.setTimeout(600000);
                 url = AppConstants.SCHEMA + AppConstants.INSTANCE_04 + AppConstants.HOST_DENUNCIAS + AppConstants.PORT
                         + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
                         + relativeUrl;
+                break;
         }
 
         return url;

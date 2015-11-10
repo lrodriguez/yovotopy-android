@@ -78,6 +78,7 @@ public class MainTabActivity extends BaseLocationActivity implements
             mTabLayout.getTabAt(i).setIcon(imageResId[i]);
             mTabLayout.getTabAt(i).setContentDescription(titles[i]);
         }
+        fab.hide();
     }
 
     @OnClick(R.id.fab)
@@ -179,6 +180,24 @@ public class MainTabActivity extends BaseLocationActivity implements
             i.putExtra(AppConstants.ARG_TIPO_LISTADO, TipoListado.DISTRITO.name());
             i.putExtra(AppConstants.ARG_ACTIVITY_TITLE, ((Departamento) item).getNombre());
             startActivity(i);
+        }
+    }
+
+    @Override
+    public void showFab(boolean show, int iconId) {
+        switch (iconId) {
+            case 1:
+                fab.setImageDrawable(searchIcon);
+                break;
+            case 2:
+                fab.setImageDrawable(sendIcon);
+                break;
+        }
+
+        if (show) {
+            fab.show();
+        } else {
+            fab.hide();
         }
     }
 }

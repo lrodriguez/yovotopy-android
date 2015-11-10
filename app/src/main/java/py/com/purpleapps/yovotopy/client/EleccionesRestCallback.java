@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
@@ -251,6 +252,8 @@ public class EleccionesRestCallback {
         HttpEntity httpEntity = new StringEntity(jsonString, ContentType.APPLICATION_JSON);
 
         View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_loading, null);
+
+        final TextView textView = (TextView) dialogView.findViewById(R.id.enviando_text);
         final AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppTheme_Dialog)
                 .setView(dialogView)
                 .setCancelable(false);
@@ -268,6 +271,8 @@ public class EleccionesRestCallback {
                     @Override
                     public void onProgress(long bytesWritten, long totalSize) {
                         super.onProgress(bytesWritten, totalSize);
+                        textView.setText(String.format("Enviados %d de %d bytes",
+                                bytesWritten, totalSize));
                     }
 
                     @Override
