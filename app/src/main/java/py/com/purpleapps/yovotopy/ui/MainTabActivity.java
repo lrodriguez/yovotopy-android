@@ -31,6 +31,7 @@ import py.com.purpleapps.yovotopy.model.Departamento;
 import py.com.purpleapps.yovotopy.model.TipoListado;
 import py.com.purpleapps.yovotopy.ui.components.adapter.tab.MainTabAdapter;
 import py.com.purpleapps.yovotopy.util.AppConstants;
+import py.com.purpleapps.yovotopy.util.Tracking;
 import rx.functions.Action1;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
@@ -174,9 +175,15 @@ public class MainTabActivity extends BaseLocationActivity implements
             /*Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);*/
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
+
+            Tracking.track(getApplication(), Tracking.Pantalla.INICIO, Tracking.Accion.VER_AJUSTES);
+
             return true;
         } else if (id == R.id.action_about) {
             AppConstants.showAboutDialog(this);
+
+            Tracking.track(getApplication(), Tracking.Pantalla.INICIO, Tracking.Accion.VER_ACERCA_DE);
+
             return true;
         }
 

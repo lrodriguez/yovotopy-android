@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import butterknife.ButterKnife;
 import py.com.purpleapps.yovotopy.R;
+import py.com.purpleapps.yovotopy.YoVotoPyApplication;
 
 /**
  * Created by luisrodriguez on 22/10/15.
@@ -101,6 +102,10 @@ public class AppConstants {
             public void onClick(View v) {
                 Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(PA_FACEBOOK_PROFILE));
                 context.startActivity(i);
+
+                Tracking.track((YoVotoPyApplication) context.getApplicationContext(),
+                        Tracking.Pantalla.ACERCA_DE,
+                        Tracking.Accion.VER_FACEBOOK);
             }
         });
 
@@ -109,6 +114,10 @@ public class AppConstants {
             public void onClick(View v) {
                 Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(PA_TWITTER_PROFILE));
                 context.startActivity(i);
+
+                Tracking.track((YoVotoPyApplication) context.getApplicationContext(),
+                        Tracking.Pantalla.ACERCA_DE,
+                        Tracking.Accion.VER_TWITTER);
             }
         });
 
@@ -123,6 +132,10 @@ public class AppConstants {
                 intent.putExtra(Intent.EXTRA_CC, "");
                 intent.setType("text/html");
                 context.startActivity(Intent.createChooser(intent, "Enviar correo"));
+
+                Tracking.track((YoVotoPyApplication) context.getApplicationContext(),
+                        Tracking.Pantalla.ACERCA_DE,
+                        Tracking.Accion.ENVIAR_CORREO);
             }
         });
 

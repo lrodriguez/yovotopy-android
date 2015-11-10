@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="@dimen/default_padding"
-            android:text="Te interesa nuestro trabajo?\nContactá con nosotros:"
+            android:text="¿Te interesa nuestro trabajo?\nContactá con nosotros:"
             android:textAppearance="?attr/textAppearanceSearchResultSubtitle" />
 
         <LinearLayout
