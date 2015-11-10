@@ -1,5 +1,6 @@
 package py.com.purpleapps.yovotopy.ui;
 
+import android.app.Application;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import py.com.purpleapps.yovotopy.model.Listado;
 import py.com.purpleapps.yovotopy.model.TipoListado;
 import py.com.purpleapps.yovotopy.ui.components.ItemOffsetDecoration;
 import py.com.purpleapps.yovotopy.util.AppConstants;
+import py.com.purpleapps.yovotopy.util.Tracking;
 
 /**
  * A fragment representing a list of Items.
@@ -177,6 +179,7 @@ public class ExplorarFragment extends Fragment implements EleccionesRestCallback
             }
         });
 
+        trackEvent();
     }
 
     @Override
@@ -193,6 +196,34 @@ public class ExplorarFragment extends Fragment implements EleccionesRestCallback
         if (startCount < 1) {
             performRequest(offset, orderBy);
             startCount++;
+        }
+    }
+
+    private void trackEvent() {
+        Tracking.Pantalla explorar = Tracking.Pantalla.EXPLORAR;
+        Tracking.Pantalla explorarJerarquia = Tracking.Pantalla.EXPLORAR_JERARQUIAS;
+        Application app = ExplorarFragment.this.getActivity().getApplication();
+
+        switch (tipoListado.getId()) {
+            case 1:
+                Tracking.track(app, explorar, Tracking.Accion.VER_PANTALLA);
+                break;
+            case 2:
+                Tracking.track(app, explorar, Tracking.Accion.VER_DEPARTAMENTO, departamento);
+                Tracking.track(app, explorarJerarquia, departamento);
+                break;
+            case 3:
+                Tracking.track(app, explorar, Tracking.Accion.VER_DISTRITO, distrito);
+                Tracking.track(app, explorarJerarquia, departamento + "/" + distrito);
+                break;
+            case 4:
+                Tracking.track(app, explorar, Tracking.Accion.VER_PARTIDO, partido);
+                Tracking.track(app, explorarJerarquia, departamento + "/" + distrito + "/" + partido);
+                break;
+            case 5:
+                Tracking.track(app, explorar, Tracking.Accion.VER_CANDIDATURA, candidatura);
+                Tracking.track(app, explorarJerarquia, departamento + "/" + distrito + "/" + partido + "/" + candidatura);
+                break;
         }
     }
 

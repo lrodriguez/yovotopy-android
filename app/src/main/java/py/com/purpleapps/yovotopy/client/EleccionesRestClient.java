@@ -65,6 +65,7 @@ public class EleccionesRestClient {
                 url = AppConstants.SCHEMA + AppConstants.INSTANCE_04 + AppConstants.HOST_DENUNCIAS + AppConstants.PORT
                         + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
                         + relativeUrl;
+                //url = "http://192.168.0.100:8080/municipales2015-v0.3/rest/"+ relativeUrl;
                 break;
         }
 

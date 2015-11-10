@@ -11,6 +11,7 @@ import butterknife.ButterKnife;
 import py.com.purpleapps.yovotopy.R;
 import py.com.purpleapps.yovotopy.model.Candidato;
 import py.com.purpleapps.yovotopy.util.AppConstants;
+import py.com.purpleapps.yovotopy.util.Tracking;
 
 public class DetalleCandidatoActivity extends BaseLocationActivity {
 
@@ -61,12 +62,23 @@ public class DetalleCandidatoActivity extends BaseLocationActivity {
             departamento.setText(candidato.getDepartamento());
             partido.setText(candidato.getPartido());
             lista.setText(String.format("%d", candidato.getLista()));
+
             if (candidato.getPuesto() != null) {
                 puestoRow.setVisibility(View.VISIBLE);
                 ordenRow.setVisibility(View.VISIBLE);
                 puesto.setText(candidato.getPuesto());
                 orden.setText(String.format("%d", candidato.getOrden()));
             }
+
+            Tracking.track(getApplication(),
+                    Tracking.Pantalla.EXPLORAR,
+                    Tracking.Accion.VER_CANDIDATO,
+                    candidato.getNombreApellido());
+
+            Tracking.track(getApplication(), Tracking.Pantalla.EXPLORAR_JERARQUIAS,
+                    candidato.getDepartamento() + "/" + candidato.getDistrito() + "/"
+                            + candidato.getPartido() + "/" + candidato.getCandidatura() + "/"
+                            + candidato.getNombreApellido());
         }
     }
 
