@@ -77,6 +77,7 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
     public static final int PLACE_PICKER_REQUEST = 1;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    public static final long FILE_SIZE_LIMIT = 10485760L;
     private static final int ACTION_TAKE_PHOTO = 10;
     private static final int PICK_FROM_GALLERY = 100;
     @Bind(R.id.swipe_refresh)
@@ -740,7 +741,7 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
             if (imagePath != null && !imagePath.isEmpty()) {
                 File imageFile = new File(imagePath);
                 long fileSize = FileUtils.sizeOf(imageFile);
-                if (fileSize > (1 * 10E7)) {
+                if (fileSize > FILE_SIZE_LIMIT) {
                     Snackbar.make(parentView, "La imagen pesa más de 10 Mb, " +
                             "cargue una imagen de menor tamaño", Snackbar.LENGTH_LONG).show();
                     return;
