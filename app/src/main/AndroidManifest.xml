@@ -91,6 +91,14 @@ dispatching on non-Google Play devices
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="py.com.purpleapps.yovotopy.ui.ExplorarListActivity" />
         </activity>
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".ui.MainTabActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="py.com.purpleapps.yovotopy.ui.MainTabActivity" />
+        </activity>
     </application>
 
 </manifest>

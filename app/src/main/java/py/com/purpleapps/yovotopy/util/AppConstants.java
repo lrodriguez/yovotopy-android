@@ -1,5 +1,16 @@
 package py.com.purpleapps.yovotopy.util;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+
+import butterknife.ButterKnife;
+import py.com.purpleapps.yovotopy.R;
+
 /**
  * Created by luisrodriguez on 22/10/15.
  */
@@ -84,4 +95,48 @@ public class AppConstants {
     public static final String FECHA_FORMAT = "dd/MM/yy";
     public static final int INITIAL_OFFSET = 0;
     public static final int DEFAULT_LIMIT = 10;
+    public static final String PA_FACEBOOK_PROFILE = "http://www.facebook.com/purpleappspy";
+    public static final String PA_TWITTER_PROFILE = "http://www.twitter.com/purpleappspy";
+    public static final String PA_MAIL = "contact.purpleapps@gmail.com";
+
+    public static void showAboutDialog(final Context context) {
+        View aboutView = LayoutInflater.from(context).inflate(R.layout.dialog_about, null);
+        Button facebook = ButterKnife.findById(aboutView, R.id.facebook_button);
+        Button twitter = ButterKnife.findById(aboutView, R.id.twitter_button);
+        Button mail = ButterKnife.findById(aboutView, R.id.email_button);
+
+        facebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(PA_FACEBOOK_PROFILE));
+                context.startActivity(i);
+            }
+        });
+
+        twitter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(PA_TWITTER_PROFILE));
+                context.startActivity(i);
+            }
+        });
+
+        mail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                String[] recipients = {PA_MAIL};
+                intent.putExtra(Intent.EXTRA_EMAIL, recipients);
+                intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                intent.putExtra(Intent.EXTRA_TEXT, "");
+                intent.putExtra(Intent.EXTRA_CC, "");
+                intent.setType("text/html");
+                context.startActivity(Intent.createChooser(intent, "Enviar correo"));
+            }
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppTheme_Dialog)
+                .setView(aboutView);
+        builder.show();
+    }
 }

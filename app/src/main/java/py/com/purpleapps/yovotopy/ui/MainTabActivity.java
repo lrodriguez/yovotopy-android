@@ -154,8 +154,12 @@ public class MainTabActivity extends BaseLocationActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            /*Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-            startActivity(intent);*/
+            /*Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);*/
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_about) {
+            AppConstants.showAboutDialog(this);
             return true;
         }
 

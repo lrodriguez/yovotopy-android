@@ -228,7 +228,6 @@
                 android:id="@+id/add_link_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
                 android:drawableLeft="@drawable/ic_link_white_24dp"
                 android:drawablePadding="8dp"
                 android:text="Añadir links"
@@ -238,10 +237,9 @@
                 android:id="@+id/add_foto_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
                 android:drawableLeft="@drawable/ic_add_to_photos_white_24dp"
                 android:drawablePadding="8dp"
-                android:text="Añadir foto (máximo 10 Mb)"
+                android:text="Añadir foto"
                 android:textColor="@color/materialTextIcons" />
 
             <RelativeLayout

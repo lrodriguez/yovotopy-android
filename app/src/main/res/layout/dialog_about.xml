@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/default_padding">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/purpleapps" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Desarrollado por Purple Apps"
+            android:textAppearance="?attr/textAppearanceSearchResultTitle" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/default_padding"
+            android:text="Te interesa nuestro trabajo?\nContactá con nosotros:"
+            android:textAppearance="?attr/textAppearanceSearchResultSubtitle" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/facebook_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:drawableLeft="@drawable/ic_facebook_grey600_24dp"
+                android:drawablePadding="@dimen/card_margin"
+                android:text="purpleappspy" />
+
+            <Button
+                android:id="@+id/twitter_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:drawableLeft="@drawable/ic_twitter_grey600_24dp"
+                android:drawablePadding="@dimen/card_margin"
+                android:text="\@purpleappspy" />
+
+            <Button
+                android:id="@+id/email_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:drawableLeft="@drawable/ic_mail_ru_grey600_24dp"
+                android:drawablePadding="@dimen/card_margin"
+                android:text="enviar correo " />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>

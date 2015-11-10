@@ -379,7 +379,9 @@ public class HomeFragment extends Fragment implements EleccionesRestCallback.OnR
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        layoutParams.setMargins(16, 0, 16, 16);
+        int margins = getResources().getDimensionPixelSize(R.dimen.card_margin);
+
+        layoutParams.setMargins(margins, 0, margins, margins);
         candidatosView.add(view);
         mainContent.addView(view, layoutParams);
     }

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
@@ -70,11 +69,12 @@ public class ConsultaPadronActivity extends BaseLocationActivity implements
         cedulaText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT && !validateCedula()) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH && !validateCedula()) {
                     showErrorCedulaText(true);
                     return true;
                 } else {
                     showErrorCedulaText(false);
+                    consultarPadron();
                     return false;
                 }
             }
@@ -114,7 +114,7 @@ public class ConsultaPadronActivity extends BaseLocationActivity implements
             public void onClick(View view) {
                 Tracking.track(ConsultaPadronActivity.this.getApplication(),
                         Tracking.Pantalla.CONSULTA_PADRON, Tracking.Accion.CONSULTAR_PADRON);
-                consultarPadron();
+                cedulaText.onEditorAction(EditorInfo.IME_ACTION_SEARCH);
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -163,13 +163,10 @@ public class ConsultaPadronActivity extends BaseLocationActivity implements
         if (validateCedula()) {
             // TODO como ocultar el teclado de forma definitiva
             showErrorCedulaText(false);
-            showKeyboard(false);
             toolbarLayout.setTitle("Datos para " + cedulaText.getText().toString());
             fragment.performRequest(cedulaText.getText().toString());
         } else {
             showErrorCedulaText(!validateCedula());
-            Snackbar.make(fragment.getView(), "Verifique los datos ingresados",
-                    Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -178,7 +175,6 @@ public class ConsultaPadronActivity extends BaseLocationActivity implements
             cedulaInput.setError("Ingrese un Nro de cédula válido");
             if (!cedulaInput.isFocused()) {
                 cedulaInput.requestFocus();
-                showKeyboard(show);
             }
         } else {
             cedulaInput.setError(AppConstants.EMPTY_STRING);
