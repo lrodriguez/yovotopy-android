@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId "py.com.purpleapps.yovotopy"
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -70,6 +70,7 @@ dependencies {
 
     // Appearence
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
+    compile 'com.github.deano2390:MaterialShowcaseView:1.0.5'
 
     compile "commons-io:commons-io:+"
 }

@@ -2,17 +2,22 @@ package py.com.purpleapps.yovotopy.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import java.util.HashMap;
 
@@ -28,18 +33,23 @@ import py.com.purpleapps.yovotopy.ui.components.adapter.tab.MainTabAdapter;
 import py.com.purpleapps.yovotopy.util.AppConstants;
 import rx.functions.Action1;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class MainTabActivity extends BaseLocationActivity implements
         HomeFragment.OnFragmentInteractionListener,
         ExplorarFragment.OnListFragmentInteractionListener,
         DenunciasFragment.OnFragmentInteractionListener,
         ConsultaPadronFragment.OnFragmentInteractionListener {
+    private static final String SHOWCASE_ID = "showcase yovotopy";
     private static final int[] imageResId = {
             R.drawable.ic_home_white_24dp,
             R.drawable.ic_explore_white_24dp,
             R.drawable.ic_announcement_white_24dp,
             R.drawable.ic_account_circle_white_24dp
     };
+
     private static final String[] titles = {
             "Inicio",
             "Explorar",
@@ -75,10 +85,17 @@ public class MainTabActivity extends BaseLocationActivity implements
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
         for (int i = 0; i < mTabLayout.getTabCount(); i++) {
-            mTabLayout.getTabAt(i).setIcon(imageResId[i]);
+            View view = LayoutInflater.from(this).inflate(R.layout.view_tab, null);
+            ImageView tabImage = ButterKnife.findById(view, R.id.tab_image);
+            Drawable drawable = ContextCompat.getDrawable(this, imageResId[i]);
+            tabImage.setImageDrawable(drawable);
+            mTabLayout.getTabAt(i).setCustomView(tabImage);
+//            mTabLayout.getTabAt(i).setIcon(imageResId[i]);
             mTabLayout.getTabAt(i).setContentDescription(titles[i]);
         }
         fab.hide();
+
+        presentShowcaseSequence();
     }
 
     @OnClick(R.id.fab)
@@ -203,5 +220,65 @@ public class MainTabActivity extends BaseLocationActivity implements
         } else {
             fab.hide();
         }
+    }
+
+    private void presentShowcaseSequence() {
+
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+        config.setMaskColor(Color.argb(150, 103, 58, 183));
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
+
+        sequence.setConfig(config);
+
+        MaterialShowcaseView targetView = new MaterialShowcaseView.Builder(this)
+                .setTarget(mTabLayout.getTabAt(0).getCustomView())
+                .setDismissText("ENTENDIDO")
+                .setContentText("Inicio:\nAquí podrás ver informaciones útiles sobre las elecciones, " +
+                        "dónde estás habilitado para votar así también como ver los candidatos en tu ciudad.")
+                .setUseAutoRadius(false)
+                .setRadius(100)
+                .setMaskColour(Color.argb(150, 103, 58, 183))
+                .build();
+        sequence.addSequenceItem(targetView);
+
+        targetView = new MaterialShowcaseView.Builder(this)
+                .setTarget(mTabLayout.getTabAt(1).getCustomView())
+                .setDismissText("ENTENDIDO")
+                .setContentText("Explorar: \nAquí podrás consultar los candidatos por distrito, partido y lista")
+                .setUseAutoRadius(false)
+                .setRadius(100)
+                .setMaskColour(Color.argb(150, 103, 58, 183))
+                .build();
+        sequence.addSequenceItem(targetView);
+
+        targetView = new MaterialShowcaseView.Builder(this)
+                .setTarget(mTabLayout.getTabAt(2).getCustomView())
+                .setDismissText("ENTENDIDO")
+                .setContentText("Denuncias: \nAquí podés enviar un reporte de una denuncia, " +
+                        "describiendo el hecho irregular con posibilidad de adjuntar fotos y links")
+                .setUseAutoRadius(false)
+                .setRadius(100)
+                .setMaskColour(Color.argb(150, 103, 58, 183))
+                .build();
+        sequence.addSequenceItem(targetView);
+
+        targetView = new MaterialShowcaseView.Builder(this)
+                .setTarget(mTabLayout.getTabAt(3).getCustomView())
+                .setDismissText("ENTENDIDO")
+                .setContentText("Perfil: \nUna vez que hayas guardado tu consulta al padrón, " +
+                        "podrás visualizar aquí los datos referentes a tu votación para que no " +
+                        "tengas que volver a realizar otra consulta")
+                .setUseAutoRadius(false)
+                .setRadius(100)
+                .setMaskColour(Color.argb(150, 103, 58, 183))
+                .build();
+        sequence.addSequenceItem(targetView);
+
+        sequence.addSequenceItem(fab, "Tocando aquí podrás consultar los datos del padrón electoral", "ENTENDIDO");
+
+        sequence.start();
+
     }
 }
