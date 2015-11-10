@@ -4,6 +4,7 @@ package py.com.purpleapps.yovotopy.ui;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -16,6 +17,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -193,6 +195,20 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         // Add 'general' preferences.
         addPreferencesFromResource(R.xml.pref_general);
+
+        final Preference datosPredeterminados = findPreference("default_data");
+        datosPredeterminados.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                SharedPreferences sharedPreferences = getSharedPreferences(AppConstants.PREFS_APP, 0);
+                sharedPreferences.edit().putString(AppConstants.PREFS_CEDULA,
+                        AppConstants.EMPTY_STRING).apply();
+                sharedPreferences.edit().putBoolean(AppConstants.PREFS_PROFILE,
+                        false).apply();
+                Snackbar.make(SettingsActivity.this.getWindow().getDecorView(), "Se borraron los datos de consulta del padrón", Snackbar.LENGTH_LONG).show();
+                return false;
+            }
+        });
 
         Preference aboutUs = findPreference("about_us");
 

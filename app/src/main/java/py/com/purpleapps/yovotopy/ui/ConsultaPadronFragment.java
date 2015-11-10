@@ -90,6 +90,7 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
     Button guardarPredeterminado;
     @Bind(R.id.ver_mapa_button)
     Button verMapa;
+    View emptyView;
     // Variables
     private String cedula;
     private boolean isProfile;
@@ -100,6 +101,7 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
     // Containers
     private View parentView;
     private Location currentLocation;
+
 
     // Para el tracking de analytics
     private Tracking.Pantalla pantalla = Tracking.Pantalla.CONSULTA_PADRON;
@@ -147,10 +149,20 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
         super.onViewCreated(view, savedInstanceState);
         parentView = view;
 
-        mainContainer.setVisibility(View.GONE);
+        datosPersonalesCard.setVisibility(View.GONE);
+        datosVotacionCard.setVisibility(View.GONE);
+        localVotacionCard.setVisibility(View.GONE);
+        votoAccesibleCard.setVisibility(View.GONE);
+
 
         if (isProfile) {
             guardarPredeterminado.setVisibility(View.GONE);
+        } else {
+            if (getActivity() instanceof MainTabActivity) {
+                View emptyView = LayoutInflater.from(getActivity())
+                        .inflate(R.layout.view_empty_profile, null);
+                mainContainer.addView(emptyView);
+            }
         }
 
         refreshLayout.setColorSchemeColors(getResources().getColor(R.color.materialAccentColor),
@@ -267,7 +279,6 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
     @Override
     public void onSuccessAction(DatosConsultaPadron datosConsultaPadron) {
 
-        mainContainer.setVisibility(View.VISIBLE);
         nombrePersona.setText(datosConsultaPadron.getDatosPersonales().getNombre());
         apellidoPersona.setText(datosConsultaPadron.getDatosPersonales().getApellido());
         sexo.setText(datosConsultaPadron.getDatosPersonales().getSexo());
@@ -275,10 +286,18 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
 
         if (!datosConsultaPadron.getPuedeVotar()) {
             Snackbar.make(parentView, datosConsultaPadron.getMotivo(), Snackbar.LENGTH_LONG).show();
-//            datosPersonalesCard.setVisibility(View.VISIBLE);
+            datosPersonalesCard.setVisibility(View.VISIBLE);
+            votoAccesibleCard.setVisibility(View.GONE);
             localVotacionCard.setVisibility(View.GONE);
             datosVotacionCard.setVisibility(View.GONE);
+            if (emptyView != null) {
+                mainContainer.removeView(emptyView);
+            }
         } else {
+            if (emptyView != null) {
+                mainContainer.removeView(emptyView);
+            }
+
             datosPersonalesCard.setVisibility(View.VISIBLE);
 
             if (datosConsultaPadron.getDatosVotacion().getTipoVotoAccesible() != null) {

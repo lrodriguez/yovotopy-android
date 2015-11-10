@@ -3,6 +3,9 @@
     <!-- This preference simply launches an intent when selected. Use this UI sparingly, per
          design guidelines. -->
     <Preference
+        android:key="default_data"
+        android:title="Borrar datos predeterminados" />
+    <Preference
         android:summary="@string/pref_summary_accesibility"
         android:title="@string/pref_title_accesibility_settings">
         <intent android:action="android.settings.ACCESSIBILITY_SETTINGS" />
