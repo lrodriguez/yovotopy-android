@@ -1,7 +1,7 @@
 package py.com.purpleapps.yovotopy.ui;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +27,8 @@ import org.json.JSONException;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import py.com.purpleapps.yovotopy.R;
 import py.com.purpleapps.yovotopy.client.EleccionesRestCallback;
 import py.com.purpleapps.yovotopy.model.DatosConsultaPadron;
@@ -46,42 +47,58 @@ import py.com.purpleapps.yovotopy.util.Tracking;
  */
 public class ConsultaPadronFragment extends Fragment implements EleccionesRestCallback.OnResponseReceived {
     private static final String TAG = "ConsultaPadron";
-
+    @Bind(R.id.swipe_refresh)
+    SwipeRefreshLayout refreshLayout;
+    @Bind(R.id.main_content)
+    LinearLayout mainContainer;
+    @Bind(R.id.datos_personales_card)
+    CardView datosPersonalesCard;
+    @Bind(R.id.local_votacion_card)
+    CardView localVotacionCard;
+    @Bind(R.id.datos_votacion_card)
+    CardView datosVotacionCard;
+    @Bind(R.id.votacion_accesible_card)
+    CardView votoAccesibleCard;
+    // Widgets
+    @Bind(R.id.nombre_persona_text)
+    TextView nombrePersona;
+    @Bind(R.id.apellido_persona_text)
+    TextView apellidoPersona;
+    @Bind(R.id.sexo_persona_text)
+    TextView sexo;
+    @Bind(R.id.nacionalidad_persona_text)
+    TextView nacionalidad;
+    @Bind(R.id.nombre_local_text)
+    TextView nombreLocal;
+    @Bind(R.id.direccion_local_text)
+    TextView direccion;
+    @Bind(R.id.departamento_text)
+    TextView departamento;
+    @Bind(R.id.zona_text)
+    TextView zona;
+    @Bind(R.id.distrito_text)
+    TextView distrito;
+    @Bind(R.id.mesa_text)
+    TextView mesa;
+    @Bind(R.id.orden_text)
+    TextView orden;
+    @Bind(R.id.voto_accesible_text)
+    TextView tipoVoto;
+    @Bind(R.id.map_image_view)
+    ImageView mapa;
+    @Bind(R.id.guardar_button)
+    Button guardarPredeterminado;
+    @Bind(R.id.ver_mapa_button)
+    Button verMapa;
     // Variables
     private String cedula;
     private boolean isProfile;
     private Double latitudLocal;
     private Double longitudLocal;
-
     private OnFragmentInteractionListener mListener;
     private EleccionesRestCallback restCallback;
-
     // Containers
     private View parentView;
-    private SwipeRefreshLayout refreshLayout;
-    private LinearLayout mainContainer;
-    private CardView datosPersonalesCard;
-    private CardView localVotacionCard;
-    private CardView datosVotacionCard;
-    private TableRow tipoVotoContainer;
-
-    // Widgets
-    private TextView nombrePersona;
-    private TextView apellidoPersona;
-    private TextView sexo;
-    private TextView nacionalidad;
-    private TextView nombreLocal;
-    private TextView direccion;
-    private TextView departamento;
-    private TextView zona;
-    private TextView distrito;
-    private TextView mesa;
-    private TextView orden;
-    private TextView tipoVoto;
-    private ImageView mapa;
-    private Button guardarPredeterminado;
-    private Button verMapa;
-
     private Location currentLocation;
 
     // Para el tracking de analytics
@@ -120,38 +137,15 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_consultapadron, container, false);
+        View view = inflater.inflate(R.layout.fragment_consultapadron, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         parentView = view;
-
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
-        mainContainer = (LinearLayout) view.findViewById(R.id.main_content);
-        datosPersonalesCard = (CardView) view.findViewById(R.id.datos_personales_card);
-        localVotacionCard = (CardView) view.findViewById(R.id.local_votacion_card);
-        datosVotacionCard = (CardView) view.findViewById(R.id.datos_votacion_card);
-
-        nombrePersona = (TextView) view.findViewById(R.id.nombre_persona_text);
-        apellidoPersona = (TextView) view.findViewById(R.id.apellido_persona_text);
-        sexo = (TextView) view.findViewById(R.id.sexo_persona_text);
-        nacionalidad = (TextView) view.findViewById(R.id.nacionalidad_persona_text);
-        guardarPredeterminado = (Button) view.findViewById(R.id.guardar_button);
-
-        mapa = (ImageView) view.findViewById(R.id.map_image_view);
-        nombreLocal = (TextView) view.findViewById(R.id.nombre_local_text);
-        direccion = (TextView) view.findViewById(R.id.direccion_local_text);
-        departamento = (TextView) view.findViewById(R.id.departamento_text);
-        zona = (TextView) view.findViewById(R.id.zona_text);
-        distrito = (TextView) view.findViewById(R.id.distrito_text);
-        verMapa = (Button) view.findViewById(R.id.ver_mapa_button);
-
-        tipoVotoContainer = (TableRow) view.findViewById(R.id.tipo_voto_layout);
-        mesa = (TextView) view.findViewById(R.id.mesa_text);
-        orden = (TextView) view.findViewById(R.id.orden_text);
-        tipoVoto = (TextView) view.findViewById(R.id.tipo_voto_text);
 
         mainContainer.setVisibility(View.GONE);
 
@@ -162,13 +156,8 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
         refreshLayout.setColorSchemeColors(getResources().getColor(R.color.materialAccentColor),
                 getResources().getColor(R.color.materialLightAccentColor),
                 getResources().getColor(R.color.materialPrimaryColor));
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // TODO mientras
-                refreshLayout.setRefreshing(false);
-            }
-        });
+
+        refreshLayout.setEnabled(false);
 
         guardarPredeterminado.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -216,20 +205,13 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
         Tracking.track(ConsultaPadronFragment.this.getActivity().getApplication(), pantalla, Tracking.Accion.VER_PANTALLA);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
@@ -251,7 +233,7 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
 
     public void performRequest(String cedula) {
         this.cedula = cedula;
-        // TODO update with user location
+
         Double latitud = AppConstants.TEST_LATITUDE;
         Double longitud = AppConstants.TEST_LONGITUDE;
 
@@ -289,6 +271,22 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
             datosVotacionCard.setVisibility(View.GONE);
         } else {
             datosPersonalesCard.setVisibility(View.VISIBLE);
+
+            if (datosConsultaPadron.getDatosVotacion().getTipoVotoAccesible() != null) {
+                votoAccesibleCard.setVisibility(View.VISIBLE);
+                tipoVoto.setText(DatosVotacion.TipoVoto
+                        .valueOf(datosConsultaPadron.getDatosVotacion()
+                                .getTipoVotoAccesible()).getDescripcion());
+                if (DatosVotacion.TipoVoto.VOTO_CASA.name().equalsIgnoreCase(datosConsultaPadron.getDatosVotacion()
+                        .getTipoVotoAccesible())) {
+                    localVotacionCard.setVisibility(View.GONE);
+                    datosVotacionCard.setVisibility(View.GONE);
+                    return;
+                }
+            } else {
+                votoAccesibleCard.setVisibility(View.GONE);
+            }
+
             localVotacionCard.setVisibility(View.VISIBLE);
             datosVotacionCard.setVisibility(View.VISIBLE);
 
@@ -307,14 +305,7 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
                     .getMesa()));
             orden.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
                     .getOrden()));
-            if (datosConsultaPadron.getDatosVotacion().getTipoVotoAccesible() != null) {
-                tipoVotoContainer.setVisibility(View.VISIBLE);
-                tipoVoto.setText(DatosVotacion.TipoVoto
-                        .valueOf(datosConsultaPadron.getDatosVotacion()
-                                .getTipoVotoAccesible()).getDescripcion());
-            } else {
-                tipoVotoContainer.setVisibility(View.GONE);
-            }
+
         }
 
     }
