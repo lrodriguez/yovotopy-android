@@ -65,12 +65,18 @@ public class HomeFragment extends Fragment implements EleccionesRestCallback.OnR
     LinearLayout mainContent;
     @Bind(R.id.swipe_refresh)
     SwipeRefreshLayout refreshLayout;
+    @Bind(R.id.proximas_elecciones_card)
+    CardView proximasEleccionesCard;
     @Bind(R.id.local_votacion_card)
     CardView localVotacionCard;
     @Bind(R.id.datos_votacion_card)
     CardView datosVotacionCard;
     @Bind(R.id.votacion_accesible_card)
     CardView votoAccesibleCard;
+    @Bind(R.id.title_proximas_text)
+    TextView proximasTitle;
+    @Bind(R.id.faltan_text)
+    TextView faltan;
     @Bind(R.id.countdown_text)
     TextView countdownText;
     @Bind(R.id.nombre_local_text)
@@ -187,7 +193,7 @@ public class HomeFragment extends Fragment implements EleccionesRestCallback.OnR
         super.onViewCreated(view, savedInstanceState);
         parentView = view;
 
-        long now = new Date().getTime();
+        final long now = new Date().getTime();
         long timeLeft = MUNICIPALES_DATE - now;
 
         new CountDownTimer(timeLeft, 1000) {
@@ -199,7 +205,13 @@ public class HomeFragment extends Fragment implements EleccionesRestCallback.OnR
             }
 
             public void onFinish() {
-                countdownText.setText("Llegó el día!");
+                if ((now - MUNICIPALES_DATE) < (HOUR_IN_MILLISECONDS * 10)) {
+                    proximasTitle.setText("Hoy");
+                    faltan.setVisibility(View.GONE);
+                    countdownText.setVisibility(View.GONE);
+                } else {
+                    proximasEleccionesCard.setVisibility(View.GONE);
+                }
             }
         }.start();
 
