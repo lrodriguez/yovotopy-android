@@ -430,8 +430,12 @@ public class EleccionesRestCallback {
         requestParams.add(AppConstants.PARAM_LAT, Double.toString(latitud));
         requestParams.add(AppConstants.PARAM_LONG, Double.toString(longitud));
         requestParams.add(AppConstants.PARAM_ORDER_BY, orderBy);
-        requestParams.add(AppConstants.PARAM_EXCLUDE, exclude);
-        requestParams.add(AppConstants.PARAM_DEPARTAMENTO, departamento);
+        if (exclude != null && !exclude.isEmpty()) {
+            requestParams.add(AppConstants.PARAM_EXCLUDE, exclude);
+        }
+        if (departamento != null && !departamento.isEmpty()) {
+            requestParams.add(AppConstants.PARAM_DEPARTAMENTO, departamento);
+        }
 
         EleccionesRestClient.get(context, AppConstants.OPENSHIFT_HOST,
                 AppConstants.PATH_DISTRITOS, requestParams,
@@ -700,12 +704,22 @@ public class EleccionesRestCallback {
         requestParams.add(AppConstants.PARAM_OFFSET, String.format("%d", offset));
         requestParams.add(AppConstants.PARAM_LIMIT, String.format("%d", limit));
         requestParams.add(AppConstants.PARAM_ORDER_BY, orderBy);
-        requestParams.add(AppConstants.PARAM_NOMBRE_CANDIDATO, nombreApellido);
-        requestParams.add(AppConstants.PARAM_DISTRITO, distrito);
-        requestParams.add(AppConstants.PARAM_DEPARTAMENTO, departamento);
-        requestParams.add(AppConstants.PARAM_PARTIDO, partido);
-        requestParams.add(AppConstants.PARAM_CANDIDATURA, candidatura);
-        if (puesto != null) {
+        if (nombreApellido != null && !nombreApellido.isEmpty()) {
+            requestParams.add(AppConstants.PARAM_NOMBRE_CANDIDATO, nombreApellido);
+        }
+        if (distrito != null && !distrito.isEmpty()) {
+            requestParams.add(AppConstants.PARAM_DISTRITO, distrito);
+        }
+        if (departamento != null && !departamento.isEmpty()) {
+            requestParams.add(AppConstants.PARAM_DEPARTAMENTO, departamento);
+        }
+        if (partido != null && !partido.isEmpty()) {
+            requestParams.add(AppConstants.PARAM_PARTIDO, partido);
+        }
+        if (candidatura != null && !candidatura.isEmpty()) {
+            requestParams.add(AppConstants.PARAM_CANDIDATURA, candidatura);
+        }
+        if (puesto != null && !puesto.isEmpty()) {
             requestParams.add(AppConstants.PARAM_PUESTO, puesto);
         }
         if (lista > 0) {

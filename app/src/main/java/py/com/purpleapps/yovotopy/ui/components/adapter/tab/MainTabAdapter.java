@@ -62,9 +62,16 @@ public class MainTabAdapter extends FragmentStatePagerAdapter {
         Fragment fragment = null;
 
         if (mPageReferenceMap.get(position) == null) {
+            SharedPreferences sharedPreferences = context
+                    .getSharedPreferences(AppConstants.PREFS_APP, 0);
+            String cedula = sharedPreferences.getString(AppConstants.PREFS_CEDULA,
+                    AppConstants.EMPTY_STRING);
+            boolean hasProfile = sharedPreferences.getBoolean(AppConstants.PREFS_PROFILE,
+                    false);
+
             switch (position) {
                 case 0:
-                    fragment = HomeFragment.newInstance();
+                    fragment = HomeFragment.newInstance(cedula, hasProfile);
                     break;
                 case 1:
                     HashMap<String, String> hashMap = new HashMap<>();
@@ -75,13 +82,6 @@ public class MainTabAdapter extends FragmentStatePagerAdapter {
                     fragment = DenunciasFragment.newInstance();
                     break;
                 case 3:
-                    SharedPreferences sharedPreferences = context
-                            .getSharedPreferences(AppConstants.PREFS_APP, 0);
-                    String cedula = sharedPreferences.getString(AppConstants.PREFS_CEDULA,
-                            AppConstants.EMPTY_STRING);
-                    boolean hasProfile = sharedPreferences.getBoolean(AppConstants.PREFS_PROFILE,
-                            false);
-
                     ConsultaPadronFragment consultaPadronFragment = ConsultaPadronFragment.newInstance(cedula, hasProfile);
                     consultaPadronFragment.setPantalla(Tracking.Pantalla.PERFIL);
 

@@ -24,9 +24,10 @@
 
                 <TextView
                     android:id="@+id/title_text"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/avizor_image"
                     android:text="Enviar nuevo reporte"
                     android:textAppearance="?attr/textAppearanceSearchResultTitle" />
 
@@ -35,7 +36,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_alignParentRight="true"
-                    android:layout_toRightOf="@id/title_text"
                     android:adjustViewBounds="true"
                     android:src="@drawable/elavizorlogo2" />
             </RelativeLayout>

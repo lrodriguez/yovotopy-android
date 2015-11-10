@@ -111,4 +111,6 @@
     <string name="error_input_length">Se ha superado la cantidad máxima de caracteres</string>
     <string name="title_activity_explorar_list">Explorar</string>
     <string name="title_activity_detalle_candidato">Detalle de Candidato</string>
+
+    <string name="section_candidatos">Candidatos a Intendente para %1$s</string>
 </resources>
