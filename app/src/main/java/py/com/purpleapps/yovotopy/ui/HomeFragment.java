@@ -440,24 +440,28 @@ public class HomeFragment extends BaseLocationFragment implements EleccionesRest
 
     @Override
     public void onSuccessAction(Listado listado) {
-        if (listado != null && listado.getContent() != null && listado.getContent().size() > 0) {
-            Object object = listado.getContent().get(0);
-            if (object instanceof Candidato) {
-                // Sacamos las vistas anteriores
-                for (View view : candidatosView) {
-                    mainContent.removeView(view);
-                }
+        try {
+            if (listado != null && listado.getContent() != null && listado.getContent().size() > 0) {
+                Object object = listado.getContent().get(0);
+                if (object instanceof Candidato) {
+                    // Sacamos las vistas anteriores
+                    for (View view : candidatosView) {
+                        mainContent.removeView(view);
+                    }
 
-                // Añadimos los candidatos
-                for (Candidato candidato : (List<Candidato>) listado.getContent()) {
-                    addCandidatoCard(candidato);
+                    // Añadimos los candidatos
+                    for (Candidato candidato : (List<Candidato>) listado.getContent()) {
+                        addCandidatoCard(candidato);
+                    }
+                } else if (object instanceof Distrito) {
+                    // Seccion de candidatos
+                    distritoCercano = ((Distrito) object).getNombre();
+                    titleText.setText(String.format(seccionCandidatos, distritoCercano));
+                    performRequest(2, "");
                 }
-            } else if (object instanceof Distrito) {
-                // Seccion de candidatos
-                distritoCercano = ((Distrito) object).getNombre();
-                titleText.setText(String.format(seccionCandidatos, distritoCercano));
-                performRequest(2, "");
             }
+        } catch (Exception e) {
+            Log.e(TAG, "Ocurrió un error: " + e);
         }
     }
 
