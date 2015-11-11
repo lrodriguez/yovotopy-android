@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
     <!-- The application name. Defaults to name specified for the application label -->
-    <string name="ga_appName">Yo Elijo PY</string>
+    <string name="ga_appName">Yo Voto PY</string>
 
     <!-- The dispatching period in seconds when Google Play services is
          unavailable. The default period is 1800 seconds or 30 minutes -->

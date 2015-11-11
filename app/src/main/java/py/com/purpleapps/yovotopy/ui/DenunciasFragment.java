@@ -193,7 +193,7 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d("Elecciones Py 2015", "failed to create directory");
+//                Log.d("Elecciones Py 2015", "failed to create directory");
                 return null;
             }
         }
@@ -431,7 +431,7 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
             email.setText(emailText);
             telefono.setText(telefonoText);
 
-            Log.d(TAG, links.toString());
+//            Log.d(TAG, links.toString());
 
             ArrayList<String> linksTemp = new ArrayList<>(links);
             links.clear();
@@ -467,7 +467,7 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
                 break;
             case ACTION_TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
-                    Log.d(TAG, "Path de la imagen: " + imagePath);
+//                    Log.d(TAG, "Path de la imagen: " + imagePath);
                     loadPicture(imagePath);
                     galleryAddPic();
                 } else if (resultCode == Activity.RESULT_CANCELED) {
@@ -476,9 +476,9 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
                 break;
             case PICK_FROM_GALLERY:
                 if (resultCode == Activity.RESULT_OK) {
-                    Log.d(TAG, "Content path de la imagen" + data.getData());
+//                    Log.d(TAG, "Content path de la imagen" + data.getData());
                     imagePath = ImageFilePath.getPath(getActivity().getApplicationContext(), data.getData());
-                    Log.i("Image File Path", "" + data.getData());
+//                    Log.i("Image File Path", "" + data.getData());
                     loadPicture(imagePath);
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     imagePath = "";
@@ -792,7 +792,7 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
         datosDenuncia.setLinks(links);
         datosDenuncia.setFotos(fotoDenunciaList);
 
-        Log.e(TAG, datosDenuncia.toString());
+//        Log.d(TAG, datosDenuncia.toString());
 
         if (isValid) {
             try {

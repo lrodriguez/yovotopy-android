@@ -260,7 +260,7 @@ public class HomeFragment extends BaseLocationFragment implements EleccionesRest
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart called");
+//        Log.d(TAG, "onStart called");
         if (startCount < 1) {
             performOnLocationUpdatedAction();
             startCount++;
@@ -337,7 +337,7 @@ public class HomeFragment extends BaseLocationFragment implements EleccionesRest
     @Override
     public void onSuccessAction(DatosConsultaPadron datosConsultaPadron) {
 
-        if (refreshLayout != null) {
+        try {
             if (!datosConsultaPadron.getPuedeVotar()) {
                 Snackbar.make(parentView, datosConsultaPadron.getMotivo(), Snackbar.LENGTH_LONG).show();
                 localVotacionCard.setVisibility(View.GONE);
@@ -385,6 +385,8 @@ public class HomeFragment extends BaseLocationFragment implements EleccionesRest
                 performRequest(2, "");
 
             }
+        } catch (Exception e) {
+            Log.e(TAG, "Ocurrió un error: " + e.getLocalizedMessage());
         }
     }
 

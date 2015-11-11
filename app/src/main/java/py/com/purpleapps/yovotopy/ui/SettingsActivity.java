@@ -20,9 +20,7 @@ import android.preference.RingtonePreference;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.List;
@@ -289,30 +287,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
             setHasOptionsMenu(true);
-
-            Preference aboutUs = findPreference("about_us");
-
-            aboutUs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Log.d("Preference", "Se hizo clic");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppTheme_Dialog)
-                            .setMessage("Somos Purple Apps.. Más detalles pronto");
-                    builder.show();
-                    return true;
-                }
-            });
-
-            /*Preference accesibilitySettings = findPreference("accesibility_settings");
-            accesibilitySettings.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-
-                public boolean onPreferenceClick(Preference preference) {
-                    Intent viewIntent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                    startActivity(viewIntent);
-
-                    return true;
-                }
-            });*/
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are

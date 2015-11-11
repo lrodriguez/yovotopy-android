@@ -286,63 +286,67 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
     @Override
     public void onSuccessAction(DatosConsultaPadron datosConsultaPadron) {
 
-        nombrePersona.setText(datosConsultaPadron.getDatosPersonales().getNombre());
-        apellidoPersona.setText(datosConsultaPadron.getDatosPersonales().getApellido());
-        sexo.setText(datosConsultaPadron.getDatosPersonales().getSexo());
-        nacionalidad.setText(datosConsultaPadron.getDatosPersonales().getNacionalidad());
+        try {
+            nombrePersona.setText(datosConsultaPadron.getDatosPersonales().getNombre());
+            apellidoPersona.setText(datosConsultaPadron.getDatosPersonales().getApellido());
+            sexo.setText(datosConsultaPadron.getDatosPersonales().getSexo());
+            nacionalidad.setText(datosConsultaPadron.getDatosPersonales().getNacionalidad());
 
-        if (!datosConsultaPadron.getPuedeVotar()) {
-            Snackbar.make(parentView, datosConsultaPadron.getMotivo(), Snackbar.LENGTH_LONG).show();
-            datosPersonalesCard.setVisibility(View.VISIBLE);
-            votoAccesibleCard.setVisibility(View.GONE);
-            localVotacionCard.setVisibility(View.GONE);
-            datosVotacionCard.setVisibility(View.GONE);
-            if (emptyView != null) {
-                mainContainer.removeView(emptyView);
-            }
-        } else {
-            if (emptyView != null) {
-                mainContainer.removeView(emptyView);
-            }
-
-            datosPersonalesCard.setVisibility(View.VISIBLE);
-
-            if (datosConsultaPadron.getDatosVotacion().getTipoVotoAccesible() != null) {
-                votoAccesibleCard.setVisibility(View.VISIBLE);
-                tipoVoto.setText(DatosVotacion.TipoVoto
-                        .valueOf(datosConsultaPadron.getDatosVotacion()
-                                .getTipoVotoAccesible()).getDescripcion());
-                if (DatosVotacion.TipoVoto.VOTO_CASA.name().equalsIgnoreCase(datosConsultaPadron.getDatosVotacion()
-                        .getTipoVotoAccesible())) {
-                    localVotacionCard.setVisibility(View.GONE);
-                    datosVotacionCard.setVisibility(View.GONE);
-                    return;
+            if (!datosConsultaPadron.getPuedeVotar()) {
+                Snackbar.make(parentView, datosConsultaPadron.getMotivo(), Snackbar.LENGTH_LONG).show();
+                datosPersonalesCard.setVisibility(View.VISIBLE);
+                votoAccesibleCard.setVisibility(View.GONE);
+                localVotacionCard.setVisibility(View.GONE);
+                datosVotacionCard.setVisibility(View.GONE);
+                if (emptyView != null) {
+                    mainContainer.removeView(emptyView);
                 }
             } else {
-                votoAccesibleCard.setVisibility(View.GONE);
+                if (emptyView != null) {
+                    mainContainer.removeView(emptyView);
+                }
+
+                datosPersonalesCard.setVisibility(View.VISIBLE);
+
+                if (datosConsultaPadron.getDatosVotacion().getTipoVotoAccesible() != null) {
+                    votoAccesibleCard.setVisibility(View.VISIBLE);
+                    tipoVoto.setText(DatosVotacion.TipoVoto
+                            .valueOf(datosConsultaPadron.getDatosVotacion()
+                                    .getTipoVotoAccesible()).getDescripcion());
+                    if (DatosVotacion.TipoVoto.VOTO_CASA.name().equalsIgnoreCase(datosConsultaPadron.getDatosVotacion()
+                            .getTipoVotoAccesible())) {
+                        localVotacionCard.setVisibility(View.GONE);
+                        datosVotacionCard.setVisibility(View.GONE);
+                        return;
+                    }
+                } else {
+                    votoAccesibleCard.setVisibility(View.GONE);
+                }
+
+                localVotacionCard.setVisibility(View.VISIBLE);
+                datosVotacionCard.setVisibility(View.VISIBLE);
+
+                latitudLocal = datosConsultaPadron.getLocalVotacion().getLatitud();
+                longitudLocal = datosConsultaPadron.getLocalVotacion().getLongitud();
+                String mapsUrl = String.format(AppConstants.URL_MAPS_STATIC_IMAGE, latitudLocal,
+                        longitudLocal, latitudLocal, longitudLocal);
+                if (getActivity() != null) {
+                    Glide.with(getActivity()).load(mapsUrl).into(mapa);
+                }
+                nombreLocal.setText(datosConsultaPadron.getLocalVotacion().getNombre());
+                direccion.setText(datosConsultaPadron.getLocalVotacion().getDireccion());
+                departamento.setText(datosConsultaPadron.getLocalVotacion().getDepartamento());
+                zona.setText(datosConsultaPadron.getLocalVotacion().getZona());
+                distrito.setText(datosConsultaPadron.getLocalVotacion().getDistrito());
+
+                mesa.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
+                        .getMesa()));
+                orden.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
+                        .getOrden()));
+
             }
-
-            localVotacionCard.setVisibility(View.VISIBLE);
-            datosVotacionCard.setVisibility(View.VISIBLE);
-
-            latitudLocal = datosConsultaPadron.getLocalVotacion().getLatitud();
-            longitudLocal = datosConsultaPadron.getLocalVotacion().getLongitud();
-            String mapsUrl = String.format(AppConstants.URL_MAPS_STATIC_IMAGE, latitudLocal,
-                    longitudLocal, latitudLocal, longitudLocal);
-            if (getActivity() != null) {
-                Glide.with(getActivity()).load(mapsUrl).into(mapa);
-            }
-            nombreLocal.setText(datosConsultaPadron.getLocalVotacion().getNombre());
-            direccion.setText(datosConsultaPadron.getLocalVotacion().getDireccion());
-            departamento.setText(datosConsultaPadron.getLocalVotacion().getDepartamento());
-            zona.setText(datosConsultaPadron.getLocalVotacion().getZona());
-            distrito.setText(datosConsultaPadron.getLocalVotacion().getDistrito());
-
-            mesa.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
-                    .getMesa()));
-            orden.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
-                    .getOrden()));
-
+        } catch (Exception e) {
+            Log.e(TAG, "Ocurrió un error: " + e.getLocalizedMessage());
         }
 
     }

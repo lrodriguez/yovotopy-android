@@ -144,8 +144,8 @@ public class ExplorarFragment extends BaseLocationFragment implements Elecciones
                     totalItemCount = layoutManager.getItemCount();
                     firstVisibleItems = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
 
-                    Log.d(TAG, "visibleItemCount: " + visibleItemCount + "\ntotalItemCount: "
-                            + totalItemCount + "\nfirstVisibleItems: " + firstVisibleItems);
+                   /* Log.d(TAG, "visibleItemCount: " + visibleItemCount + "\ntotalItemCount: "
+                            + totalItemCount + "\nfirstVisibleItems: " + firstVisibleItems);*/
 
                     if (loading && totalItemCount > previousTotal) {
                         loading = false;
@@ -194,7 +194,7 @@ public class ExplorarFragment extends BaseLocationFragment implements Elecciones
     public void onStart() {
         super.onStart();
 
-        Log.d(TAG, "onStart called");
+//        Log.d(TAG, "onStart called");
         if (startCount < 1) {
             performOnLocationUpdatedAction();
             startCount++;

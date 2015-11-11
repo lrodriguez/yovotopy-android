@@ -12,65 +12,67 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.hugo'
 
 android {
+    signingConfigs {
+        releaseConfig {
+            keyAlias '***REMOVED***'
+            keyPassword '***REMOVED***'
+            storeFile file('***REMOVED***')
+            storePassword '***REMOVED***'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-
     defaultConfig {
         applicationId "py.com.purpleapps.yovotopy"
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        signingConfig signingConfigs.releaseConfig
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
-
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
     }
+    productFlavors {
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.android.support:design:23.1.0'
     compile 'com.android.support:cardview-v7:23.1.0'
     compile 'com.android.support:support-v4:23.1.0'
-
     // Google Play Services
     compile 'com.google.android.gms:play-services-location:8.1.0'
     compile 'com.google.android.gms:play-services-analytics:8.1.0'
-
     // Async http client
     compile 'com.fasterxml.jackson.core:jackson-databind:2.5.3'
     compile 'com.loopj.android:android-async-http:1.4.9'
-
     // Image Loader
     compile 'com.github.bumptech.glide:glide:3.6.1'
-
     // Reactive Location
     compile 'pl.charmas.android:android-reactive-location:0.8@aar'
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'io.reactivex:rxandroid:0.25.0'
-
     // View Injection
     compile 'com.jakewharton:butterknife:7.0.1'
-
     // Appearence
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
     compile 'com.github.deano2390:MaterialShowcaseView:1.0.5'
-
-    compile "commons-io:commons-io:+"
+    compile 'commons-io:commons-io:+'
 }

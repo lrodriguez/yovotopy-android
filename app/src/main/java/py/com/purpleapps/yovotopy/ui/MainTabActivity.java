@@ -13,7 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -133,17 +132,17 @@ public class MainTabActivity extends BaseLocationActivity implements
                 .subscribe(new Action1<Location>() {
                     @Override
                     public void call(Location location) {
-                        Log.i(TAG, "lastKnownLocationSuscription callback is running");
+//                        Log.i(TAG, "lastKnownLocationSuscription callback is running");
                         if (location != null) {
                             currentLocation = location;
-                            Log.i(TAG, "Se obtuvo la localización: "
+                            /*Log.i(TAG, "Se obtuvo la localización: "
                                     + currentLocation.getLatitude() + ";"
                                     + currentLocation.getLongitude() + "("
-                                    + currentLocation.getAccuracy() + ")");
+                                    + currentLocation.getAccuracy() + ")");*/
                             Intent intent = new Intent("py.com.purpleapps.yovotopy.LOCATION_UPDATED");
                             LocalBroadcastManager.getInstance(MainTabActivity.this).sendBroadcast(intent);
                         } else {
-                            Log.i(TAG, "Reactive Location: no se obtuvo la localización");
+//                            Log.i(TAG, "Reactive Location: no se obtuvo la localización");
                             Intent intent = new Intent("ppy.com.purpleapps.yovotopy.LOCATION_UPDATE_FAILED");
                             LocalBroadcastManager.getInstance(MainTabActivity.this).sendBroadcast(intent);
                         }

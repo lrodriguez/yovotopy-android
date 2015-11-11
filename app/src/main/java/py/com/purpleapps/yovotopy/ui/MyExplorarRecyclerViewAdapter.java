@@ -2,8 +2,9 @@ package py.com.purpleapps.yovotopy.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,7 @@ import py.com.purpleapps.yovotopy.model.Departamento;
 import py.com.purpleapps.yovotopy.model.Distrito;
 import py.com.purpleapps.yovotopy.model.Partido;
 import py.com.purpleapps.yovotopy.ui.ExplorarFragment.OnListFragmentInteractionListener;
-import py.com.purpleapps.yovotopy.ui.dummy.DummyContent.DummyItem;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link py.com.purpleapps.yovotopy.ui.ExplorarFragment.OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MyExplorarRecyclerViewAdapter extends RecyclerView.Adapter<MyExplorarRecyclerViewAdapter.ViewHolder> {
 
     private final Context mContext;
@@ -118,25 +113,37 @@ public class MyExplorarRecyclerViewAdapter extends RecyclerView.Adapter<MyExplor
 
     private void setViewBackground(int itemPosition, View view) {
         try {
-            if (itemPosition == 0) {
-                view.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_1));
-            } else if (itemPosition == 1) {
-                view.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_2));
-            } else if (itemPosition == 2) {
-                view.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_3));
-            } else if (itemPosition == 3) {
-                view.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.explorar_item_4));
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                if (itemPosition == 0) {
+                    view.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.explorar_item_1));
+                } else if (itemPosition == 1) {
+                    view.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.explorar_item_2));
+                } else if (itemPosition == 2) {
+                    view.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.explorar_item_3));
+                } else if (itemPosition == 3) {
+                    view.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.explorar_item_4));
+                }
+            } else {
+                if (itemPosition == 0) {
+                    view.setBackground(ContextCompat.getDrawable(mContext, R.drawable.explorar_item_1));
+                } else if (itemPosition == 1) {
+                    view.setBackground(ContextCompat.getDrawable(mContext, R.drawable.explorar_item_2));
+                } else if (itemPosition == 2) {
+                    view.setBackground(ContextCompat.getDrawable(mContext, R.drawable.explorar_item_3));
+                } else if (itemPosition == 3) {
+                    view.setBackground(ContextCompat.getDrawable(mContext, R.drawable.explorar_item_4));
+                }
             }
         } catch (Resources.NotFoundException e) {
-            Log.e("Adapter", e.getLocalizedMessage());
+//            Log.e("Adapter", e.getLocalizedMessage());
             if (itemPosition == 0) {
-                view.setBackgroundColor(mContext.getResources().getColor(R.color.materialLightPrimaryColor));
+                view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.materialLightPrimaryColor));
             } else if (itemPosition == 1) {
-                view.setBackgroundColor(mContext.getResources().getColor(R.color.materialLightAccentColor));
+                view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.materialLightAccentColor));
             } else if (itemPosition == 2) {
-                view.setBackgroundColor(mContext.getResources().getColor(R.color.materialAccentColor));
+                view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.materialAccentColor));
             } else if (itemPosition == 3) {
-                view.setBackgroundColor(mContext.getResources().getColor(R.color.materialDarkPrimaryColor));
+                view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.materialDarkPrimaryColor));
             }
         }
 
