@@ -233,7 +233,8 @@ public class MainTabActivity extends BaseLocationActivity implements
 
         ShowcaseConfig config = new ShowcaseConfig();
         config.setDelay(500); // half second between each showcase view
-        config.setMaskColor(Color.argb(150, 103, 58, 183));
+        int color = Color.argb(150, 81, 45, 168);
+        config.setMaskColor(color);
 
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
 
@@ -246,7 +247,7 @@ public class MainTabActivity extends BaseLocationActivity implements
                         "dónde estás habilitado para votar así también como ver los candidatos en tu ciudad.")
                 .setUseAutoRadius(false)
                 .setRadius(100)
-                .setMaskColour(Color.argb(150, 103, 58, 183))
+                .setMaskColour(color)
                 .build();
         sequence.addSequenceItem(targetView);
 
@@ -256,7 +257,7 @@ public class MainTabActivity extends BaseLocationActivity implements
                 .setContentText("Explorar: \nAquí podrás consultar los candidatos por distrito, partido y lista")
                 .setUseAutoRadius(false)
                 .setRadius(100)
-                .setMaskColour(Color.argb(150, 103, 58, 183))
+                .setMaskColour(color)
                 .build();
         sequence.addSequenceItem(targetView);
 
@@ -267,7 +268,7 @@ public class MainTabActivity extends BaseLocationActivity implements
                         "describiendo el hecho irregular con posibilidad de adjuntar fotos y links")
                 .setUseAutoRadius(false)
                 .setRadius(100)
-                .setMaskColour(Color.argb(150, 103, 58, 183))
+                .setMaskColour(color)
                 .build();
         sequence.addSequenceItem(targetView);
 
@@ -279,7 +280,7 @@ public class MainTabActivity extends BaseLocationActivity implements
                         "tengas que volver a realizar otra consulta")
                 .setUseAutoRadius(false)
                 .setRadius(100)
-                .setMaskColour(Color.argb(150, 103, 58, 183))
+                .setMaskColour(color)
                 .build();
         sequence.addSequenceItem(targetView);
 
