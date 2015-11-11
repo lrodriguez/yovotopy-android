@@ -239,6 +239,7 @@ public class MainTabActivity extends BaseLocationActivity implements
         config.setDelay(500); // half second between each showcase view
         int color = Color.argb(150, 81, 45, 168);
         config.setMaskColor(color);
+        int radius = getResources().getDimensionPixelSize(R.dimen.showcase_item_radius);
 
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
 
@@ -248,9 +249,9 @@ public class MainTabActivity extends BaseLocationActivity implements
                 .setTarget(mTabLayout.getTabAt(0).getCustomView())
                 .setDismissText("ENTENDIDO")
                 .setContentText("Inicio:\nAquí podrás ver informaciones útiles sobre las elecciones, " +
-                        "dónde estás habilitado para votar así también como ver los candidatos en tu ciudad.")
+                        "dónde estás habilitado para votar y ver los candidatos en tu ciudad.")
                 .setUseAutoRadius(false)
-                .setRadius(100)
+                .setRadius(radius)
                 .setMaskColour(color)
                 .build();
         sequence.addSequenceItem(targetView);
@@ -260,7 +261,7 @@ public class MainTabActivity extends BaseLocationActivity implements
                 .setDismissText("ENTENDIDO")
                 .setContentText("Explorar: \nAquí podrás consultar los candidatos por distrito, partido y lista")
                 .setUseAutoRadius(false)
-                .setRadius(100)
+                .setRadius(radius)
                 .setMaskColour(color)
                 .build();
         sequence.addSequenceItem(targetView);
@@ -271,7 +272,7 @@ public class MainTabActivity extends BaseLocationActivity implements
                 .setContentText("Denuncias: \nAquí podés enviar un reporte de una denuncia, " +
                         "describiendo el hecho irregular con posibilidad de adjuntar fotos y links")
                 .setUseAutoRadius(false)
-                .setRadius(100)
+                .setRadius(radius)
                 .setMaskColour(color)
                 .build();
         sequence.addSequenceItem(targetView);
@@ -280,10 +281,9 @@ public class MainTabActivity extends BaseLocationActivity implements
                 .setTarget(mTabLayout.getTabAt(3).getCustomView())
                 .setDismissText("ENTENDIDO")
                 .setContentText("Perfil: \nUna vez que hayas guardado tu consulta al padrón, " +
-                        "podrás visualizar aquí los datos referentes a tu votación para que no " +
-                        "tengas que volver a realizar otra consulta")
+                        "podrás visualizar aquí tus datos referentes a la votación")
                 .setUseAutoRadius(false)
-                .setRadius(100)
+                .setRadius(radius)
                 .setMaskColour(color)
                 .build();
         sequence.addSequenceItem(targetView);

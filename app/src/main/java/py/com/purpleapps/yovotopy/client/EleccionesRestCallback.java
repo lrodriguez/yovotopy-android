@@ -86,7 +86,6 @@ public class EleccionesRestCallback {
 
         RequestParams requestParams = new RequestParams();
         requestParams.add(AppConstants.PARAM_CEDULA, cedula);
-        // TODO update with method params
         requestParams.add(AppConstants.PARAM_LATITUD, Double.toString(latitud));
         requestParams.add(AppConstants.PARAM_LONGITUD, Double.toString(longitud));
 
@@ -122,6 +121,8 @@ public class EleccionesRestCallback {
                 } catch (ClassCastException e) {
                     Log.e(TAG, "No se pudo realizar el cast del objeto: "
                             + e.getLocalizedMessage());
+                } catch (Exception e) {
+                    Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                 }
 
             }
@@ -148,6 +149,8 @@ public class EleccionesRestCallback {
                 } catch (ClassCastException e) {
                     Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
                             + e.getLocalizedMessage());
+                } catch (Exception e) {
+                    Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                 }
 
             }
@@ -206,6 +209,8 @@ public class EleccionesRestCallback {
                         } catch (ClassCastException e) {
                             Log.e(TAG, "No se pudo realizar el cast del objeto: "
                                     + e.getLocalizedMessage());
+                        } catch (Exception e) {
+                            Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                         }
                     }
 
@@ -231,6 +236,8 @@ public class EleccionesRestCallback {
                         } catch (ClassCastException e) {
                             Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
                                     + e.getLocalizedMessage());
+                        } catch (Exception e) {
+                            Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                         }
                     }
 
@@ -324,6 +331,8 @@ public class EleccionesRestCallback {
                         } catch (ClassCastException e) {
                             Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
                                     + e.getLocalizedMessage());
+                        } catch (Exception e) {
+                            Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                         }
                     }
 
@@ -382,6 +391,8 @@ public class EleccionesRestCallback {
                 } catch (ClassCastException e) {
                     Log.e(TAG, "No se pudo realizar el cast del objeto: "
                             + e.getLocalizedMessage());
+                } catch (Exception e) {
+                    Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                 }
 
             }
@@ -408,6 +419,8 @@ public class EleccionesRestCallback {
                 } catch (ClassCastException e) {
                     Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
                             + e.getLocalizedMessage());
+                } catch (Exception e) {
+                    Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                 }
 
             }
@@ -481,6 +494,8 @@ public class EleccionesRestCallback {
                 } catch (ClassCastException e) {
                     Log.e(TAG, "No se pudo realizar el cast del objeto: "
                             + e.getLocalizedMessage());
+                } catch (Exception e) {
+                    Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                 }
 
             }
@@ -507,6 +522,8 @@ public class EleccionesRestCallback {
                 } catch (ClassCastException e) {
                     Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
                             + e.getLocalizedMessage());
+                } catch (Exception e) {
+                    Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                 }
 
             }
@@ -574,6 +591,8 @@ public class EleccionesRestCallback {
                 } catch (ClassCastException e) {
                     Log.e(TAG, "No se pudo realizar el cast del objeto: "
                             + e.getLocalizedMessage());
+                } catch (Exception e) {
+                    Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                 }
 
             }
@@ -600,6 +619,8 @@ public class EleccionesRestCallback {
                 } catch (ClassCastException e) {
                     Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
                             + e.getLocalizedMessage());
+                } catch (Exception e) {
+                    Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                 }
 
             }
@@ -666,6 +687,8 @@ public class EleccionesRestCallback {
                 } catch (ClassCastException e) {
                     Log.e(TAG, "No se pudo realizar el cast del objeto: "
                             + e.getLocalizedMessage());
+                } catch (Exception e) {
+                    Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                 }
 
             }
@@ -692,6 +715,8 @@ public class EleccionesRestCallback {
                 } catch (ClassCastException e) {
                     Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
                             + e.getLocalizedMessage());
+                } catch (Exception e) {
+                    Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                 }
 
             }
@@ -788,6 +813,8 @@ public class EleccionesRestCallback {
                 } catch (ClassCastException e) {
                     Log.e(TAG, "No se pudo realizar el cast del objeto: "
                             + e.getLocalizedMessage());
+                } catch (Exception e) {
+                    Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                 }
 
             }
@@ -815,7 +842,7 @@ public class EleccionesRestCallback {
                     Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
                             + e.getLocalizedMessage());
                 } catch (Exception e) {
-
+                    Log.e(TAG, "Ocurrió un error desconocido: " + e.getLocalizedMessage());
                 }
 
             }
