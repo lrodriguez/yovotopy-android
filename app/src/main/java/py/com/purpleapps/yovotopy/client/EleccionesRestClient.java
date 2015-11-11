@@ -43,6 +43,14 @@ public class EleccionesRestClient {
         client.post(context, getAbsoluteUrl(host, url), httpEntity, contentType, responseHandler);
     }
 
+    public static void cancelRequests(Context context) {
+        client.cancelRequests(context, true);
+    }
+
+    public static void cancelRequestByTAG(Object TAG) {
+        client.cancelRequestsByTAG(TAG, true);
+    }
+
     private static String getAbsoluteUrl(int host, String relativeUrl) {
         String url = null;
 

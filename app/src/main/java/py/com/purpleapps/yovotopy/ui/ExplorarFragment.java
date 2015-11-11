@@ -2,9 +2,7 @@ package py.com.purpleapps.yovotopy.ui;
 
 import android.app.Application;
 import android.content.Context;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +22,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import py.com.purpleapps.yovotopy.R;
 import py.com.purpleapps.yovotopy.client.EleccionesRestCallback;
+import py.com.purpleapps.yovotopy.client.EleccionesRestClient;
 import py.com.purpleapps.yovotopy.model.DatosConsultaPadron;
 import py.com.purpleapps.yovotopy.model.Listado;
 import py.com.purpleapps.yovotopy.model.TipoListado;
@@ -37,7 +36,7 @@ import py.com.purpleapps.yovotopy.util.Tracking;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ExplorarFragment extends Fragment implements EleccionesRestCallback.OnResponseReceived {
+public class ExplorarFragment extends BaseLocationFragment implements EleccionesRestCallback.OnResponseReceived {
     public static final String TAG = "ExplorarFragment";
     @Bind(R.id.swipe_refresh)
     SwipeRefreshLayout refreshLayout;
@@ -61,8 +60,6 @@ public class ExplorarFragment extends Fragment implements EleccionesRestCallback
     private View parentView;
     private MyExplorarRecyclerViewAdapter mAdapter;
     private EleccionesRestCallback restCallback;
-
-    private Location currentLocation;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -156,7 +153,7 @@ public class ExplorarFragment extends Fragment implements EleccionesRestCallback
                     }
 
                     if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItems + visibleThreshold)) {
-                        if ((offset + limit) < count) {
+                        if ((offset + limit) <= count) {
                             performRequest(offset + limit, orderBy);
                             loading = true;
                         }
@@ -168,18 +165,23 @@ public class ExplorarFragment extends Fragment implements EleccionesRestCallback
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                count = 0;
-                firstVisibleItems = 0;
-                visibleItemCount = 0;
-                totalItemCount = 0;
-                previousTotal = 0;
-                offset = AppConstants.INITIAL_OFFSET;
-                mAdapter.removeItems();
+                resetFragment();
                 performRequest(offset, orderBy);
             }
         });
 
         trackEvent();
+    }
+
+    public void resetFragment() {
+        count = 0;
+        firstVisibleItems = 0;
+        visibleItemCount = 0;
+        totalItemCount = 0;
+        previousTotal = 0;
+        loading = true;
+        offset = AppConstants.INITIAL_OFFSET;
+        mAdapter.removeItems();
     }
 
     @Override
@@ -194,8 +196,39 @@ public class ExplorarFragment extends Fragment implements EleccionesRestCallback
 
         Log.d(TAG, "onStart called");
         if (startCount < 1) {
-            performRequest(offset, orderBy);
+            performOnLocationUpdatedAction();
             startCount++;
+        }
+    }
+
+    @Override
+    public void onStop() {
+        switch (tipoListado.getId()) {
+            case 1:
+                EleccionesRestClient.cancelRequestByTAG(AppConstants.PATH_DEPARTAMENTOS);
+                break;
+            case 2:
+                EleccionesRestClient.cancelRequestByTAG(AppConstants.PATH_DISTRITOS);
+                break;
+            case 3:
+                EleccionesRestClient.cancelRequestByTAG(AppConstants.PATH_PARTIDOS);
+                break;
+            case 4:
+                EleccionesRestClient.cancelRequestByTAG(AppConstants.PATH_CANDIDATURAS);
+                break;
+            case 5:
+                EleccionesRestClient.cancelRequestByTAG(AppConstants.PATH_CANDIDATOS);
+                break;
+        }
+        super.onStop();
+    }
+
+    @Override
+    void performOnLocationUpdatedAction() {
+        resetFragment();
+        currentLocation = BaseLocationActivity.getCurrentLocation();
+        if (currentLocation != null) {
+            performRequest(offset, orderBy);
         }
     }
 
@@ -238,16 +271,9 @@ public class ExplorarFragment extends Fragment implements EleccionesRestCallback
     }
 
     private void performRequest(int offset, String orderBy) {
-        // TODO update with user location
-        Double latitud = AppConstants.TEST_LATITUDE;
-        Double longitud = AppConstants.TEST_LONGITUDE;
+        Double latitud = currentLocation.getLatitude();
+        Double longitud = currentLocation.getLongitude();
 
-        currentLocation = BaseLocationActivity.getCurrentLocation();
-
-        if (currentLocation != null) {
-            latitud = currentLocation.getLatitude();
-            longitud = currentLocation.getLongitude();
-        }
 
         try {
             switch (tipoListado.getId()) {

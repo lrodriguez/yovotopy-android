@@ -90,81 +90,91 @@ public class EleccionesRestCallback {
         requestParams.add(AppConstants.PARAM_LATITUD, Double.toString(latitud));
         requestParams.add(AppConstants.PARAM_LONGITUD, Double.toString(longitud));
 
+        BaseJsonHttpResponseHandler<Object> responseHandler = new BaseJsonHttpResponseHandler<Object>() {
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
+            }
+
+            @Override
+            public void onCancel() {
+                super.onCancel();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
+                                  Object response) {
+
+                Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
+                        + rawJsonResponse);
+                Log.i(TAG, response.toString());
+                try {
+                    mListener.onSuccessAction((DatosConsultaPadron) response);
+                } catch (ClassCastException e) {
+                    Log.e(TAG, "No se pudo realizar el cast del objeto: "
+                            + e.getLocalizedMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable,
+                                  String rawJsonData, Object errorResponse) {
+                Log.e(TAG, "Status Code: " + statusCode + "\nRaw JSONData: "
+                        + rawJsonData);
+                try {
+                    MensajeError mensajeError = (MensajeError) errorResponse;
+                    if (statusCode == 404) {
+                        Snackbar.make(getParentView(), mensajeError.getMensajeUsuario(),
+                                Snackbar.LENGTH_SHORT).show();
+                    } else if (statusCode == 500 || statusCode == 503) {
+                        Snackbar.make(getParentView(), "El servicio no está disponible, " +
+                                        "intente de nuevo más tarde",
+                                Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        Snackbar.make(getParentView(), "Ocurrió un error, " +
+                                        "intente de nuevo más tarde",
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                } catch (ClassCastException e) {
+                    Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
+                            + e.getLocalizedMessage());
+                }
+
+            }
+
+            @Override
+            protected Object parseResponse(String rawJsonData, boolean isFailure)
+                    throws Throwable {
+                DatosConsultaPadron datosConsultaPadron = null;
+                MensajeError mensajeError = null;
+                ObjectMapper om = new ObjectMapper();
+                JsonParser parser = new JsonFactory().createParser(rawJsonData);
+
+                if (!isFailure) {
+                    datosConsultaPadron = om.readValues(parser, DatosConsultaPadron.class)
+                            .next();
+                    return datosConsultaPadron;
+                } else {
+                    mensajeError = om.readValues(parser, MensajeError.class).next();
+                    return mensajeError;
+                }
+            }
+        };
+
+        responseHandler.setTag(AppConstants.PATH_CONSULTA_PADRON);
+
         EleccionesRestClient.get(context, AppConstants.OPENSHIFT_HOST,
-                AppConstants.PATH_CONSULTA_PADRON, requestParams,
-                new BaseJsonHttpResponseHandler<Object>() {
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                        ((SwipeRefreshLayout) getLoadingView()).setRefreshing(true);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
-                                          Object response) {
-
-                        Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
-                                + rawJsonResponse);
-                        Log.i(TAG, response.toString());
-                        try {
-                            mListener.onSuccessAction((DatosConsultaPadron) response);
-                        } catch (ClassCastException e) {
-                            Log.e(TAG, "No se pudo realizar el cast del objeto: "
-                                    + e.getLocalizedMessage());
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable,
-                                          String rawJsonData, Object errorResponse) {
-                        Log.e(TAG, "Status Code: " + statusCode + "\nRaw JSONData: "
-                                + rawJsonData);
-                        try {
-                            MensajeError mensajeError = (MensajeError) errorResponse;
-                            if (statusCode == 404) {
-                                Snackbar.make(getParentView(), mensajeError.getMensajeUsuario(),
-                                        Snackbar.LENGTH_SHORT).show();
-                            } else if (statusCode == 500 || statusCode == 503) {
-                                Snackbar.make(getParentView(), "El servicio no está disponible, " +
-                                                "intente de nuevo más tarde",
-                                        Snackbar.LENGTH_SHORT).show();
-                            } else {
-                                Snackbar.make(getParentView(), "Ocurrió un error, " +
-                                                "intente de nuevo más tarde",
-                                        Snackbar.LENGTH_SHORT).show();
-                            }
-                        } catch (ClassCastException e) {
-                            Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
-                                    + e.getLocalizedMessage());
-                        }
-
-                    }
-
-                    @Override
-                    protected Object parseResponse(String rawJsonData, boolean isFailure)
-                            throws Throwable {
-                        DatosConsultaPadron datosConsultaPadron = null;
-                        MensajeError mensajeError = null;
-                        ObjectMapper om = new ObjectMapper();
-                        JsonParser parser = new JsonFactory().createParser(rawJsonData);
-
-                        if (!isFailure) {
-                            datosConsultaPadron = om.readValues(parser, DatosConsultaPadron.class)
-                                    .next();
-                            return datosConsultaPadron;
-                        } else {
-                            mensajeError = om.readValues(parser, MensajeError.class).next();
-                            return mensajeError;
-                        }
-                    }
-                });
+                AppConstants.PATH_CONSULTA_PADRON, requestParams, responseHandler);
     }
 
     public void getCategoriasAvizor() throws JSONException {
@@ -341,83 +351,92 @@ public class EleccionesRestCallback {
         requestParams.add(AppConstants.PARAM_ORDER_BY, orderBy);
         requestParams.add(AppConstants.PARAM_EXCLUDE, exclude);
 
+        BaseJsonHttpResponseHandler<Object> responseHandler = new BaseJsonHttpResponseHandler<Object>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
+            }
+
+            @Override
+            public void onCancel() {
+                super.onCancel();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
+                                  Object response) {
+
+                Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
+                        + rawJsonResponse);
+                Log.i(TAG, response.toString());
+                try {
+                    mListener.onSuccessAction((List<Departamento>) response);
+                } catch (ClassCastException e) {
+                    Log.e(TAG, "No se pudo realizar el cast del objeto: "
+                            + e.getLocalizedMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable,
+                                  String rawJsonData, Object errorResponse) {
+                Log.e(TAG, "Status Code: " + statusCode + "\nRaw JSONData: "
+                        + rawJsonData);
+                try {
+                    MensajeError mensajeError = (MensajeError) errorResponse;
+                    if (statusCode == 404) {
+                        Snackbar.make(getParentView(), mensajeError.getMensajeUsuario(),
+                                Snackbar.LENGTH_SHORT).show();
+                    } else if (statusCode == 500 || statusCode == 503) {
+                        Snackbar.make(getParentView(), "El servicio no está disponible, " +
+                                        "intente de nuevo más tarde",
+                                Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        Snackbar.make(getParentView(), "Ocurrió un error, " +
+                                        "intente de nuevo más tarde",
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                } catch (ClassCastException e) {
+                    Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
+                            + e.getLocalizedMessage());
+                }
+
+            }
+
+            @Override
+            protected Object parseResponse(String rawJsonData, boolean isFailure)
+                    throws Throwable {
+                List<Departamento> departamentos = null;
+                MensajeError mensajeError = null;
+
+                ObjectMapper om = new ObjectMapper();
+                JsonParser parser = new JsonFactory().createParser(rawJsonData);
+
+                if (!isFailure) {
+                    JavaType jt = om.getTypeFactory().constructCollectionType(List.class,
+                            Departamento.class);
+                    departamentos = om.readValue(parser, jt);
+                    return departamentos;
+                } else {
+                    mensajeError = om.readValues(parser, MensajeError.class).next();
+                    return mensajeError;
+                }
+            }
+        };
+
+        responseHandler.setTag(AppConstants.PATH_DEPARTAMENTOS);
+
         EleccionesRestClient.get(context, AppConstants.OPENSHIFT_HOST,
-                AppConstants.PATH_DEPARTAMENTOS, requestParams,
-                new BaseJsonHttpResponseHandler<Object>() {
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                        ((SwipeRefreshLayout) getLoadingView()).setRefreshing(true);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
-                                          Object response) {
-
-                        Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
-                                + rawJsonResponse);
-                        Log.i(TAG, response.toString());
-                        try {
-                            mListener.onSuccessAction((List<Departamento>) response);
-                        } catch (ClassCastException e) {
-                            Log.e(TAG, "No se pudo realizar el cast del objeto: "
-                                    + e.getLocalizedMessage());
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable,
-                                          String rawJsonData, Object errorResponse) {
-                        Log.e(TAG, "Status Code: " + statusCode + "\nRaw JSONData: "
-                                + rawJsonData);
-                        try {
-                            MensajeError mensajeError = (MensajeError) errorResponse;
-                            if (statusCode == 404) {
-                                Snackbar.make(getParentView(), mensajeError.getMensajeUsuario(),
-                                        Snackbar.LENGTH_SHORT).show();
-                            } else if (statusCode == 500 || statusCode == 503) {
-                                Snackbar.make(getParentView(), "El servicio no está disponible, " +
-                                                "intente de nuevo más tarde",
-                                        Snackbar.LENGTH_SHORT).show();
-                            } else {
-                                Snackbar.make(getParentView(), "Ocurrió un error, " +
-                                                "intente de nuevo más tarde",
-                                        Snackbar.LENGTH_SHORT).show();
-                            }
-                        } catch (ClassCastException e) {
-                            Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
-                                    + e.getLocalizedMessage());
-                        }
-
-                    }
-
-                    @Override
-                    protected Object parseResponse(String rawJsonData, boolean isFailure)
-                            throws Throwable {
-                        List<Departamento> departamentos = null;
-                        MensajeError mensajeError = null;
-
-                        ObjectMapper om = new ObjectMapper();
-                        JsonParser parser = new JsonFactory().createParser(rawJsonData);
-
-                        if (!isFailure) {
-                            JavaType jt = om.getTypeFactory().constructCollectionType(List.class,
-                                    Departamento.class);
-                            departamentos = om.readValue(parser, jt);
-                            return departamentos;
-                        } else {
-                            mensajeError = om.readValues(parser, MensajeError.class).next();
-                            return mensajeError;
-                        }
-                    }
-                });
+                AppConstants.PATH_DEPARTAMENTOS, requestParams, responseHandler);
     }
 
     @DebugLog
@@ -437,83 +456,86 @@ public class EleccionesRestCallback {
             requestParams.add(AppConstants.PARAM_DEPARTAMENTO, departamento);
         }
 
+        BaseJsonHttpResponseHandler<Object> responseHandler = new BaseJsonHttpResponseHandler<Object>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
+                                  Object response) {
+
+                Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
+                        + rawJsonResponse);
+                Log.i(TAG, response.toString());
+                try {
+                    mListener.onSuccessAction((Listado<Distrito>) response);
+                } catch (ClassCastException e) {
+                    Log.e(TAG, "No se pudo realizar el cast del objeto: "
+                            + e.getLocalizedMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable,
+                                  String rawJsonData, Object errorResponse) {
+                Log.e(TAG, "Status Code: " + statusCode + "\nRaw JSONData: "
+                        + rawJsonData);
+                try {
+                    MensajeError mensajeError = (MensajeError) errorResponse;
+                    if (statusCode == 404) {
+                        Snackbar.make(getParentView(), mensajeError.getMensajeUsuario(),
+                                Snackbar.LENGTH_SHORT).show();
+                    } else if (statusCode == 500 || statusCode == 503) {
+                        Snackbar.make(getParentView(), "El servicio no está disponible, " +
+                                        "intente de nuevo más tarde",
+                                Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        Snackbar.make(getParentView(), "Ocurrió un error, " +
+                                        "intente de nuevo más tarde",
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                } catch (ClassCastException e) {
+                    Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
+                            + e.getLocalizedMessage());
+                }
+
+            }
+
+            @Override
+            protected Object parseResponse(String rawJsonData, boolean isFailure)
+                    throws Throwable {
+                Listado<Distrito> distritos = null;
+                MensajeError mensajeError = null;
+
+                ObjectMapper om = new ObjectMapper();
+                JsonParser parser = new JsonFactory().createParser(rawJsonData);
+
+                if (!isFailure) {
+                    JavaType jt = om.getTypeFactory().constructParametrizedType(Listado.class,
+                            Listado.class, Distrito.class);
+                    distritos = om.readValue(parser, jt);
+                    return distritos;
+                } else {
+                    mensajeError = om.readValues(parser, MensajeError.class).next();
+                    return mensajeError;
+                }
+            }
+        };
+
+        responseHandler.setTag(AppConstants.PATH_DISTRITOS);
+
         EleccionesRestClient.get(context, AppConstants.OPENSHIFT_HOST,
-                AppConstants.PATH_DISTRITOS, requestParams,
-                new BaseJsonHttpResponseHandler<Object>() {
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                        ((SwipeRefreshLayout) getLoadingView()).setRefreshing(true);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
-                                          Object response) {
-
-                        Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
-                                + rawJsonResponse);
-                        Log.i(TAG, response.toString());
-                        try {
-                            mListener.onSuccessAction((Listado<Distrito>) response);
-                        } catch (ClassCastException e) {
-                            Log.e(TAG, "No se pudo realizar el cast del objeto: "
-                                    + e.getLocalizedMessage());
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable,
-                                          String rawJsonData, Object errorResponse) {
-                        Log.e(TAG, "Status Code: " + statusCode + "\nRaw JSONData: "
-                                + rawJsonData);
-                        try {
-                            MensajeError mensajeError = (MensajeError) errorResponse;
-                            if (statusCode == 404) {
-                                Snackbar.make(getParentView(), mensajeError.getMensajeUsuario(),
-                                        Snackbar.LENGTH_SHORT).show();
-                            } else if (statusCode == 500 || statusCode == 503) {
-                                Snackbar.make(getParentView(), "El servicio no está disponible, " +
-                                                "intente de nuevo más tarde",
-                                        Snackbar.LENGTH_SHORT).show();
-                            } else {
-                                Snackbar.make(getParentView(), "Ocurrió un error, " +
-                                                "intente de nuevo más tarde",
-                                        Snackbar.LENGTH_SHORT).show();
-                            }
-                        } catch (ClassCastException e) {
-                            Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
-                                    + e.getLocalizedMessage());
-                        }
-
-                    }
-
-                    @Override
-                    protected Object parseResponse(String rawJsonData, boolean isFailure)
-                            throws Throwable {
-                        Listado<Distrito> distritos = null;
-                        MensajeError mensajeError = null;
-
-                        ObjectMapper om = new ObjectMapper();
-                        JsonParser parser = new JsonFactory().createParser(rawJsonData);
-
-                        if (!isFailure) {
-                            JavaType jt = om.getTypeFactory().constructParametrizedType(Listado.class,
-                                    Listado.class, Distrito.class);
-                            distritos = om.readValue(parser, jt);
-                            return distritos;
-                        } else {
-                            mensajeError = om.readValues(parser, MensajeError.class).next();
-                            return mensajeError;
-                        }
-                    }
-                });
+                AppConstants.PATH_DISTRITOS, requestParams, responseHandler);
     }
 
     @DebugLog
@@ -527,83 +549,86 @@ public class EleccionesRestCallback {
         requestParams.add(AppConstants.PARAM_DISTRITO, distrito);
         requestParams.add(AppConstants.PARAM_DEPARTAMENTO, departamento);
 
+        BaseJsonHttpResponseHandler<Object> responseHandler = new BaseJsonHttpResponseHandler<Object>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
+                                  Object response) {
+
+                Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
+                        + rawJsonResponse);
+                Log.i(TAG, response.toString());
+                try {
+                    mListener.onSuccessAction((Listado<Partido>) response);
+                } catch (ClassCastException e) {
+                    Log.e(TAG, "No se pudo realizar el cast del objeto: "
+                            + e.getLocalizedMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable,
+                                  String rawJsonData, Object errorResponse) {
+                Log.e(TAG, "Status Code: " + statusCode + "\nRaw JSONData: "
+                        + rawJsonData);
+                try {
+                    MensajeError mensajeError = (MensajeError) errorResponse;
+                    if (statusCode == 404) {
+                        Snackbar.make(getParentView(), mensajeError.getMensajeUsuario(),
+                                Snackbar.LENGTH_SHORT).show();
+                    } else if (statusCode == 500 || statusCode == 503) {
+                        Snackbar.make(getParentView(), "El servicio no está disponible, " +
+                                        "intente de nuevo más tarde",
+                                Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        Snackbar.make(getParentView(), "Ocurrió un error, " +
+                                        "intente de nuevo más tarde",
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                } catch (ClassCastException e) {
+                    Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
+                            + e.getLocalizedMessage());
+                }
+
+            }
+
+            @Override
+            protected Object parseResponse(String rawJsonData, boolean isFailure)
+                    throws Throwable {
+                Listado<Partido> partidos = null;
+                MensajeError mensajeError = null;
+
+                ObjectMapper om = new ObjectMapper();
+                JsonParser parser = new JsonFactory().createParser(rawJsonData);
+
+                if (!isFailure) {
+                    JavaType jt = om.getTypeFactory().constructParametrizedType(Listado.class,
+                            Listado.class, Partido.class);
+                    partidos = om.readValue(parser, jt);
+                    return partidos;
+                } else {
+                    mensajeError = om.readValues(parser, MensajeError.class).next();
+                    return mensajeError;
+                }
+            }
+        };
+
+        responseHandler.setTag(AppConstants.PATH_PARTIDOS);
+
         EleccionesRestClient.get(context, AppConstants.OPENSHIFT_HOST,
-                AppConstants.PATH_PARTIDOS, requestParams,
-                new BaseJsonHttpResponseHandler<Object>() {
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                        ((SwipeRefreshLayout) getLoadingView()).setRefreshing(true);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
-                                          Object response) {
-
-                        Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
-                                + rawJsonResponse);
-                        Log.i(TAG, response.toString());
-                        try {
-                            mListener.onSuccessAction((Listado<Partido>) response);
-                        } catch (ClassCastException e) {
-                            Log.e(TAG, "No se pudo realizar el cast del objeto: "
-                                    + e.getLocalizedMessage());
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable,
-                                          String rawJsonData, Object errorResponse) {
-                        Log.e(TAG, "Status Code: " + statusCode + "\nRaw JSONData: "
-                                + rawJsonData);
-                        try {
-                            MensajeError mensajeError = (MensajeError) errorResponse;
-                            if (statusCode == 404) {
-                                Snackbar.make(getParentView(), mensajeError.getMensajeUsuario(),
-                                        Snackbar.LENGTH_SHORT).show();
-                            } else if (statusCode == 500 || statusCode == 503) {
-                                Snackbar.make(getParentView(), "El servicio no está disponible, " +
-                                                "intente de nuevo más tarde",
-                                        Snackbar.LENGTH_SHORT).show();
-                            } else {
-                                Snackbar.make(getParentView(), "Ocurrió un error, " +
-                                                "intente de nuevo más tarde",
-                                        Snackbar.LENGTH_SHORT).show();
-                            }
-                        } catch (ClassCastException e) {
-                            Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
-                                    + e.getLocalizedMessage());
-                        }
-
-                    }
-
-                    @Override
-                    protected Object parseResponse(String rawJsonData, boolean isFailure)
-                            throws Throwable {
-                        Listado<Partido> partidos = null;
-                        MensajeError mensajeError = null;
-
-                        ObjectMapper om = new ObjectMapper();
-                        JsonParser parser = new JsonFactory().createParser(rawJsonData);
-
-                        if (!isFailure) {
-                            JavaType jt = om.getTypeFactory().constructParametrizedType(Listado.class,
-                                    Listado.class, Partido.class);
-                            partidos = om.readValue(parser, jt);
-                            return partidos;
-                        } else {
-                            mensajeError = om.readValues(parser, MensajeError.class).next();
-                            return mensajeError;
-                        }
-                    }
-                });
+                AppConstants.PATH_PARTIDOS, requestParams, responseHandler);
     }
 
     @DebugLog
@@ -616,83 +641,86 @@ public class EleccionesRestCallback {
         requestParams.add(AppConstants.PARAM_DEPARTAMENTO, departamento);
         requestParams.add(AppConstants.PARAM_PARTIDO, partido);
 
+        BaseJsonHttpResponseHandler<Object> responseHandler = new BaseJsonHttpResponseHandler<Object>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
+                                  Object response) {
+
+                Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
+                        + rawJsonResponse);
+                Log.i(TAG, response.toString());
+                try {
+                    mListener.onSuccessAction((List<String>) response);
+                } catch (ClassCastException e) {
+                    Log.e(TAG, "No se pudo realizar el cast del objeto: "
+                            + e.getLocalizedMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable,
+                                  String rawJsonData, Object errorResponse) {
+                Log.e(TAG, "Status Code: " + statusCode + "\nRaw JSONData: "
+                        + rawJsonData);
+                try {
+                    MensajeError mensajeError = (MensajeError) errorResponse;
+                    if (statusCode == 404) {
+                        Snackbar.make(getParentView(), mensajeError.getMensajeUsuario(),
+                                Snackbar.LENGTH_SHORT).show();
+                    } else if (statusCode == 500 || statusCode == 503) {
+                        Snackbar.make(getParentView(), "El servicio no está disponible, " +
+                                        "intente de nuevo más tarde",
+                                Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        Snackbar.make(getParentView(), "Ocurrió un error, " +
+                                        "intente de nuevo más tarde",
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                } catch (ClassCastException e) {
+                    Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
+                            + e.getLocalizedMessage());
+                }
+
+            }
+
+            @Override
+            protected Object parseResponse(String rawJsonData, boolean isFailure)
+                    throws Throwable {
+                List<String> candidaturas = null;
+                MensajeError mensajeError = null;
+
+                ObjectMapper om = new ObjectMapper();
+                JsonParser parser = new JsonFactory().createParser(rawJsonData);
+
+                if (!isFailure) {
+                    JavaType jt = om.getTypeFactory().constructCollectionType(List.class,
+                            String.class);
+                    candidaturas = om.readValue(parser, jt);
+                    return candidaturas;
+                } else {
+                    mensajeError = om.readValues(parser, MensajeError.class).next();
+                    return mensajeError;
+                }
+            }
+        };
+
+        responseHandler.setTag(AppConstants.PATH_CANDIDATURAS);
+
         EleccionesRestClient.get(context, AppConstants.OPENSHIFT_HOST,
-                AppConstants.PATH_CANDIDATURAS, requestParams,
-                new BaseJsonHttpResponseHandler<Object>() {
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                        ((SwipeRefreshLayout) getLoadingView()).setRefreshing(true);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
-                                          Object response) {
-
-                        Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
-                                + rawJsonResponse);
-                        Log.i(TAG, response.toString());
-                        try {
-                            mListener.onSuccessAction((List<String>) response);
-                        } catch (ClassCastException e) {
-                            Log.e(TAG, "No se pudo realizar el cast del objeto: "
-                                    + e.getLocalizedMessage());
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable,
-                                          String rawJsonData, Object errorResponse) {
-                        Log.e(TAG, "Status Code: " + statusCode + "\nRaw JSONData: "
-                                + rawJsonData);
-                        try {
-                            MensajeError mensajeError = (MensajeError) errorResponse;
-                            if (statusCode == 404) {
-                                Snackbar.make(getParentView(), mensajeError.getMensajeUsuario(),
-                                        Snackbar.LENGTH_SHORT).show();
-                            } else if (statusCode == 500 || statusCode == 503) {
-                                Snackbar.make(getParentView(), "El servicio no está disponible, " +
-                                                "intente de nuevo más tarde",
-                                        Snackbar.LENGTH_SHORT).show();
-                            } else {
-                                Snackbar.make(getParentView(), "Ocurrió un error, " +
-                                                "intente de nuevo más tarde",
-                                        Snackbar.LENGTH_SHORT).show();
-                            }
-                        } catch (ClassCastException e) {
-                            Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
-                                    + e.getLocalizedMessage());
-                        }
-
-                    }
-
-                    @Override
-                    protected Object parseResponse(String rawJsonData, boolean isFailure)
-                            throws Throwable {
-                        List<String> candidaturas = null;
-                        MensajeError mensajeError = null;
-
-                        ObjectMapper om = new ObjectMapper();
-                        JsonParser parser = new JsonFactory().createParser(rawJsonData);
-
-                        if (!isFailure) {
-                            JavaType jt = om.getTypeFactory().constructCollectionType(List.class,
-                                    String.class);
-                            candidaturas = om.readValue(parser, jt);
-                            return candidaturas;
-                        } else {
-                            mensajeError = om.readValues(parser, MensajeError.class).next();
-                            return mensajeError;
-                        }
-                    }
-                });
+                AppConstants.PATH_CANDIDATURAS, requestParams, responseHandler);
     }
 
     @DebugLog
@@ -729,85 +757,94 @@ public class EleccionesRestCallback {
             requestParams.add(AppConstants.PARAM_ORDEN, String.format("%d", orden));
         }
 
+        BaseJsonHttpResponseHandler<Object> responseHandler = new BaseJsonHttpResponseHandler<Object>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(true);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
+            }
+
+            @Override
+            public void onCancel() {
+                super.onCancel();
+                ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
+                                  Object response) {
+
+                Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
+                        + rawJsonResponse);
+                Log.i(TAG, response.toString());
+                try {
+                    mListener.onSuccessAction((Listado<Candidato>) response);
+                } catch (ClassCastException e) {
+                    Log.e(TAG, "No se pudo realizar el cast del objeto: "
+                            + e.getLocalizedMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable,
+                                  String rawJsonData, Object errorResponse) {
+                Log.e(TAG, "Status Code: " + statusCode + "\nRaw JSONData: "
+                        + rawJsonData);
+                try {
+                    MensajeError mensajeError = (MensajeError) errorResponse;
+                    if (statusCode == 404) {
+                        Snackbar.make(getParentView(), mensajeError.getMensajeUsuario(),
+                                Snackbar.LENGTH_SHORT).show();
+                    } else if (statusCode == 500 || statusCode == 503) {
+                        Snackbar.make(getParentView(), "El servicio no está disponible, " +
+                                        "intente de nuevo más tarde",
+                                Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        Snackbar.make(getParentView(), "Ocurrió un error, " +
+                                        "intente de nuevo más tarde",
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                } catch (ClassCastException e) {
+                    Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
+                            + e.getLocalizedMessage());
+                } catch (Exception e) {
+
+                }
+
+            }
+
+            @Override
+            protected Object parseResponse(String rawJsonData, boolean isFailure)
+                    throws Throwable {
+                Listado<Candidato> candidatos = null;
+                MensajeError mensajeError = null;
+
+                ObjectMapper om = new ObjectMapper();
+                JsonParser parser = new JsonFactory().createParser(rawJsonData);
+
+                if (!isFailure) {
+                    JavaType jt = om.getTypeFactory().constructParametrizedType(Listado.class,
+                            Listado.class, Candidato.class);
+                    candidatos = om.readValue(parser, jt);
+                    return candidatos;
+                } else {
+                    mensajeError = om.readValues(parser, MensajeError.class).next();
+                    return mensajeError;
+                }
+            }
+        };
+
+        responseHandler.setTag(AppConstants.PATH_CANDIDATOS);
+
         EleccionesRestClient.get(context, AppConstants.OPENSHIFT_HOST,
-                AppConstants.PATH_CANDIDATOS, requestParams,
-                new BaseJsonHttpResponseHandler<Object>() {
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                        ((SwipeRefreshLayout) getLoadingView()).setRefreshing(true);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        ((SwipeRefreshLayout) getLoadingView()).setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
-                                          Object response) {
-
-                        Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
-                                + rawJsonResponse);
-                        Log.i(TAG, response.toString());
-                        try {
-                            mListener.onSuccessAction((Listado<Candidato>) response);
-                        } catch (ClassCastException e) {
-                            Log.e(TAG, "No se pudo realizar el cast del objeto: "
-                                    + e.getLocalizedMessage());
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable,
-                                          String rawJsonData, Object errorResponse) {
-                        Log.e(TAG, "Status Code: " + statusCode + "\nRaw JSONData: "
-                                + rawJsonData);
-                        try {
-                            MensajeError mensajeError = (MensajeError) errorResponse;
-                            if (statusCode == 404) {
-                                Snackbar.make(getParentView(), mensajeError.getMensajeUsuario(),
-                                        Snackbar.LENGTH_SHORT).show();
-                            } else if (statusCode == 500 || statusCode == 503) {
-                                Snackbar.make(getParentView(), "El servicio no está disponible, " +
-                                                "intente de nuevo más tarde",
-                                        Snackbar.LENGTH_SHORT).show();
-                            } else {
-                                Snackbar.make(getParentView(), "Ocurrió un error, " +
-                                                "intente de nuevo más tarde",
-                                        Snackbar.LENGTH_SHORT).show();
-                            }
-                        } catch (ClassCastException e) {
-                            Log.e(TAG, "No se pudo realizar el cast del mensaje de error: "
-                                    + e.getLocalizedMessage());
-                        } catch (Exception e) {
-
-                        }
-
-                    }
-
-                    @Override
-                    protected Object parseResponse(String rawJsonData, boolean isFailure)
-                            throws Throwable {
-                        Listado<Candidato> candidatos = null;
-                        MensajeError mensajeError = null;
-
-                        ObjectMapper om = new ObjectMapper();
-                        JsonParser parser = new JsonFactory().createParser(rawJsonData);
-
-                        if (!isFailure) {
-                            JavaType jt = om.getTypeFactory().constructParametrizedType(Listado.class,
-                                    Listado.class, Candidato.class);
-                            candidatos = om.readValue(parser, jt);
-                            return candidatos;
-                        } else {
-                            mensajeError = om.readValues(parser, MensajeError.class).next();
-                            return mensajeError;
-                        }
-                    }
-                });
+                AppConstants.PATH_CANDIDATOS, requestParams, responseHandler);
     }
 
     public interface OnResponseReceived {

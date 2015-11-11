@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -139,8 +140,12 @@ public class MainTabActivity extends BaseLocationActivity implements
                                     + currentLocation.getLatitude() + ";"
                                     + currentLocation.getLongitude() + "("
                                     + currentLocation.getAccuracy() + ")");
+                            Intent intent = new Intent("py.com.purpleapps.yovotopy.LOCATION_UPDATED");
+                            LocalBroadcastManager.getInstance(MainTabActivity.this).sendBroadcast(intent);
                         } else {
                             Log.i(TAG, "Reactive Location: no se obtuvo la localización");
+                            Intent intent = new Intent("ppy.com.purpleapps.yovotopy.LOCATION_UPDATE_FAILED");
+                            LocalBroadcastManager.getInstance(MainTabActivity.this).sendBroadcast(intent);
                         }
                     }
                 });

@@ -3,7 +3,6 @@ package py.com.purpleapps.yovotopy.ui;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -36,6 +35,7 @@ import butterknife.BindString;
 import butterknife.ButterKnife;
 import py.com.purpleapps.yovotopy.R;
 import py.com.purpleapps.yovotopy.client.EleccionesRestCallback;
+import py.com.purpleapps.yovotopy.client.EleccionesRestClient;
 import py.com.purpleapps.yovotopy.model.Candidato;
 import py.com.purpleapps.yovotopy.model.DatosConsultaPadron;
 import py.com.purpleapps.yovotopy.model.DatosVotacion;
@@ -52,9 +52,8 @@ import py.com.purpleapps.yovotopy.util.Tracking;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment implements EleccionesRestCallback.OnResponseReceived {
+public class HomeFragment extends BaseLocationFragment implements EleccionesRestCallback.OnResponseReceived {
     public static final String TAG = "HomeFragment";
-
     public static final long MUNICIPALES_DATE = 1447581600000L;
     public static final long DAY_IN_MILLISECONDS = 86400000L;
     public static final long HOUR_IN_MILLISECONDS = 3600000L;
@@ -104,6 +103,7 @@ public class HomeFragment extends Fragment implements EleccionesRestCallback.OnR
     List<View> candidatosView;
     @BindString(R.string.section_candidatos)
     String seccionCandidatos;
+    private int startCount = 0;
     private String cedula;
     private boolean hasProfile;
     private Double latitudLocal;
@@ -111,9 +111,9 @@ public class HomeFragment extends Fragment implements EleccionesRestCallback.OnR
     private String distritoCercano;
     private OnFragmentInteractionListener mListener;
 
-    private EleccionesRestCallback restCallback;
+    private CountDownTimer timer;
 
-    private Location currentLocation;
+    private EleccionesRestCallback restCallback;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -179,6 +179,14 @@ public class HomeFragment extends Fragment implements EleccionesRestCallback.OnR
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        timer.cancel();
+        mainContent.removeAllViews();
+        ButterKnife.unbind(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -196,7 +204,7 @@ public class HomeFragment extends Fragment implements EleccionesRestCallback.OnR
         final long now = new Date().getTime();
         long timeLeft = MUNICIPALES_DATE - now;
 
-        new CountDownTimer(timeLeft, 1000) {
+        timer = new CountDownTimer(timeLeft, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 String timeText = calculateRemainingTime(millisUntilFinished);
@@ -242,11 +250,9 @@ public class HomeFragment extends Fragment implements EleccionesRestCallback.OnR
             }
         });
 
-        if (!hasProfile) {
-            localVotacionCard.setVisibility(View.GONE);
-            datosVotacionCard.setVisibility(View.GONE);
-            votoAccesibleCard.setVisibility(View.GONE);
-        }
+        localVotacionCard.setVisibility(View.GONE);
+        datosVotacionCard.setVisibility(View.GONE);
+        votoAccesibleCard.setVisibility(View.GONE);
 
         restCallback = new EleccionesRestCallback(this, getActivity(), refreshLayout, parentView);
     }
@@ -254,12 +260,22 @@ public class HomeFragment extends Fragment implements EleccionesRestCallback.OnR
     @Override
     public void onStart() {
         super.onStart();
-
-        if (hasProfile) {
-            performRequest(1, cedula);
-        } else {
-            performRequest(3, "");
+        Log.d(TAG, "onStart called");
+        if (startCount < 1) {
+            performOnLocationUpdatedAction();
+            startCount++;
         }
+    }
+
+    @Override
+    public void onStop() {
+        if (hasProfile) {
+            EleccionesRestClient.cancelRequestByTAG(AppConstants.PATH_CONSULTA_PADRON);
+        } else {
+            EleccionesRestClient.cancelRequestByTAG(AppConstants.PATH_DISTRITOS);
+        }
+        EleccionesRestClient.cancelRequestByTAG(AppConstants.PATH_CANDIDATOS);
+        super.onStop();
     }
 
     @Override
@@ -279,17 +295,23 @@ public class HomeFragment extends Fragment implements EleccionesRestCallback.OnR
         mListener = null;
     }
 
-    public void performRequest(int idRequest, String cedula) {
-
-        Double latitud = AppConstants.TEST_LATITUDE;
-        Double longitud = AppConstants.TEST_LONGITUDE;
-
+    @Override
+    void performOnLocationUpdatedAction() {
         currentLocation = BaseLocationActivity.getCurrentLocation();
 
         if (currentLocation != null) {
-            latitud = currentLocation.getLatitude();
-            longitud = currentLocation.getLongitude();
+            if (hasProfile) {
+                performRequest(1, cedula);
+            } else {
+                performRequest(3, "");
+            }
         }
+    }
+
+    public void performRequest(int idRequest, String cedula) {
+
+        Double latitud = currentLocation.getLatitude();
+        Double longitud = currentLocation.getLongitude();
 
         try {
             switch (idRequest) {
@@ -315,92 +337,98 @@ public class HomeFragment extends Fragment implements EleccionesRestCallback.OnR
     @Override
     public void onSuccessAction(DatosConsultaPadron datosConsultaPadron) {
 
-        if (!datosConsultaPadron.getPuedeVotar()) {
-            Snackbar.make(parentView, datosConsultaPadron.getMotivo(), Snackbar.LENGTH_LONG).show();
-            localVotacionCard.setVisibility(View.GONE);
-            datosVotacionCard.setVisibility(View.GONE);
-        } else {
-            if (datosConsultaPadron.getDatosVotacion().getTipoVotoAccesible() != null) {
-                votoAccesibleCard.setVisibility(View.VISIBLE);
-                tipoVoto.setText(DatosVotacion.TipoVoto
-                        .valueOf(datosConsultaPadron.getDatosVotacion()
-                                .getTipoVotoAccesible()).getDescripcion());
-                if (DatosVotacion.TipoVoto.VOTO_CASA.name().equalsIgnoreCase(datosConsultaPadron.getDatosVotacion()
-                        .getTipoVotoAccesible())) {
-                    localVotacionCard.setVisibility(View.GONE);
-                    datosVotacionCard.setVisibility(View.GONE);
-                    return;
-                }
+        if (refreshLayout != null) {
+            if (!datosConsultaPadron.getPuedeVotar()) {
+                Snackbar.make(parentView, datosConsultaPadron.getMotivo(), Snackbar.LENGTH_LONG).show();
+                localVotacionCard.setVisibility(View.GONE);
+                datosVotacionCard.setVisibility(View.GONE);
             } else {
-                votoAccesibleCard.setVisibility(View.GONE);
+                if (datosConsultaPadron.getDatosVotacion().getTipoVotoAccesible() != null) {
+                    votoAccesibleCard.setVisibility(View.VISIBLE);
+                    tipoVoto.setText(DatosVotacion.TipoVoto
+                            .valueOf(datosConsultaPadron.getDatosVotacion()
+                                    .getTipoVotoAccesible()).getDescripcion());
+                    if (DatosVotacion.TipoVoto.VOTO_CASA.name().equalsIgnoreCase(datosConsultaPadron.getDatosVotacion()
+                            .getTipoVotoAccesible())) {
+                        localVotacionCard.setVisibility(View.GONE);
+                        datosVotacionCard.setVisibility(View.GONE);
+                        return;
+                    }
+                } else {
+                    votoAccesibleCard.setVisibility(View.GONE);
+                }
+
+                localVotacionCard.setVisibility(View.VISIBLE);
+                datosVotacionCard.setVisibility(View.VISIBLE);
+
+                latitudLocal = datosConsultaPadron.getLocalVotacion().getLatitud();
+                longitudLocal = datosConsultaPadron.getLocalVotacion().getLongitud();
+                String mapsUrl = String.format(AppConstants.URL_MAPS_STATIC_IMAGE, latitudLocal,
+                        longitudLocal, latitudLocal, longitudLocal);
+                if (getActivity() != null) {
+                    Glide.with(getActivity()).load(mapsUrl).into(mapa);
+                }
+                nombreLocal.setText(datosConsultaPadron.getLocalVotacion().getNombre());
+                direccion.setText(datosConsultaPadron.getLocalVotacion().getDireccion());
+                departamento.setText(datosConsultaPadron.getLocalVotacion().getDepartamento());
+                zona.setText(datosConsultaPadron.getLocalVotacion().getZona());
+                distrito.setText(datosConsultaPadron.getLocalVotacion().getDistrito());
+
+                mesa.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
+                        .getMesa()));
+                orden.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
+                        .getOrden()));
+
+                // Seccion de candidatos
+                distritoCercano = datosConsultaPadron.getLocalVotacion().getDistrito();
+                titleText.setText(String.format(seccionCandidatos, distritoCercano));
+                performRequest(2, "");
+
             }
-
-            localVotacionCard.setVisibility(View.VISIBLE);
-            datosVotacionCard.setVisibility(View.VISIBLE);
-
-            latitudLocal = datosConsultaPadron.getLocalVotacion().getLatitud();
-            longitudLocal = datosConsultaPadron.getLocalVotacion().getLongitud();
-            String mapsUrl = String.format(AppConstants.URL_MAPS_STATIC_IMAGE, latitudLocal,
-                    longitudLocal, latitudLocal, longitudLocal);
-            Glide.with(this).load(mapsUrl).into(mapa);
-            nombreLocal.setText(datosConsultaPadron.getLocalVotacion().getNombre());
-            direccion.setText(datosConsultaPadron.getLocalVotacion().getDireccion());
-            departamento.setText(datosConsultaPadron.getLocalVotacion().getDepartamento());
-            zona.setText(datosConsultaPadron.getLocalVotacion().getZona());
-            distrito.setText(datosConsultaPadron.getLocalVotacion().getDistrito());
-
-            mesa.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
-                    .getMesa()));
-            orden.setText(String.format("%d", datosConsultaPadron.getDatosVotacion()
-                    .getOrden()));
-
-            // Seccion de candidatos
-            distritoCercano = datosConsultaPadron.getLocalVotacion().getDistrito();
-            titleText.setText(String.format(seccionCandidatos, distritoCercano));
-            performRequest(2, "");
-
         }
     }
 
     private void addCandidatoCard(Candidato candidato) {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.card_datos_candidato, null);
+        if (getActivity() != null) {
+            View view = LayoutInflater.from(getActivity()).inflate(R.layout.card_datos_candidato, null);
 
-        TextView nombre = ButterKnife.findById(view, R.id.nombre_candidato_text);
-        TextView candidatura = ButterKnife.findById(view, R.id.candidatura_text);
-        TextView lista = ButterKnife.findById(view, R.id.lista_text);
-        TextView partido = ButterKnife.findById(view, R.id.partido_text);
-        TextView distrito = ButterKnife.findById(view, R.id.distrito_text);
-        TextView departamento = ButterKnife.findById(view, R.id.departamento_text);
-        TextView puesto = ButterKnife.findById(view, R.id.puesto_text);
-        TextView orden = ButterKnife.findById(view, R.id.orden_text);
-        TableRow puestoRow = ButterKnife.findById(view, R.id.puesto_row);
-        TableRow ordenRow = ButterKnife.findById(view, R.id.orden_row);
+            TextView nombre = ButterKnife.findById(view, R.id.nombre_candidato_text);
+            TextView candidatura = ButterKnife.findById(view, R.id.candidatura_text);
+            TextView lista = ButterKnife.findById(view, R.id.lista_text);
+            TextView partido = ButterKnife.findById(view, R.id.partido_text);
+            TextView distrito = ButterKnife.findById(view, R.id.distrito_text);
+            TextView departamento = ButterKnife.findById(view, R.id.departamento_text);
+            TextView puesto = ButterKnife.findById(view, R.id.puesto_text);
+            TextView orden = ButterKnife.findById(view, R.id.orden_text);
+            TableRow puestoRow = ButterKnife.findById(view, R.id.puesto_row);
+            TableRow ordenRow = ButterKnife.findById(view, R.id.orden_row);
 
-        puestoRow.setVisibility(View.GONE);
-        ordenRow.setVisibility(View.GONE);
+            puestoRow.setVisibility(View.GONE);
+            ordenRow.setVisibility(View.GONE);
 
-        if (candidato != null) {
-            nombre.setText(candidato.getNombreApellido());
-            candidatura.setText(candidato.getCandidatura());
-            distrito.setText(candidato.getDistrito());
-            departamento.setText(candidato.getDepartamento());
-            partido.setText(candidato.getPartido());
-            lista.setText(String.format("%d", candidato.getLista()));
-            if (candidato.getPuesto() != null) {
-                puestoRow.setVisibility(View.VISIBLE);
-                ordenRow.setVisibility(View.VISIBLE);
-                puesto.setText(candidato.getPuesto());
-                orden.setText(String.format("%d", candidato.getOrden()));
+            if (candidato != null) {
+                nombre.setText(candidato.getNombreApellido());
+                candidatura.setText(candidato.getCandidatura());
+                distrito.setText(candidato.getDistrito());
+                departamento.setText(candidato.getDepartamento());
+                partido.setText(candidato.getPartido());
+                lista.setText(String.format("%d", candidato.getLista()));
+                if (candidato.getPuesto() != null) {
+                    puestoRow.setVisibility(View.VISIBLE);
+                    ordenRow.setVisibility(View.VISIBLE);
+                    puesto.setText(candidato.getPuesto());
+                    orden.setText(String.format("%d", candidato.getOrden()));
+                }
             }
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            int margins = getResources().getDimensionPixelSize(R.dimen.card_margin);
+
+            layoutParams.setMargins(margins, 0, margins, margins);
+            candidatosView.add(view);
+            mainContent.addView(view, layoutParams);
         }
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        int margins = getResources().getDimensionPixelSize(R.dimen.card_margin);
-
-        layoutParams.setMargins(margins, 0, margins, margins);
-        candidatosView.add(view);
-        mainContent.addView(view, layoutParams);
     }
 
     @Override

@@ -31,6 +31,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import py.com.purpleapps.yovotopy.R;
 import py.com.purpleapps.yovotopy.client.EleccionesRestCallback;
+import py.com.purpleapps.yovotopy.client.EleccionesRestClient;
 import py.com.purpleapps.yovotopy.model.DatosConsultaPadron;
 import py.com.purpleapps.yovotopy.model.DatosVotacion;
 import py.com.purpleapps.yovotopy.model.Listado;
@@ -241,6 +242,12 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
         }
     }
 
+    @Override
+    public void onStop() {
+        EleccionesRestClient.cancelRequestByTAG(AppConstants.PATH_CONSULTA_PADRON);
+        super.onStop();
+    }
+
     public void performRequest(String cedula) {
         this.cedula = cedula;
 
@@ -322,7 +329,9 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
             longitudLocal = datosConsultaPadron.getLocalVotacion().getLongitud();
             String mapsUrl = String.format(AppConstants.URL_MAPS_STATIC_IMAGE, latitudLocal,
                     longitudLocal, latitudLocal, longitudLocal);
-            Glide.with(this).load(mapsUrl).into(mapa);
+            if (getActivity() != null) {
+                Glide.with(getActivity()).load(mapsUrl).into(mapa);
+            }
             nombreLocal.setText(datosConsultaPadron.getLocalVotacion().getNombre());
             direccion.setText(datosConsultaPadron.getLocalVotacion().getDireccion());
             departamento.setText(datosConsultaPadron.getLocalVotacion().getDepartamento());
