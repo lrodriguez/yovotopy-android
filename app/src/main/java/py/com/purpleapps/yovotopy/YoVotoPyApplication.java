@@ -30,6 +30,8 @@ public class YoVotoPyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        trustEveryone();
+
         setupGATracker();
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
@@ -37,8 +39,6 @@ public class YoVotoPyApplication extends Application {
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
-
-        trustEveryone();
     }
 
     public Tracker getTracker() {

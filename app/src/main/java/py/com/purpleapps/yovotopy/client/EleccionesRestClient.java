@@ -62,7 +62,8 @@ public class EleccionesRestClient {
             case AppConstants.OPENSHIFT_HOST:
 
                 client.setTimeout(30000);
-                randomValue = instanceRandom.nextInt(3);
+                //randomValue = instanceRandom.nextInt(3);
+                randomValue = 6;
                 openshiftName = AppConstants.Instance.values()[randomValue].getNombre();
 
                 Log.d("RestClient", "Llamada al web service: " + AppConstants.SCHEMA
@@ -89,7 +90,6 @@ public class EleccionesRestClient {
                 url = AppConstants.SCHEMA + openshiftName + AppConstants.HOST_DENUNCIAS + AppConstants.PORT
                         + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
                         + relativeUrl;
-                //url = "http://192.168.0.100:8080/municipales2015-v0.3/rest/"+ relativeUrl;
                 break;
         }
 

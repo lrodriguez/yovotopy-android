@@ -36,7 +36,7 @@ public class AppConstants {
     // REST client constants
     public static final String SCHEMA = "http://";
     public static final String HOST_DENUNCIAS = "-purpleappspy.rhcloud.com";
-    public static final String HOST = "-openshiftpublic.rhcloud.com";
+    public static final String HOST = "-yovotopy.rhcloud.com";
     public static final String HOST_AVIZOR = "www.elavizor.org.py";
     public static final String PORT = ":80";
     public static final String BASE_PATH = "/municipales2015-%s/rest/";
@@ -150,7 +150,8 @@ public class AppConstants {
         INSTANCE_03(3, "yovoto02"),
         INSTANCE_04(4, "yovoto03"),
         INSTANCE_05(5, "yovoto04"),
-        INSTANCE_06(6, "yovoto05");
+        INSTANCE_06(6, "yovoto05"),
+        INSTANCE_07(6, "yovoto06");
 
         private int id;
         private String nombre;
