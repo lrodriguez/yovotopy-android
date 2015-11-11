@@ -1,7 +1,6 @@
 package py.com.purpleapps.yovotopy.client;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -66,10 +65,10 @@ public class EleccionesRestClient {
                 randomValue = 6;
                 openshiftName = AppConstants.Instance.values()[randomValue].getNombre();
 
-                Log.d("RestClient", "Llamada al web service: " + AppConstants.SCHEMA
+                /*Log.d("RestClient", "Llamada al web service: " + AppConstants.SCHEMA
                         + openshiftName + AppConstants.HOST + AppConstants.PORT
                         + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
-                        + relativeUrl);
+                        + relativeUrl);*/
                 url = AppConstants.SCHEMA + openshiftName + AppConstants.HOST + AppConstants.PORT
                         + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
                         + relativeUrl;
@@ -83,10 +82,10 @@ public class EleccionesRestClient {
                 randomValue = instanceRandom.nextInt(6 - 3) + 3;
                 openshiftName = AppConstants.Instance.values()[randomValue].getNombre();
 
-                Log.d("RestClient", "Llamada al web service: " + AppConstants.SCHEMA
+                /*Log.d("RestClient", "Llamada al web service: " + AppConstants.SCHEMA
                         + openshiftName + AppConstants.HOST_DENUNCIAS + AppConstants.PORT
                         + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
-                        + relativeUrl);
+                        + relativeUrl);*/
                 url = AppConstants.SCHEMA + openshiftName + AppConstants.HOST_DENUNCIAS + AppConstants.PORT
                         + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
                         + relativeUrl;

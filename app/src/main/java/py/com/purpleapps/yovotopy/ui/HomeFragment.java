@@ -270,7 +270,7 @@ public class HomeFragment extends BaseLocationFragment implements EleccionesRest
     @Override
     public void onStop() {
         if (hasProfile) {
-            EleccionesRestClient.cancelRequestByTAG(AppConstants.PATH_CONSULTA_PADRON);
+            EleccionesRestClient.cancelRequestByTAG(AppConstants.PATH_CONSULTA_PADRON + TAG);
         } else {
             EleccionesRestClient.cancelRequestByTAG(AppConstants.PATH_DISTRITOS);
         }
@@ -316,7 +316,7 @@ public class HomeFragment extends BaseLocationFragment implements EleccionesRest
         try {
             switch (idRequest) {
                 case 1:
-                    restCallback.getConsultaPadron(cedula, latitud, longitud);
+                    restCallback.getConsultaPadron(cedula, latitud, longitud, TAG);
                     break;
                 case 2:
                     restCallback.getCandidatos(AppConstants.INITIAL_OFFSET, AppConstants.DEFAULT_LIMIT,

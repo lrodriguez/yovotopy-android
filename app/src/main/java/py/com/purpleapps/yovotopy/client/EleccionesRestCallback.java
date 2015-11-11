@@ -81,7 +81,7 @@ public class EleccionesRestCallback {
         this.parentView = parentView;
     }
 
-    public void getConsultaPadron(String cedula, Double latitud, Double longitud)
+    public void getConsultaPadron(String cedula, Double latitud, Double longitud, String fragmentId)
             throws JSONException {
 
         RequestParams requestParams = new RequestParams();
@@ -114,9 +114,9 @@ public class EleccionesRestCallback {
             public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
                                   Object response) {
 
-                Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
+                /*Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
                         + rawJsonResponse);
-                Log.i(TAG, response.toString());
+                Log.i(TAG, response.toString());*/
                 try {
                     mListener.onSuccessAction((DatosConsultaPadron) response);
                 } catch (ClassCastException e) {
@@ -198,9 +198,9 @@ public class EleccionesRestCallback {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
                                           AvizorResponse response) {
-                        Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
+                        /*Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
                                 + rawJsonResponse);
-                        Log.i(TAG, response.toString());
+                        Log.i(TAG, response.toString());*/
                         try {
                             mListener.onSuccessAction(response.getAvizorEntity().getCategorias());
                         } catch (ClassCastException e) {
@@ -294,8 +294,8 @@ public class EleccionesRestCallback {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
                                           Object response) {
-                        Log.e(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
-                                + rawJsonResponse);
+                        /*Log.e(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
+                                + rawJsonResponse);*/
                         if (response != null) {
                             Log.i(TAG, response.toString());
                         }
@@ -374,9 +374,9 @@ public class EleccionesRestCallback {
             public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
                                   Object response) {
 
-                Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
+                /*Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
                         + rawJsonResponse);
-                Log.i(TAG, response.toString());
+                Log.i(TAG, response.toString());*/
                 try {
                     mListener.onSuccessAction((List<Departamento>) response);
                 } catch (ClassCastException e) {
@@ -473,9 +473,9 @@ public class EleccionesRestCallback {
             public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
                                   Object response) {
 
-                Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
+                /*Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
                         + rawJsonResponse);
-                Log.i(TAG, response.toString());
+                Log.i(TAG, response.toString());*/
                 try {
                     mListener.onSuccessAction((Listado<Distrito>) response);
                 } catch (ClassCastException e) {
@@ -566,9 +566,9 @@ public class EleccionesRestCallback {
             public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
                                   Object response) {
 
-                Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
+                /*Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
                         + rawJsonResponse);
-                Log.i(TAG, response.toString());
+                Log.i(TAG, response.toString());*/
                 try {
                     mListener.onSuccessAction((Listado<Partido>) response);
                 } catch (ClassCastException e) {
@@ -658,9 +658,9 @@ public class EleccionesRestCallback {
             public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
                                   Object response) {
 
-                Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
+                /*Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
                         + rawJsonResponse);
-                Log.i(TAG, response.toString());
+                Log.i(TAG, response.toString());*/
                 try {
                     mListener.onSuccessAction((List<String>) response);
                 } catch (ClassCastException e) {
@@ -780,9 +780,9 @@ public class EleccionesRestCallback {
             public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse,
                                   Object response) {
 
-                Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
+                /*Log.i(TAG, "Status Code: " + statusCode + "\nRaw rawJsonResponse: "
                         + rawJsonResponse);
-                Log.i(TAG, response.toString());
+                Log.i(TAG, response.toString());*/
                 try {
                     mListener.onSuccessAction((Listado<Candidato>) response);
                 } catch (ClassCastException e) {

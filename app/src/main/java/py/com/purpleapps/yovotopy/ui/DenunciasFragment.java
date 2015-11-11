@@ -135,6 +135,8 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
     ImageView avizorImage;
     @BindString(R.string.error_input_required)
     String errorRequired;
+    @BindString(R.string.error_input_min_length)
+    String errorMinLength;
     private OnFragmentInteractionListener mListener;
     // Rest callback variables
     private EleccionesRestCallback restCallback;
@@ -810,6 +812,9 @@ public class DenunciasFragment extends Fragment implements EleccionesRestCallbac
     private void showError(TextInputLayout textInputLayout, String text) {
         if (text.isEmpty()) {
             textInputLayout.setError(errorRequired);
+            isValid = false;
+        } else if (text.length() < 3) {
+            textInputLayout.setError(errorMinLength);
             isValid = false;
         } else {
             textInputLayout.setError("");

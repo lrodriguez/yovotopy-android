@@ -244,7 +244,7 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
 
     @Override
     public void onStop() {
-        EleccionesRestClient.cancelRequestByTAG(AppConstants.PATH_CONSULTA_PADRON);
+        EleccionesRestClient.cancelRequestByTAG(AppConstants.PATH_CONSULTA_PADRON + TAG);
         super.onStop();
     }
 
@@ -262,7 +262,7 @@ public class ConsultaPadronFragment extends Fragment implements EleccionesRestCa
         }
 
         try {
-            restCallback.getConsultaPadron(cedula, latitud, longitud);
+            restCallback.getConsultaPadron(cedula, latitud, longitud, TAG);
         } catch (JSONException e) {
             Log.e(TAG, "Ocurrió un error: " + e.getLocalizedMessage());
         }
