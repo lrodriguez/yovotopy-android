@@ -87,7 +87,7 @@ public class EleccionesRestClient {
                         + openshiftName + AppConstants.HOST_DENUNCIAS + AppConstants.PORT
                         + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
                         + relativeUrl);*/
-                url = AppConstants.SCHEMA + openshiftName + AppConstants.HOST_DENUNCIAS + AppConstants.PORT
+                url = AppConstants.SCHEMA + openshiftName + AppConstants.HOST + AppConstants.PORT
                         + String.format(AppConstants.BASE_PATH, AppConstants.VERSION)
                         + relativeUrl;
                 break;
