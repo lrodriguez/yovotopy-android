@@ -85,8 +85,8 @@ public class AppConstants {
     public static final String FECHA_FORMAT = "dd/MM/yy";
     public static final int INITIAL_OFFSET = 0;
     public static final int DEFAULT_LIMIT = 10;
-    public static final String AVIZOR_HOME_PAGE = "http://www.elavizor.org.py";
-    public static final String AVIZOR_DENUNCIAS_PAGE = "http://www.elavizor.org.py/reports";
+    public static final String AVIZOR_HOME_PAGE = "https://www.elavizor.org.py";
+    public static final String AVIZOR_DENUNCIAS_PAGE = "https://www.elavizor.org.py/reports";
     public static final String PA_FACEBOOK_PROFILE = "http://www.facebook.com/purpleappspy";
     public static final String PA_TWITTER_PROFILE = "http://www.twitter.com/purpleappspy";
     public static final String PA_MAIL = "contact.purpleapps@gmail.com";
