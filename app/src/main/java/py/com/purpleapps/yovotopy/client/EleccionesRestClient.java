@@ -79,7 +79,8 @@ public class EleccionesRestClient {
                 break;
             case AppConstants.OPENSHIFT_DENUNCIAS_HOST:
                 client.setTimeout(600000);
-                randomValue = instanceRandom.nextInt(6 - 3) + 3;
+                //randomValue = instanceRandom.nextInt(6 - 3) + 3;
+                randomValue = 6;
                 openshiftName = AppConstants.Instance.values()[randomValue].getNombre();
 
                 /*Log.d("RestClient", "Llamada al web service: " + AppConstants.SCHEMA
