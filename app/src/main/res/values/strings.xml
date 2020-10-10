@@ -2,7 +2,7 @@
     <string name="app_name">Yo Voto Py</string>
     <string name="action_settings">Ajustes</string>
 
-    <string name="gps_places_api_key">***REMOVED***</string>
+    <string name="gps_places_api_key">GOOGLE API KEY</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_consulta_padron">Datos del padrón electoral</string>

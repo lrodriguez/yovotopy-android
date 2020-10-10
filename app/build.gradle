@@ -14,10 +14,10 @@ apply plugin: 'com.jakewharton.hugo'
 android {
     signingConfigs {
         releaseConfig {
-            keyAlias '***REMOVED***'
-            keyPassword '***REMOVED***'
-            storeFile file('***REMOVED***')
-            storePassword '***REMOVED***'
+            keyAlias 'ALIAS'
+            keyPassword 'PASSWORD'
+            storeFile file('PATH')
+            storePassword 'PASSWORD'
         }
     }
     compileSdkVersion 23
